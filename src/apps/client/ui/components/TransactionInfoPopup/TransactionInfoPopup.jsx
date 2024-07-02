@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import format from 'date-fns/format';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 
 import styles from './TransactionInfoPopup.css';
 
@@ -19,7 +19,7 @@ import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveTransaction from '../../../services/client/saveTransaction';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
 
-import FormInput from '../FormInput/FormInput';
+// import FormInput from '../FormInput/FormInput';
 import checkBalance from '../../../../../../server/api/admin/transaction/utils/checkBalance';
 
 const mapStateToProps = ({ application, data }) => {
@@ -180,7 +180,7 @@ class TransactionInfoPopup extends Component {
 
     render () {
         const { langMap, transactions } = this.props;
-        const { error } = this.state;
+        // const { error } = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
 
         return <div className={styles.transactionPopupContainer}>
@@ -202,13 +202,13 @@ class TransactionInfoPopup extends Component {
                         <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
                     </div>)}
             </div>
-            <div className={styles.footer}>
-                <div className={styles.funds}>{text.moneyWithdrawalTitle}</div>
-                <div className={styles.rightContainer}>
-                    <div className={styles.summ}>{text.summ}, $</div>
-                    <form className={styles.form} onSubmit={this.handleSubmit} >
-                        <div className={styles.amountContainerField}>
-                            <FormInput
+            {/*   <div className={styles.footer}> */}
+            {/*  <div className={styles.funds}>{text.moneyWithdrawalTitle}</div> */}
+            {/*   <div className={styles.rightContainer}> */}
+            {/*       <div className={styles.summ}>{text.summ}, $</div> */}
+            {/*      <form className={styles.form} onSubmit={this.handleSubmit} > */}
+            {/*        <div className={styles.amountContainerField}> */}
+            {/*          <FormInput
                                 texts={{ amount: text.inputPlaceholder }}
                                 name='amount'
                                 onFocus={this.onFocus}
@@ -217,25 +217,25 @@ class TransactionInfoPopup extends Component {
                                 value={this.state.amount.value}
                                 focus={this.state.amount.value}
                                 type='number'
-                            />
-                        </div>
-                        <button type='submit' className={classNames(styles.button, {
+                            /> */}
+            {/*    </div> */}
+            {/*      <button type='submit' className={classNames(styles.button, {
                             [styles.buttonUnactive]: !this.state['amount'].isValid || error
-                        })}>
-                            {text.moneyWithdrawal}
-                            <div className={classNames(styles.failedPopup, {
+                        })}> */}
+            {/*    {text.moneyWithdrawal} */}
+            {/*   <div className={classNames(styles.failedPopup, {
                                 [styles.isFailedPopup]: !this.state['amount'].isValid || error
-                            })}>
-                                <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" />
-                                <div className={styles.title}>
-                                    {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
-                                    {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]}
-                                </div>
-                            </div>
-                        </button>
-                    </form>
-                </div>
-            </div>
+                            })}> */}
+            {/*       <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" /> */}
+            {/*       <div className={styles.title}> */}
+            {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
+            {/*         {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]} */}
+            {/*       </div> */}
+            {/*     </div> */}
+            {/*    </button> */}
+            {/*    </form> */}
+            {/*  </div> */}
+            {/*    </div> */}
         </div>;
     }
 }

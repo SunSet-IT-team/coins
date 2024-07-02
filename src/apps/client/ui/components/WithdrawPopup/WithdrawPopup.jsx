@@ -194,9 +194,9 @@ class WithdrawPopup extends Component {
         const date = new Date(currentDate);
         return format(date, 'dd.MM.yyyy HH:mm');
     };
-
+    // transactions - props
     render () {
-        const { langMap, isVisible, transactions } = this.props;
+        const { langMap, isVisible } = this.props;
         const { error } = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
 
@@ -216,7 +216,7 @@ class WithdrawPopup extends Component {
                                 </svg>
                             </button>
                             <div className={styles.transactionPopupContainer}>
-                                <div className={styles.navbar}>
+                                {/*  <div className={styles.navbar}>
                                     <div className={styles.itemNum}>#</div>
                                     <div className={styles.itemSum}>{text.summ}</div>
                                     <div className={styles.itemStatus}>{text.status}</div>
@@ -233,7 +233,7 @@ class WithdrawPopup extends Component {
                                             </div>
                                             <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
                                         </div>)}
-                                </div>
+                                </div> */}
                                 <div className={styles.footer}>
                                     <div className={styles.funds}>{text.moneyWithdrawalTitle}</div>
                                     <div className={styles.rightContainer}>
