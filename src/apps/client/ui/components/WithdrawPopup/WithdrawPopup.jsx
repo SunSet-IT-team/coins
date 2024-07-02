@@ -1,0 +1,280 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import format from 'date-fns/format';
+import classNames from 'classnames';
+
+import styles from './WithdrawPopup.css';
+
+import propOr from '@tinkoff/utils/object/propOr';
+import pathOr from '@tinkoff/utils/object/pathOr';
+import isUndefined from '@tinkoff/utils/is/undefined';
+import isObject from '@tinkoff/utils/is/object';
+import isArray from '@tinkoff/utils/is/array';
+
+import required from '../Form/validators/required';
+
+import outsideClick from '../../hocs/outsideClick.jsx';
+// import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
+import setTransactionsPopup from '../../../actions/setTransactionPopup';
+import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
+import saveTransaction from '../../../services/client/saveTransaction';
+import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
+
+import FormInput from '../FormInput/FormInput';
+import checkBalance from '../../../../../../server/api/admin/transaction/utils/checkBalance';
+
+const mapStateToProps = ({ application, data }) => {
+    return {
+        langMap: application.langMap,
+        transactions: data.transactions,
+        user: data.user
+    };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    saveMoneyOutput: payload => dispatch(saveMoneyOutput(payload)),
+    saveTransaction: payload => dispatch(saveTransaction(payload)),
+    // setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
+    setTransactionsPopup: payload => dispatch(setTransactionsPopup(payload)),
+    setWithdrawSuccessPopup: payload => dispatch(setWithdrawSuccessPopup(payload))
+});
+@outsideClick
+class WithdrawPopup extends Component {
+    static propTypes = {
+        langMap: PropTypes.object.isRequired,
+        transactions: PropTypes.array.isRequired,
+        // setAccountInfoPopup: PropTypes.func.isRequired,
+        setTransactionsPopup: PropTypes.func.isRequired,
+        user: PropTypes.object,
+        turnOnClickOutside: PropTypes.func.isRequired,
+        outsideClickEnabled: PropTypes.bool,
+        saveTransaction: PropTypes.func.isRequired,
+        saveMoneyOutput: PropTypes.func.isRequired,
+        isVisible: PropTypes.bool,
+        setWithdrawSuccessPopup: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        transactions: []
+    }
+
+    constructor (props) {
+        super(props);
+        this.state = {
+            ...this.defaultState(),
+            error: ''
+        };
+    }
+
+    componentDidUpdate (prevProps) {
+        const { outsideClickEnabled } = this.props;
+
+        if (!outsideClickEnabled) {
+            this.props.turnOnClickOutside(this, this.closePopup);
+        }
+
+        if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
+            this.setState({
+                ...this.defaultState(),
+                error: ''
+            });
+        }
+    }
+
+    defaultState () {
+        return {
+            amount: { value: '', focus: false, isValid: true }
+        };
+    };
+
+    handleChange = (name, value) => e => {
+        e.stopPropagation();
+        const actualValue = isUndefined(value) ? e.target.value : value;
+
+        if (actualValue.length > this.state.maxLength) return;
+
+        this.setState({
+            [name]: { ...this.state[name], value: actualValue, focus: isUndefined(value), isValid: true },
+            error: ''
+        });
+    };
+
+    onFocus = name => e => {
+        e.stopPropagation();
+        this.setState({
+            [name]: { ...this.state[name], focus: !this.state[name].focus }
+        });
+    };
+
+    onBlur = name => {
+        const currentState = this.handleCheckErrors([name]);
+
+        this.setState({
+            [name]: { ...this.state[name], focus: false, isValid: currentState[name].isValid }
+        });
+    };
+
+    handleCheckErrors = (names = []) => {
+        const thisState = {};
+        this.setState({
+            error: ''
+        });
+
+        names.forEach(name => {
+            const property = this.state[name];
+
+            if (isObject(property) && !isArray(property)) {
+                let isValid = true;
+                let error;
+
+                if (this.state[name].value < 5 && !!this.state[name].value || !this.state[name].value) {
+                    error = 'MinValue';
+                } else if (!checkBalance(this.props.user.balance - this.state[name].value) && !!this.state[name].value) {
+                    error = 'Balance';
+                }
+
+                if (error) {
+                    isValid = false;
+                }
+
+                const newValue = { ...property, isValid };
+                thisState[name] = newValue;
+
+                this.setState({
+                    [name]: newValue,
+                    error
+                });
+            }
+        });
+
+        return thisState;
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+
+        const { amount } = this.state;
+
+        const thisState = this.handleCheckErrors(Object.keys(this.state));
+        let isValid = required(amount.value, { text: false }) === undefined;
+
+        for (let key in thisState) {
+            if (!pathOr(['isValid'], true, thisState[key])) {
+                isValid = false;
+            }
+        }
+
+        if (isValid) {
+            this.props.saveMoneyOutput({
+                userId: this.props.user.id,
+                amount: amount.value
+            })
+                .then(() => {
+                    this.props.setWithdrawSuccessPopup({ visible: true, amount: amount.value });
+                    setTimeout(() => this.closePopup(), 2000);
+                })
+                .catch(e => {
+                    this.setState({ error: e.message });
+                });
+        }
+    };
+
+    handleOutsideClick = () => {
+        this.props.turnOnClickOutside(this, this.closePopup);
+    }
+
+    closePopup = () => {
+        this.props.setWithdrawSuccessPopup({ visible: false, amount: this.state.amount.value });
+        // this.props.setAccountInfoPopup();
+        this.props.setTransactionsPopup(false);
+    };
+
+    getDate = currentDate => {
+        const date = new Date(currentDate);
+        return format(date, 'dd.MM.yyyy HH:mm');
+    };
+
+    render () {
+        const { langMap, isVisible, transactions } = this.props;
+        const { error } = this.state;
+        const text = propOr('accountInfo', {}, langMap).transaction;
+
+        return <div onClick={this.handleOutsideClick}
+            className={classNames(styles.root, {
+                [styles.isVisible]: isVisible
+            })}>
+            <div className={styles.cover} />
+            <div className={styles.popupWrap}>
+                <div className={styles.popup}>
+                    <div className={styles.popupContent}>
+                        <div className={classNames(styles.content)}>
+                            <button className={classNames(styles.closeButton)} onClick={this.closePopup}>
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    {/* eslint-disable-next-line max-len */}
+                                    <path d="M12 1.05L10.95 0L6 4.95L1.05 0L0 1.05L4.95 6L0 10.95L1.05 12L6 7.05L10.95 12L12 10.95L7.05 6L12 1.05Z" fill="#F8F8F8" />
+                                </svg>
+                            </button>
+                            <div className={styles.transactionPopupContainer}>
+                                <div className={styles.navbar}>
+                                    <div className={styles.itemNum}>#</div>
+                                    <div className={styles.itemSum}>{text.summ}</div>
+                                    <div className={styles.itemStatus}>{text.status}</div>
+                                    <div className={styles.itemDate}>{text.date}</div>
+                                </div>
+                                <div className={styles.transactionsContainer}>
+                                    {transactions
+                                        .sort((prev, next) => next.createdAt - prev.createdAt)
+                                        .map((item, i) => <div key={i} className={styles.transactionItem}>
+                                            <div className={styles.itemNum}>{i + 1}</div>
+                                            <div className={styles.itemSum}>$ {item.value}</div>
+                                            <div className={styles.itemStatus}>
+                                                {item.content}
+                                            </div>
+                                            <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
+                                        </div>)}
+                                </div>
+                                <div className={styles.footer}>
+                                    <div className={styles.funds}>{text.moneyWithdrawalTitle}</div>
+                                    <div className={styles.rightContainer}>
+                                        <div className={styles.summ}>{text.summ}, $</div>
+                                        <form className={styles.form} onSubmit={this.handleSubmit} >
+                                            <div className={styles.amountContainerField}>
+                                                <FormInput
+                                                    texts={{ amount: text.inputPlaceholder }}
+                                                    name='amount'
+                                                    onFocus={this.onFocus}
+                                                    onBlur={this.onBlur}
+                                                    handleChange={this.handleChange}
+                                                    value={this.state.amount.value}
+                                                    focus={this.state.amount.value}
+                                                    type='number'
+                                                />
+                                            </div>
+                                            <button type='submit' className={classNames(styles.button, {
+                                                [styles.buttonUnactive]: !this.state['amount'].isValid || error
+                                            })}>
+                                                {text.moneyWithdrawal}
+                                                <div className={classNames(styles.failedPopup, {
+                                                    [styles.isFailedPopup]: !this.state['amount'].isValid || error
+                                                })}>
+                                                    <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" />
+                                                    <div className={styles.title}>
+                                                        {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
+                                                        {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]}
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>;
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WithdrawPopup);

@@ -22,10 +22,10 @@ import CookiesAgreement from './ui/components/CookiesAgreement/CookiesAgreement'
 import AuthenticationPopup from './ui/components/AuthenticationPopup/AuthenticationPopup';
 import AccountInfoPopup from './ui/components/AccountInfoPopup/AccountInfoPopup';
 import PaymentsPopup from './ui/components/PaymentsPopup/PaymentsPopup';
-import TransactionInfoPopup from './ui/components/TransactionInfoPopup/TransactionInfoPopup';
 import WithdrawSuccessPopup from './ui/components/WithdrawSuccessPopup/WithdrawSuccessPopup';
 import ConnectionLost from './ui/components/ConnectionLost/ConnectionLost';
 import NotFoundPage from './ui/components/NotFoundPage/NotFoundPage';
+import WithdrawPopup from './ui/components/WithdrawPopup/WithdrawPopup';
 
 import messageWebsocketController from './services/client/messageWebsocket';
 import assetPriceWebsocketController from './services/client/assetPriceWebsocket';
@@ -174,11 +174,12 @@ class App extends Component {
                 </div>
                 <AuthenticationPopup isVisible={authenticationFormPopup.isPopup} activeIndex={authenticationFormPopup.activeIndex} />
                 <AccountInfoPopup isVisible={accountInfoPopup} />
-                <TransactionInfoPopup isVisible={transactionsPopup} />
+                <WithdrawPopup isVisible={transactionsPopup} />
                 <PaymentsPopup isVisible={paymentsPopup} />
                 <WithdrawSuccessPopup isVisible={withdrawPopup.visible} amount={withdrawPopup.amount} />
                 <div className={classNames(styles.outsideClick, {
-                    [styles.outsideClickActive]: authenticationFormPopup.isPopup || accountInfoPopup || paymentsPopup || withdrawPopup.visible
+                    // eslint-disable-next-line max-len
+                    [styles.outsideClickActive]: authenticationFormPopup.isPopup || accountInfoPopup || paymentsPopup || transactionsPopup || withdrawPopup.visible
                 })} />
                 <Footer events={events} />
             </div>

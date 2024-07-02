@@ -14,8 +14,7 @@ import isArray from '@tinkoff/utils/is/array';
 
 import required from '../Form/validators/required';
 
-// import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
-import setTransactionsPopup from '../../../actions/setTransactionPopup';
+import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveTransaction from '../../../services/client/saveTransaction';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
@@ -34,8 +33,7 @@ const mapStateToProps = ({ application, data }) => {
 const mapDispatchToProps = (dispatch) => ({
     saveMoneyOutput: payload => dispatch(saveMoneyOutput(payload)),
     saveTransaction: payload => dispatch(saveTransaction(payload)),
-    // setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
-    setTransactionsPopup: payload => dispatch(setTransactionsPopup(payload)),
+    setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
     setWithdrawSuccessPopup: payload => dispatch(setWithdrawSuccessPopup(payload))
 });
 
@@ -43,8 +41,7 @@ class TransactionInfoPopup extends Component {
     static propTypes = {
         langMap: PropTypes.object.isRequired,
         transactions: PropTypes.array.isRequired,
-        // setAccountInfoPopup: PropTypes.func.isRequired,
-        setTransactionsPopup: PropTypes.func.isRequired,
+        setAccountInfoPopup: PropTypes.func.isRequired,
         user: PropTypes.object,
         saveTransaction: PropTypes.func.isRequired,
         saveMoneyOutput: PropTypes.func.isRequired,
@@ -173,8 +170,7 @@ class TransactionInfoPopup extends Component {
 
     closePopup = () => {
         this.props.setWithdrawSuccessPopup({ visible: false, amount: this.state.amount.value });
-        // this.props.setAccountInfoPopup();
-        this.props.setTransactionsPopup();
+        this.props.setAccountInfoPopup();
     };
 
     getDate = currentDate => {
@@ -183,81 +179,61 @@ class TransactionInfoPopup extends Component {
     };
 
     render () {
-        const { langMap, isVisible, transactions } = this.props;
+        const { langMap, transactions } = this.props;
         const { error } = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
 
-        return <div onClick={this.handleOutsideClick}
-            className={classNames(styles.root, {
-                [styles.isVisible]: isVisible
-            })}>
-            <div className={styles.cover} />
-            <div className={styles.popupWrap}>
-                <div className={styles.popup}>
-                    <div className={styles.popupContent}>
-                        <div className={classNames(styles.content)}>
-                            <button className={classNames(styles.closeButton)} onClick={this.closePopup}>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    {/* eslint-disable-next-line max-len */}
-                                    <path d="M12 1.05L10.95 0L6 4.95L1.05 0L0 1.05L4.95 6L0 10.95L1.05 12L6 7.05L10.95 12L12 10.95L7.05 6L12 1.05Z" fill="#F8F8F8" />
-                                </svg>
-                            </button>
-                            <div className={styles.transactionPopupContainer}>
-                                <div className={styles.navbar}>
-                                    <div className={styles.itemNum}>#</div>
-                                    <div className={styles.itemSum}>{text.summ}</div>
-                                    <div className={styles.itemStatus}>{text.status}</div>
-                                    <div className={styles.itemDate}>{text.date}</div>
-                                </div>
-                                <div className={styles.transactionsContainer}>
-                                    {transactions
-                                        .sort((prev, next) => next.createdAt - prev.createdAt)
-                                        .map((item, i) => <div key={i} className={styles.transactionItem}>
-                                            <div className={styles.itemNum}>{i + 1}</div>
-                                            <div className={styles.itemSum}>$ {item.value}</div>
-                                            <div className={styles.itemStatus}>
-                                                {item.content}
-                                            </div>
-                                            <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
-                                        </div>)}
-                                </div>
-                                <div className={styles.footer}>
-                                    <div className={styles.funds}>{text.moneyWithdrawalTitle}</div>
-                                    <div className={styles.rightContainer}>
-                                        <div className={styles.summ}>{text.summ}, $</div>
-                                        <form className={styles.form} onSubmit={this.handleSubmit} >
-                                            <div className={styles.amountContainerField}>
-                                                <FormInput
-                                                    texts={{ amount: text.inputPlaceholder }}
-                                                    name='amount'
-                                                    onFocus={this.onFocus}
-                                                    onBlur={this.onBlur}
-                                                    handleChange={this.handleChange}
-                                                    value={this.state.amount.value}
-                                                    focus={this.state.amount.value}
-                                                    type='number'
-                                                />
-                                            </div>
-                                            <button type='submit' className={classNames(styles.button, {
-                                                [styles.buttonUnactive]: !this.state['amount'].isValid || error
-                                            })}>
-                                                {text.moneyWithdrawal}
-                                                <div className={classNames(styles.failedPopup, {
-                                                    [styles.isFailedPopup]: !this.state['amount'].isValid || error
-                                                })}>
-                                                    <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" />
-                                                    <div className={styles.title}>
-                                                        {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
-                                                        {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]}
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </form>
-                                    </div>
+        return <div className={styles.transactionPopupContainer}>
+            <div className={styles.navbar}>
+                <div className={styles.itemNum}>#</div>
+                <div className={styles.itemSum}>{text.summ}</div>
+                <div className={styles.itemStatus}>{text.status}</div>
+                <div className={styles.itemDate}>{text.date}</div>
+            </div>
+            <div className={styles.transactionsContainer}>
+                {transactions
+                    .sort((prev, next) => next.createdAt - prev.createdAt)
+                    .map((item, i) => <div key={i} className={styles.transactionItem}>
+                        <div className={styles.itemNum}>{i + 1}</div>
+                        <div className={styles.itemSum}>$ {item.value}</div>
+                        <div className={styles.itemStatus}>
+                            {item.content}
+                        </div>
+                        <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
+                    </div>)}
+            </div>
+            <div className={styles.footer}>
+                <div className={styles.funds}>{text.moneyWithdrawalTitle}</div>
+                <div className={styles.rightContainer}>
+                    <div className={styles.summ}>{text.summ}, $</div>
+                    <form className={styles.form} onSubmit={this.handleSubmit} >
+                        <div className={styles.amountContainerField}>
+                            <FormInput
+                                texts={{ amount: text.inputPlaceholder }}
+                                name='amount'
+                                onFocus={this.onFocus}
+                                onBlur={this.onBlur}
+                                handleChange={this.handleChange}
+                                value={this.state.amount.value}
+                                focus={this.state.amount.value}
+                                type='number'
+                            />
+                        </div>
+                        <button type='submit' className={classNames(styles.button, {
+                            [styles.buttonUnactive]: !this.state['amount'].isValid || error
+                        })}>
+                            {text.moneyWithdrawal}
+                            <div className={classNames(styles.failedPopup, {
+                                [styles.isFailedPopup]: !this.state['amount'].isValid || error
+                            })}>
+                                <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" />
+                                <div className={styles.title}>
+                                    {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
+                                    {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]}
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>;

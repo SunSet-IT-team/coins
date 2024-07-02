@@ -99,7 +99,7 @@ class Header extends Component {
                 <img className={styles.logo} src="/src/apps/client/ui/components/Header/images/mainLogo.png" alt="logo" />
             </a>
             <div className={styles.timeLangWrapper}>
-                {/* <div className={styles.langBlock}>
+            {/* <div className={styles.langBlock}>
                     <a onClick={(e) => {
                         e.preventDefault();
                         this.setLang('ru');

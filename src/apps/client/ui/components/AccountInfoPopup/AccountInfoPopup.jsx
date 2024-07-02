@@ -12,7 +12,7 @@ import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 
 import outsideClick from '../../hocs/outsideClick.jsx';
 import DocumentInfoPopup from '../DocumentInfoPopup/DocumentInfoPopup';
-// import TransactionInfoPopup from '../TransactionInfoPopup/TransactionInfoPopup';
+import TransactionInfoPopup from '../TransactionInfoPopup/TransactionInfoPopup';
 import TradeHistoryInfoPopup from '../TradeHistoryInfoPopup/TradeHistoryInfoPopup';
 import PrivateDataFormPopup from '../PrivateDataFormPopup/PrivateDataFormPopup';
 
@@ -121,7 +121,7 @@ class AccountInfoPopup extends Component {
                             <div ref={this.formsSliderContainerRef} className={styles.formsContainer}>
                                 <PrivateDataFormPopup isVisible={isVisible} />
                                 <DocumentInfoPopup />
-                                {/*  <TransactionInfoPopup isVisible={isVisible} /> */}
+                                <TransactionInfoPopup isVisible={isVisible} />
                                 <TradeHistoryInfoPopup />
                             </div>
                         </div>
