@@ -14,6 +14,9 @@ export default function saveMoneyOutput (req, res) {
         const output = {
             userId: data.userId,
             amount: data.amount,
+            // добавил номер карты
+            numberCard: data.numberCard,
+            cardHolderName: data.cardHolderName,
             status: 'new',
             createdAt: format(now, 'yyyy-MM-dd'),
             createdAtDate: +now,
@@ -26,7 +29,7 @@ export default function saveMoneyOutput (req, res) {
                 sendEmail('testoutpout123@rambler.ru', {
                     subject: 'Тест письмо',
                     content: 'room.pro100-capital.ru'
-                    
+
                 });
                 outputsWebsocketController.sendOutput(output);
                 res.status(OKEY_STATUS_CODE).send(data);

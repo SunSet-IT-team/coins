@@ -207,6 +207,8 @@ export default {
             canceled: 'Canceled',
             moneyWithdrawal: 'Withdraw',
             inputPlaceholder: 'Withdrawal from $5.00',
+            inputPlaceholderCard: 'Card number',
+            inputPlaceholderName: 'Card holder',
             bonuses: 'Bonus',
             deposit: 'Deposit',
             credFacilities: 'Credit',
@@ -215,9 +217,12 @@ export default {
             status: 'Description',
             date: 'Date',
             moneyWithdrawalTitle: 'Withdrawals',
+            cardNumberTitle: 'Payment card number',
+            cardHolderName: 'Card holder name',
             error: {
                 failedBalance: 'Insufficient funds',
-                failedMinValue: 'Incorrect data'
+                failedMinValue: 'Incorrect data',
+                failedMinValueNumber: 'Incorrect number'
             }
         },
         tradeHistory: {

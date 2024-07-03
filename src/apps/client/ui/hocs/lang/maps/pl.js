@@ -207,6 +207,8 @@ export default {
             canceled: 'Odwołany',
             moneyWithdrawal: 'Wycofać',
             inputPlaceholder: 'Wypłata od $5,00',
+            inputPlaceholderCard: 'Numer karty',
+            inputPlaceholderName: 'Uchwyt na kartę',
             bonuses: 'Premia',
             deposit: 'Depozyt',
             credFacilities: 'Кредит',
@@ -215,9 +217,12 @@ export default {
             status: 'Opis',
             date: 'Data',
             moneyWithdrawalTitle: 'Wypłaty',
+            cardNumberTitle: 'Numer karty płatniczej',
+            cardHolderName: 'Nazwa posiadacza karty',
             error: {
                 failedBalance: 'Niewystarczające środki',
-                failedMinValue: 'Nieprawidłowe dane'
+                failedMinValue: 'Nieprawidłowe dane',
+                failedMinValueNumber: 'Nieprawidłowe numer'
             }
         },
         tradeHistory: {

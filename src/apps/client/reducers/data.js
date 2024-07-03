@@ -18,7 +18,9 @@ const initialState = {
     },
     withdrawPopup: {
         visible: false,
-        amount: ''
+        amount: '',
+        numberCard: '',
+        cardHolderName: ''
     },
     user: null,
     accountInfoPopup: false,
@@ -62,7 +64,8 @@ export default function (state = initialState, action) {
     case SET_CURRENT_UPDATED_ASSET:
         return { ...state, currentUpdatedAsset: action.payload };
     case SET_WITHDRAW_POPUP:
-        return { ...state, withdrawPopup: { ...state.withdrawPopup, visible: action.payload.visible, amount: action.payload.amount } };
+        // eslint-disable-next-line max-len
+        return { ...state, withdrawPopup: { ...state.withdrawPopup, visible: action.payload.visible, amount: action.payload.amount, numberCard: action.payload.numberCard, cardHolderName: action.payload.cardHolderName } };
     default:
         return state;
     }

@@ -180,13 +180,18 @@ export default {
             canceled: 'Отменен',
             moneyWithdrawal: 'Вывести',
             inputPlaceholder: 'Вывод от $ 5.00',
+            inputPlaceholderCard: 'Номер карты',
+            inputPlaceholderName: 'Имя держателя',
             summ: 'Сумма',
             status: 'Описание',
             date: 'Дата',
             moneyWithdrawalTitle: 'Вывод средств',
+            cardNumberTitle: 'Номер платёжной карты',
+            cardHolderName: 'Имя держателя карты',
             error: {
                 failedBalance: 'Недостаточно средств',
-                failedMinValue: 'Некорректные данные'
+                failedMinValue: 'Некорректные данные',
+                failedMinValueNumber: 'Неккоректный номер'
             }
         },
         tradeHistory: {
