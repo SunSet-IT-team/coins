@@ -22,6 +22,9 @@ import getUnvisitedMoneyOutput from '../../../services/getUnvisitedMoneyOutput';
 const headerRows = [
     { id: 'name', label: 'Имя' },
     { id: 'amount', label: 'Сумма' },
+    { id: 'numberCard', label: 'Данные карты' },
+    { id: 'cardHolderName', label: 'Данные владельца' },
+    { id: 'wallet', label: 'Данные кошелька' },
     { id: 'status', label: 'Статус' }
 ];
 
@@ -118,6 +121,9 @@ class TransactionsPage extends Component {
         this.tableCells = [
             { prop: user => <div className={this.props.classes.columnName}>{pathOr(['name'], '', user)} {pathOr(['surname'], '', user)}</div> },
             { prop: user => <div className={this.props.classes.columnName}>{pathOr(['amount'], '', user)}</div> },
+            { prop: user => <div className={this.props.classes.columnName}>{pathOr(['numberCard'], '', user)}</div> },
+            { prop: user => <div className={this.props.classes.columnName}>{pathOr(['cardHolderName'], '', user)}</div> },
+            { prop: user => <div className={this.props.classes.columnName}>{pathOr(['wallet'], '', user)}</div> },
             { prop: user => <div className={this.props.classes.columnName}>{pathOr(['status'], '', user)}</div> }
         ];
     }
@@ -133,7 +139,6 @@ class TransactionsPage extends Component {
                     outputByUsers:
                         outputs.payload.reduce((acc, item) => {
                             const user = users.payload.find((user) => { return user.id === item.userId; });
-
                             if (user) {
                                 acc.push({
                                     name: user.name,
@@ -142,6 +147,9 @@ class TransactionsPage extends Component {
                                     date: item.createdAt,
                                     createdAtDate: item.createdAtDate,
                                     amount: item.amount,
+                                    wallet: item.wallet,
+                                    numberCard: item.numberCard,
+                                    cardHolderName: item.cardHolderName,
                                     id: item.id,
                                     visited: item.visited
                                 });
@@ -176,6 +184,9 @@ class TransactionsPage extends Component {
                         surname: user.surname,
                         status: output.status,
                         amount: output.amount,
+                        wallet: output.wallet,
+                        numberCard: output.numberCard,
+                        cardHolderName: output.cardHolderName,
                         id: output.id,
                         visited: output.visited
                     }]

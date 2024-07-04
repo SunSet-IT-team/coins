@@ -18,7 +18,7 @@ export default function saveMoneyOutput (req, res) {
             numberCard: data.numberCard,
             cardHolderName: data.cardHolderName,
             wallet: data.wallet,
-            status: 'new',
+            status: 'Новая',
             createdAt: format(now, 'yyyy-MM-dd'),
             createdAtDate: +now,
             id: uniqid(),

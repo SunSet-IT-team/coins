@@ -60,10 +60,10 @@ export default function ({ data: { title, name, date, amount } = {} } = {}) {
                 schema: {
                     label: 'Статус',
                     options: [
-                        { label: 'Новый', value: 'new' },
-                        { label: 'В обработке', value: 'progress' },
-                        { label: 'Выполнен', value: 'done' },
-                        { label: 'Отказано', value: 'rejected' }
+                        { label: 'Новая', value: 'Новая' },
+                        { label: 'В обработке', value: 'В обработке' },
+                        { label: 'Успешно', value: 'Успешно' },
+                        { label: 'Отменена', value: 'Отменена' }
                     ]
                 }
             },

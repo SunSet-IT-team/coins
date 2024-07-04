@@ -16,9 +16,13 @@ import Form from '../Form/Form';
 import getSchema from './MoneyOutputFormSchema';
 import editMoneyOutput from '../../../services/editMoneyOutput';
 import uniqid from 'uniqid';
+/* import saveTransaction from '../../../services/saveTransaction';
+import editTransaction from '../../../services/editTransaction'; */
 
 const mapDispatchToProps = (dispatch) => ({
     editMoneyOutput: payload => dispatch(editMoneyOutput(payload))
+    /*  saveTransaction: payload => dispatch(saveTransaction(payload)),
+    editTransaction: payload => dispatch(editTransaction(payload)) */
 });
 
 const materialStyles = theme => ({
