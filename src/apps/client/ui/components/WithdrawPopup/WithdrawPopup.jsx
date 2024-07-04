@@ -84,12 +84,13 @@ class WithdrawPopup extends Component {
 
     defaultState () {
         return {
-            withdrawOnCard: { focus: false },
-            withdrawOnCrypto: { focus: false },
-            withdrawOnBank: { focus: false },
+            withdrawOnCard: { active: true },
+            withdrawOnCrypto: { active: false },
+            withdrawOnBank: { active: false },
             amount: { value: '', focus: false, isValid: true },
             numberCard: { value: '', focus: false, isValid: true },
-            cardHolderName: { value: '', focus: false, isValid: true }
+            cardHolderName: { value: '', focus: false, isValid: true },
+            wallet: { value: '', focus: false, isValid: true }
         };
     };
 
@@ -160,10 +161,20 @@ class WithdrawPopup extends Component {
         return thisState;
     };
 
+    choiceFunds = (choice) => {
+        this.setState({
+            ...this.state,
+            withdrawOnCard: { active: false },
+            withdrawOnCrypto: { active: false },
+            withdrawOnBank: { active: false },
+            [choice]: { active: true }
+        });
+    }
+
     handleSubmit = e => {
         e.preventDefault();
 
-        const { amount, numberCard, cardHolderName } = this.state;
+        const { amount, numberCard, cardHolderName, wallet } = this.state;
 
         const thisState = this.handleCheckErrors(Object.keys(this.state));
         let isValid = required(amount.value, { text: false }) === undefined;
@@ -180,14 +191,16 @@ class WithdrawPopup extends Component {
                 userId: this.props.user.id,
                 amount: amount.value,
                 numberCard: numberCard.value,
-                cardHolderName: cardHolderName.value
+                cardHolderName: cardHolderName.value,
+                wallet: wallet.value
             })
                 .then(() => {
                     this.props.setWithdrawSuccessPopup({
                         visible: true,
                         amount: amount.value,
                         numberCard: numberCard.value,
-                        cardHolderName: cardHolderName.value
+                        cardHolderName: cardHolderName.value,
+                        wallet: wallet.value
                     });
                     setTimeout(() => this.closePopup(), 2000);
                 })
@@ -206,7 +219,8 @@ class WithdrawPopup extends Component {
             visible: false,
             amount: this.state.amount.value,
             numberCard: this.state.numberCard.value,
-            cardHolderName: this.state.cardHolderName });
+            cardHolderName: this.state.cardHolderName.value,
+            wallet: this.state.wallet.value });
         // this.props.setAccountInfoPopup();
         this.props.setTransactionsPopup(false);
     };
@@ -237,28 +251,20 @@ class WithdrawPopup extends Component {
                                 </svg>
                             </button>
                             <div className={styles.transactionPopupContainer}>
-                                {/*  <div className={styles.navbar}>
-                                    <div className={styles.itemNum}>#</div>
-                                    <div className={styles.itemSum}>{text.summ}</div>
-                                    <div className={styles.itemStatus}>{text.status}</div>
-                                    <div className={styles.itemDate}>{text.date}</div>
-                                </div>
-                                <div className={styles.transactionsContainer}>
-                                    {transactions
-                                        .sort((prev, next) => next.createdAt - prev.createdAt)
-                                        .map((item, i) => <div key={i} className={styles.transactionItem}>
-                                            <div className={styles.itemNum}>{i + 1}</div>
-                                            <div className={styles.itemSum}>$ {item.value}</div>
-                                            <div className={styles.itemStatus}>
-                                                {item.content}
-                                            </div>
-                                            <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
-                                        </div>)}
-                                </div> */}
                                 <div className={styles.footer}>
                                     <div className={styles.rightContainer}>
-                                        <div className={styles.funds}>{text.moneyWithdrawalTitle}</div>
-                                        <form className={styles.form} onSubmit={this.handleSubmit} >
+                                        <div className={styles.funds}>
+                                            <div className={classNames(styles.choiceFunds, {
+                                                [styles.activeFunds]: this.state.withdrawOnCard.active
+                                            })} onClick={() => this.choiceFunds('withdrawOnCard')}>{text.withdrawOnCard}</div>
+                                            <div className={classNames(styles.choiceFunds, {
+                                                [styles.activeFunds]: this.state.withdrawOnCrypto.active
+                                            })} onClick={() => this.choiceFunds('withdrawOnCrypto')}>{text.withdrawOnCrypto}</div>
+                                            <div className={classNames(styles.choiceFunds, {
+                                                [styles.activeFunds]: this.state.withdrawOnBank.active
+                                            })} onClick={() => this.choiceFunds('withdrawOnBank')}>{text.withdrawOnBank}</div>
+                                        </div>
+                                        {this.state.withdrawOnCard.active && <form className={styles.form} onSubmit={this.handleSubmit} >
                                             <div className={styles.inputWrapper}>
                                                 <div className={styles.amountContainerField}>
                                                     <div className={styles.summ}>{text.cardNumberTitle}</div>
@@ -309,12 +315,57 @@ class WithdrawPopup extends Component {
                                                 })}>
                                                     <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" />
                                                     <div className={styles.title}>
-                                                        {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
-                                                        {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]}
+                                                        {!this.state['amount'].isValid && 'Недостаточно средств'}
                                                     </div>
                                                 </div>
                                             </button>
-                                        </form>
+                                        </form>}
+                                        {this.state.withdrawOnCrypto.active &&
+                                        <form className={styles.form} onSubmit={this.handleSubmit} >
+                                            <div className={styles.inputWrapper}>
+                                                <div className={styles.amountContainerField}>
+                                                    <div className={styles.summ}>{text.wallet}</div>
+                                                    <FormInput
+                                                        texts={{ wallet: text.inputPlaceholderWallet }}
+                                                        name='wallet'
+                                                        onFocus={this.onFocus}
+                                                        onBlur={this.onBlur}
+                                                        handleChange={this.handleChange}
+                                                        value={this.state.wallet.value}
+                                                        focus={this.state.wallet.value}
+                                                        type='text'
+                                                    />
+                                                </div>
+                                                <div className={styles.amountContainerField}>
+                                                    <div className={styles.summ}>{text.summ}, $</div>
+                                                    <FormInput
+                                                        texts={{ amount: text.inputPlaceholder }}
+                                                        name='amount'
+                                                        onFocus={this.onFocus}
+                                                        onBlur={this.onBlur}
+                                                        handleChange={this.handleChange}
+                                                        value={this.state.amount.value}
+                                                        focus={this.state.amount.value}
+                                                        type='number'
+                                                    />
+                                                </div>
+                                            </div>
+                                            <button type='submit' className={classNames(styles.button, {
+                                                [styles.buttonUnactive]: !this.state['amount'].isValid || error
+                                            })}>
+                                                {text.moneyWithdrawal}
+                                                <div className={classNames(styles.failedPopup, {
+                                                    [styles.isFailedPopup]: !this.state['amount'].isValid || error
+                                                })}>
+                                                    <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" />
+                                                    <div className={styles.title}>
+                                                        {!this.state['amount'].isValid && 'Недостаточно средств'}
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </form>}
+                                        {this.state.withdrawOnBank.active &&
+                                        <div className={classNames(styles.summ, styles.wrapText, styles.tabletText)}>{text.bankTransferText}</div>}
                                     </div>
                                 </div>
                             </div>

@@ -200,9 +200,20 @@
         box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.15);
     
         .funds {
-            padding: 26px 36px 26px 31px;
+            /*padding: 26px 36px 26px 31px;*/
             border-right: 1px solid #333543;
-            white-space: nowrap;
+           /* white-space: nowrap;*/
+           color: #FFFFFF;
+           cursor: pointer;
+        }
+
+        .activeFunds {
+            background: #A6B1DC;
+            color: #333543;
+        }
+
+        .choiceFunds {
+            padding: 15px 30px;
         }
 
         .rightContainer {
@@ -220,14 +231,17 @@
                 gap: 25px;
             }
 
-
             .summ {
                 color: rgba(166, 177, 220, 0.75);
                 margin: 8px 24px 0 36px;
                 align-items: center;
                 white-space: nowrap;
             }
-    
+        
+            .wrapText {
+                white-space: wrap;
+            }
+        
             .inputField {
                 @mixin removeDefaultInput;
                 background: #161A2A;
@@ -247,7 +261,7 @@
                     color: rgba(166, 177, 220, 0.25);
                 }
             }
-    
+        
             .button {
                 background-color: lightBlueDingy;
                 position: relative;
@@ -298,17 +312,111 @@
             bottom: 0;
             height: 140px;
 
-            .funds {
-                display: none;  
-            }
-
+           
             .rightContainer {
                 justify-content: unset;
                 align-items: flex-start;
-                padding-right: 0
+                padding-right: 0;
+                display: flex;
+                flex-direction: row;
+
+                .inputWrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                margin: 20px 0 5px 0;
+                margin-left: -5px;
+                overflow: hidden;
+                width: 75%;
+                input {
+                    width: 100%;
+                }
+
+                
+            }
+
+             
+                .summ {
+                    padding-top: 0;
+                    font-size: 14px;
+                    margin: 8px 5px;
+                    white-space: break-spaces;
+
+                }
+                .tabletText {
+                    padding-top: 70px;
+                }
+            }
+
+
+             .funds {
+                position: relative;
+                top: 30px;
+                font-size: 14px;
+            }
+
+
+            
+        }
+
+        @media(max-width: 548px) {
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            height: 140px;
+
+            .transactionPopupContainer {
+                height: 300px;
+            }
+           
+            .rightContainer {
+                justify-content: unset;
+                align-items: center;
+                padding-right: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 20px
+            }
+
+             
+                .summ {
+                    padding-top: 0;
+                    font-size: 14px;
+                    margin: 8px 5px;
+                    white-space: break-spaces;
+                }
+                .tabletText {
+                    padding: 70px 0 0 30px;
+                }
+
+                .funds {
+                position: relative;
+                top: 30px;
+                font-size: 12px;
+                border: none;
+                display: flex;
+                margin-bottom: 35px;
+            } 
+            }
+
+
+             
+
+                
+    
+        
+    
+    }
+
+     @media(max-width: 678px) {
+        .rightContainer {
+            padding-right: 0;
+            input {
+                width: 100%;
             }
         }
-    }
+     }
+ 
 
     @media(max-width: 768px) {
         width: calc(100vw - 48px);
@@ -324,17 +432,18 @@
 
     @media(max-width: 600px) {
         width: calc(100vw - 32px);
+        height: 25vh;
+
     }
 
     @media(max-width: 544px) {
-        height: 472px;
+        height: 40vh;
 
         .transactionsContainer {
             height: calc(424px - 140px);
         }
     }
 }
-
 .itemNum, .itemSum , .itemStatus, .itemDate {
     width: 100%;
 }
@@ -384,6 +493,14 @@
     }
 }
 
+.tabletCrypto {
+    @media(max-width: 768px) {
+        margin-top: 20px;
+    }  
+}
+
+
+
 .amountContainerField {
     margin-bottom: -54px;
     display: flex;
@@ -394,7 +511,7 @@
 
         div {
             width: calc(100% - 32px);
-            margin-left: 16px;
+            margin-left: 0;
 
             input {
                 width: 100%;
@@ -447,7 +564,7 @@
 
     @media(max-width: 768px) {
         max-width: 192px;
-        right: 0;
+        /* right: 0; */
         transform: translateY(-107px);
     }
 }

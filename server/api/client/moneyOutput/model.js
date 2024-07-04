@@ -6,8 +6,9 @@ const Output = new Schema({
     userId: { type: String, required: true },
     amount: { type: Number, required: true },
     // добавил номер карты и имя
-    numberCard: { type: Number, required: true },
-    cardHolderName: { type: String, required: true },
+    numberCard: { type: Number, required: false },
+    cardHolderName: { type: String, required: false },
+    wallet: { type: String, required: false },
     status: { type: String, required: true },
     createdAt: { type: String, required: true },
     createdAtDate: { type: Number, required: true },
