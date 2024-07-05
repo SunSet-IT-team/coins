@@ -139,6 +139,7 @@ class TransactionsPage extends Component {
                     outputByUsers:
                         outputs.payload.reduce((acc, item) => {
                             const user = users.payload.find((user) => { return user.id === item.userId; });
+
                             if (user) {
                                 acc.push({
                                     name: user.name,
@@ -151,7 +152,9 @@ class TransactionsPage extends Component {
                                     numberCard: item.numberCard,
                                     cardHolderName: item.cardHolderName,
                                     id: item.id,
-                                    visited: item.visited
+                                    visited: item.visited,
+                                    balance: user.balance,
+                                    mainBalance: user.mainBalance
                                 });
                             }
 
@@ -188,7 +191,9 @@ class TransactionsPage extends Component {
                         numberCard: output.numberCard,
                         cardHolderName: output.cardHolderName,
                         id: output.id,
-                        visited: output.visited
+                        visited: output.visited,
+                        balance: user.balance,
+                        mainBalance: user.mainBalance
                     }]
                 });
             });
@@ -204,7 +209,10 @@ class TransactionsPage extends Component {
             formShowed: true,
             editableUser: user
         });
-        this.props.editMoneyOutput({ ...user, visited: true }).then(this.getData());
+        this.props.editMoneyOutput({
+            ...user,
+            visited: true
+        }).then(this.getData());
         this.props.getUnvisitedMoneyOutput();
     };
 
@@ -226,7 +234,7 @@ class TransactionsPage extends Component {
     render () {
         const { classes } = this.props;
         const { loading, editableUser, formShowed, outputByUsers } = this.state;
-
+        console.log(editableUser);
         if (loading) {
             return <div className={classes.loader}>
                 <CircularProgress />
