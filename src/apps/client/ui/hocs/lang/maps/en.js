@@ -322,6 +322,13 @@ export default {
         bitcoin: {
             title: 'Bitcoin'
         },
+        usdt: {
+            title: 'USDT TRC-20'
+        },
+        swift: {
+            title: 'SWIFT',
+            text: 'To top up funds by Bank Transfer, please contact the support chat.'
+        },
         visa: {
             title: 'USDT',
             subtitle: 'Visa/Mastercard'
@@ -329,6 +336,7 @@ export default {
         replenishment: 'Choose a deposit method',
         info: {
             bitcoinTopTitle: 'Our bitcoin address',
+            usdtTopTitle: 'Our USDT TRC-20 address',
             adress: '1BQ9qza7fn9snSCyJQB3ZcN46biBtkt4ee',
             adressBottomTitle: 'After the transaction, contact our manager',
             copied: 'Copied',

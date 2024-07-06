@@ -287,8 +287,15 @@ export default {
         qiwi: {
             title: 'QIWI payment'
         },
+        usdt: {
+            title: 'USDT TRC-20'
+        },
         bitcoin: {
             title: 'Bitcoin'
+        },
+        swift: {
+            title: 'SWIFT',
+            text: 'Чтобы пополнить счет с помощью банковского перевода, обратитесь в чат поддержки.'
         },
         visa: {
             title: 'Payment gateway',
@@ -297,6 +304,7 @@ export default {
         replenishment: 'Выберите способ пополнения',
         info: {
             bitcoinTopTitle: 'Наш биткоин адрес',
+            usdtTopTitle: 'Наш USDT TRC-20 адрес',
             adress: '1BQ9qza7fn9snSCyJQB3ZcN46biBtkt4ee',
             adressBottomTitle: 'После проведения транзакции свяжитесь с нашим менеджером',
             copied: 'Скопировано',

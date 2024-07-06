@@ -323,6 +323,13 @@ export default {
         bitcoin: {
             title: 'Bitcoin'
         },
+        usdt: {
+            title: 'USDT TRC-20'
+        },
+        swift: {
+            title: 'SWIFT',
+            text: 'Aby doładować środki przelewem bankowym, skontaktuj się z czatem pomocy technicznej.'
+        },
         visa: {
             title: 'USDT',
             subtitle: 'Visa/Mastercard'
@@ -330,6 +337,7 @@ export default {
         replenishment: 'Wybierz metodę wpłaty',
         info: {
             bitcoinTopTitle: 'Nasz adres bitcoin',
+            usdtTopTitle: 'Nasz adres USDT TRC-20',
             adress: '1BQ9qza7fn9snSCyJQB3ZcN46biBtkt4ee',
             adressBottomTitle: 'Po transakcji skontaktuj się z naszym menedżerem',
             copied: 'Skopiowane',

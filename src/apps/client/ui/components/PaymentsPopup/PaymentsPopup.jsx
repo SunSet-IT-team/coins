@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import NumberFormat from 'react-number-format';
+/* import NumberFormat from 'react-number-format'; */
 
 import classNames from 'classnames';
 
@@ -17,9 +17,9 @@ import outsideClick from '../../hocs/outsideClick.jsx';
 import copy from 'copy-to-clipboard';
 
 const PAYMENTS_SYSTEM = [
-    { id: 1, name: 'qiwi', icon: '/src/apps/client/ui/components/PaymentsPopup/images/qiwi.svg' },
-    { id: 2, name: 'bitcoin', icon: '/src/apps/client/ui/components/PaymentsPopup/images/bit.svg' },
-    { id: 3, name: 'visa', icon: '/src/apps/client/ui/components/PaymentsPopup/images/visa.svg' }
+    { id: 1, name: 'usdt', icon: '/src/apps/client/ui/components/PaymentsPopup/images/usdt.svg' },
+    { id: 2, name: 'bitcoin', icon: '/src/apps/client/ui/components/PaymentsPopup/images/bitcoin.svg' },
+    { id: 3, name: 'swift', icon: '/src/apps/client/ui/components/PaymentsPopup/images/SWIFT_logo.svg' }
 ];
 
 const mapStateToProps = ({ application, data }) => {
@@ -138,7 +138,7 @@ class PaymentsPopup extends Component {
 
     render () {
         const { langMap, isVisible, payments } = this.props;
-        const { activePayment, amount, focusField, fieldError } = this.state;
+        const { activePayment, focusField, fieldError } = this.state;
         const text = propOr('payments', {}, langMap);
 
         return <div onClick={this.handleOutsideClick}
@@ -184,53 +184,63 @@ class PaymentsPopup extends Component {
                                         {text.info[`${activePayment}TopTitle`]}
                                     </div>
                                     <div className={styles.adressWrapper}>
-                                        {
-                                            this.state.activePayment === 'bitcoin'
-                                                ? <div className={styles.bitcoinAdressContainer}>
+                                        { this.state.activePayment === 'bitcoin' &&
+                                                <div className={styles.bitcoinAdressContainer}>
                                                     <div className={styles.bitcoinAdress}>
                                                         {payments.bitcoin}
                                                     </div>
                                                     <div className={styles.copy} onClick={() => this.copyToClipBoard(payments.bitcoin)} />
-                                                </div>
-                                                : <form onSubmit={this.handleSubmit} className={classNames(styles.qiwiAdressContainer, {
-                                                    [styles.isInputFocus]: focusField,
-                                                    [styles.errorFieldOutline]: fieldError && activePayment === 'qiwi'
-                                                })}>
-                                                    <NumberFormat
-                                                        type='text'
-                                                        className={styles.counter}
-                                                        value={amount}
-                                                        allowNegative={false}
-                                                        decimalScale={0}
-                                                        placeholder={0}
-                                                        thousandSeparator={true}
-                                                        prefix="₽"
-                                                        onFocus={this.handleFocusBlurField}
-                                                        onBlur={this.handleFocusBlurField}
-                                                        onValueChange={values => {
-                                                            if (!isVisible) {
-                                                                return;
-                                                            }
-                                                            this.setState({
-                                                                amount: values.floatValue,
-                                                                fieldError: values.floatValue > 0 ? '' : 'Incorrect'
-                                                            });
-                                                        }}
-                                                    />
-                                                    <button type='submit' className={styles.sendButton}>
-                                                        <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            {/* eslint-disable-next-line max-len */}
-                                                            <path d="M0.00999999 18L21 9L0.00999999 0L0 7L15 9L0 11L0.00999999 18Z" fill="#A6B1DC" fillOpacity="0.25" />
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                        }
+                                                </div> }
+                                        {this.state.activePayment === 'usdt' && <div className={styles.bitcoinAdressContainer}>
+                                            <div className={styles.bitcoinAdress}>
+                                                {payments.usdt}
+                                            </div>
+                                            <div className={styles.copy} onClick={() => this.copyToClipBoard(payments.usdt)} />
+                                        </div>}
+                                        {this.state.activePayment === 'swift' && <div className={styles.bitcoinAdressContainer}>
+                                            <div className={styles.bitcoinAdress}>
+                                                {text.swift.text}
+                                            </div>
+                                        </div>}
+                                        {/* Вставить это выше в условное, если нужно qiwi */}
+                                        {/* <form onSubmit={this.handleSubmit} className={classNames(styles.qiwiAdressContainer, { */}
+                                        {/* [styles.isInputFocus]: focusField, */}
+                                        {/* [styles.errorFieldOutline]: fieldError && activePayment === 'qiwi' */}
+                                        {/* })}> */}
+                                        {/* <NumberFormat */}
+                                        {/*  type='text' */}
+                                        {/* className={styles.counter} */}
+                                        {/*  value={amount} */}
+                                        { /* allowNegative={false} */}
+                                        {/* decimalScale={0} */}
+                                        {/*  placeholder={0} */}
+                                        {/* thousandSeparator={true} */}
+                                        {/* prefix="₽" */}
+                                        {/* onFocus={this.handleFocusBlurField} */}
+                                        {/* onBlur={this.handleFocusBlurField} */}
+                                        {/* onValueChange={values => { */}
+                                        {/* if (!isVisible) { */}
+                                        {/*  return; */}
+                                        {/*  } */}
+                                        {/* this.setState({ */}
+                                        {/*  amount: values.floatValue, */}
+                                        {/* fieldError: values.floatValue > 0 ? '' : 'Incorrect' */}
+                                        {/*  }); */}
+                                        {/*   }} */}
+                                        {/* /> */}
+                                        {/* <button type='submit' className={styles.sendButton}> */}
+                                        {/* <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg"> */}
+                                        {/* eslint-disable-next-line max-len */}
+                                        {/*  <path d="M0.00999999 18L21 9L0.00999999 0L0 7L15 9L0 11L0.00999999 18Z" fill="#A6B1DC" fillOpacity="0.25" /> */}
+                                        {/* </svg> */}
+                                        {/*  </button> */}
+                                        {/*  </form> */}
                                     </div>
-                                    <div className={classNames(styles.titleBottom, {
+                                    {/* <div className={classNames(styles.titleBottom, {
                                         [styles.errorField]: fieldError && activePayment === 'qiwi'
                                     })}>
                                         {fieldError && activePayment === 'qiwi' ? text.info[`failed${fieldError}`] : text.info.adressBottomTitle}
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className={classNames(styles.dontShowCopiedText, { [styles.showCopiedText]: this.state.showCopied })}>
                                     {text.info.copied}

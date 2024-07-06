@@ -14,12 +14,13 @@ export default function changeCredentials (req, res) {
                 if (admin.password !== md5(oldCredentials.password)) {
                     return res.status(FORBIDDEN_STATUS_CODE).end();
                 }
-
+                console.log(admin);
                 changeCredentialsQuery({
                     login: newCredentials.login,
                     password: md5(newCredentials.password),
                     email: newCredentials.email,
-                    id: admin.id
+                    id: admin.id,
+                    qr: admin.qr || {}
                 })
                     .then(() => {
                         res.status(OKEY_STATUS_CODE).end();

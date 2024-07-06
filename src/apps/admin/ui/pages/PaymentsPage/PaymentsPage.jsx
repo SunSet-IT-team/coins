@@ -64,9 +64,9 @@ class PaymentsPage extends Component {
         super(props);
 
         this.state = {
-            qiwi: '',
+            usdt: '',
             bitcoin: '',
-            gateway: '',
+            swift: '',
             success: false
         };
     }
@@ -74,18 +74,18 @@ class PaymentsPage extends Component {
     componentDidMount () {
         this.props.getPayments().then(
             payments => this.setState({
-                qiwi: payments[0].qiwi,
+                qiwi: payments[0].usdt,
                 bitcoin: payments[0].bitcoin,
-                gateway: payments[0].gateway
+                gateway: payments[0].swift
             })
         );
     }
 
     handleSubmit = () => {
         const data = {
-            qiwi: this.state.qiwi,
+            usdt: this.state.usdt,
             bitcoin: this.state.bitcoin,
-            gateway: this.state.gateway
+            swift: this.state.swift
         };
 
         this.props.updatePayments(data)
@@ -101,14 +101,14 @@ class PaymentsPage extends Component {
     }
     render () {
         const { classes } = this.props;
-        const { qiwi, bitcoin, gateway, success } = this.state;
+        const { usdt, bitcoin, swift, success } = this.state;
 
         return <div className={styles.root}>
             <div className={styles.row}>
                 <label className={styles.label} >
-                    QIWI:
+                    USDT TRC20:
                 </label>
-                <input className={styles.input} type="text" value={qiwi} onChange={this.handleChange('qiwi')} />
+                <input className={styles.input} type="text" value={usdt} onChange={this.handleChange('usdt')} />
             </div>
             <div className={styles.row}>
                 <label className={styles.label} >
@@ -118,9 +118,9 @@ class PaymentsPage extends Component {
             </div>
             <div className={styles.row}>
                 <label className={styles.label} >
-                    Portmone:
+                    SWIFT:
                 </label>
-                <input className={styles.input} type="text" value={gateway} onChange={this.handleChange('gateway')} />
+                <input className={styles.input} type="text" value={swift} onChange={this.handleChange('swift')} />
             </div>
             <button className={styles.button} onClick={this.handleSubmit}>Сохранить</button>
             {success
