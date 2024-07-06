@@ -180,6 +180,7 @@ class TransactionInfoPopup extends Component {
 
     render () {
         const { langMap, transactions } = this.props;
+
         // const { error } = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
 

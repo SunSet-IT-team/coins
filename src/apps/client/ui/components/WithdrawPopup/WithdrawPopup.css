@@ -437,7 +437,7 @@
     }
 
     @media(max-width: 544px) {
-        height: 40vh;
+        height: 45vh;
 
         .transactionsContainer {
             height: calc(424px - 140px);

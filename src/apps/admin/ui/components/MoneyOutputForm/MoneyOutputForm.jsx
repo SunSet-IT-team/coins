@@ -144,7 +144,6 @@ class MoneyOutputForm extends Component {
         const { editMoneyOutput, onDone, saveTransaction } = this.props;
 
         saveTransaction(userPayload).then(() => {
-            console.log('данные отправлены');
             onDone();
         }).catch(() => {
             this.setState({
