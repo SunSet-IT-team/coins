@@ -30,6 +30,10 @@ export default function saveTransaction (req, res) {
                         info.balance = checkBalance(balance + transaction.value);
                         info.mainBalance = checkBalance(mainBalance + transaction.value);
                     }
+                    if (transaction.type === 'deduction') {
+                        info.balance = checkBalance(balance - transaction.value);
+                        info.mainBalance = checkBalance(mainBalance - transaction.value);
+                    }
                     if (transaction.type === 'bonuses') {
                         info.bonuses = checkBalance(bonuses + transaction.value);
                     }

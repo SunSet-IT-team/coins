@@ -205,7 +205,7 @@ class UserForm extends Component {
     handleSubmit = values => {
         const userPayload = this.getUserPayload(values);
         const { editUser, onDone } = this.props;
-
+        console.log(userPayload);
         editUser(userPayload)
             .then(() => {
                 onDone();

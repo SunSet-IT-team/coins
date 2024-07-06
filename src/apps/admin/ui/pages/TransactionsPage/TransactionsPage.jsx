@@ -116,7 +116,8 @@ class TransactionsPage extends Component {
         this.state = {
             loading: true,
             formShowed: false,
-            editableUser: null
+            editableUser: null,
+            allInfoUser: []
         };
         this.tableCells = [
             { prop: user => <div className={this.props.classes.columnName}>{pathOr(['name'], '', user)} {pathOr(['surname'], '', user)}</div> },
@@ -136,6 +137,17 @@ class TransactionsPage extends Component {
             .then(([outputs, users]) => {
                 this.setState({
                     loading: false,
+                    allInfoUser:
+                    outputs.payload.reduce((acc, item) => {
+                        const user = users.payload.find((user) => { return user.id === item.userId; });
+                        if (user) {
+                            acc.push({
+                                ...user
+                            });
+                        }
+
+                        return acc;
+                    }, []),
                     outputByUsers:
                         outputs.payload.reduce((acc, item) => {
                             const user = users.payload.find((user) => { return user.id === item.userId; });
@@ -154,7 +166,8 @@ class TransactionsPage extends Component {
                                     id: item.id,
                                     visited: item.visited,
                                     balance: user.balance,
-                                    mainBalance: user.mainBalance
+                                    mainBalance: user.mainBalance,
+                                    userId: user.id
                                 });
                             }
 
@@ -193,7 +206,8 @@ class TransactionsPage extends Component {
                         id: output.id,
                         visited: output.visited,
                         balance: user.balance,
-                        mainBalance: user.mainBalance
+                        mainBalance: user.mainBalance,
+                        userId: user.id
                     }]
                 });
             });
@@ -233,8 +247,8 @@ class TransactionsPage extends Component {
 
     render () {
         const { classes } = this.props;
-        const { loading, editableUser, formShowed, outputByUsers } = this.state;
-        console.log(editableUser);
+        const { loading, editableUser, formShowed, outputByUsers, allInfoUser } = this.state;
+
         if (loading) {
             return <div className={classes.loader}>
                 <CircularProgress />
@@ -255,7 +269,7 @@ class TransactionsPage extends Component {
             />
             <Modal open={formShowed} onClose={this.handleCloseUserForm} className={classes.modal} disableEnforceFocus>
                 <Paper className={classes.modalContent}>
-                    <MoneyOutputForm user={editableUser} onDone={this.handleFormDone} />
+                    <MoneyOutputForm user={editableUser} allInfoUser={allInfoUser} onDone={this.handleFormDone} />
                 </Paper>
             </Modal>
         </div>;

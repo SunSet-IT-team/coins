@@ -10,6 +10,8 @@ const VALUES = [
     'accountNumber',
     'email',
     'phone',
+    'balance',
+    'mainBalance',
     'accountStatus',
     'country',
     'city',
