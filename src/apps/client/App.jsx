@@ -175,7 +175,6 @@ class App extends Component {
                 <AuthenticationPopup isVisible={authenticationFormPopup.isPopup} activeIndex={authenticationFormPopup.activeIndex} />
                 <AccountInfoPopup isVisible={accountInfoPopup} />
                 <WithdrawPopup isVisible={transactionsPopup} />
-
                 <PaymentsPopup isVisible={paymentsPopup} />
                 <WithdrawSuccessPopup isVisible={withdrawPopup.visible} amount={withdrawPopup.amount} />
                 <div className={classNames(styles.outsideClick, {
