@@ -7,13 +7,15 @@ import editMessage from '../../../services/client/editMessage';
 import format from 'date-fns/format';
 import isToday from 'date-fns/isToday';
 import isThisWeek from 'date-fns/isThisWeek';
+import propOr from '@tinkoff/utils/object/propOr';
 
 import messageWebsocketController from '../../../services/client/messageWebsocket';
 
 import styles from './ChatPage.css';
 
-const mapStateToProps = ({ data }) => {
+const mapStateToProps = ({ application, data }) => {
     return {
+        langMap: application.langMap,
         userId: data.user.id
     };
 };
@@ -25,6 +27,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 class ChatPage extends Component {
     propTypes = {
+        langMap: PropTypes.object.isRequired,
         getMessageHistory: PropTypes.func.isRequired,
         closeChatHandler: PropTypes.func.isRequired,
         editMessage: PropTypes.func.isRequired,
@@ -103,10 +106,13 @@ class ChatPage extends Component {
     };
 
     render () {
+        const { langMap } = this.props;
+
+        const text = propOr('chat', {}, langMap);
         const { value, messages } = this.state;
         return <div className={styles.chatContainer} >
             <div className={styles.titleContainer}>
-                <h4 className={styles.title}>Чат</h4>
+                <h4 className={styles.title}>{text.title}</h4>
             </div>
             <div ref={this.messagesContainer} className={styles.messagesContainer}>
                 <div className={styles.invisible} />
@@ -138,7 +144,7 @@ class ChatPage extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className={styles.inputWrapper}>
                         <div className={styles.input}>
-                            <input placeholder='Введите сообщение' value={value} onChange={this.handleChange} type="text" />
+                            <input placeholder={text.inputPlaceholder} value={value} onChange={this.handleChange} type="text" />
                         </div>
                         <div className={styles.button}>
                             <button type='submit'>

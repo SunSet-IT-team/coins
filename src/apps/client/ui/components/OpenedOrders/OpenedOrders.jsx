@@ -6,6 +6,8 @@ import styles from './OpenedOrders.css';
 
 import OpenedOrder from '../OpenedOrder/OpenedOrder';
 
+import propOr from '@tinkoff/utils/object/propOr';
+
 import closeOrder from '../../../services/client/closeOrder';
 import autoCloseOrder from '../../../services/client/autoCloseOrder';
 import getClosedOrders from '../../../services/client/getOrders';
@@ -19,9 +21,10 @@ import formatPrice from '../../../utils/formatPrice';
 import { getCommission, getProfit } from '../../../utils/getAssetValues';
 import { COMMISSION } from '../../../constants/constants';
 
-const mapStateToProps = ({ data }) => {
+const mapStateToProps = ({ application, data }) => {
     return {
-        closedOrders: data.closedOrders
+        closedOrders: data.closedOrders,
+        langMap: application.langMap
     };
 };
 
@@ -34,6 +37,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 class OpenedOrders extends Component {
     static propTypes = {
+        langMap: PropTypes.object.isRequired,
         closeOrder: PropTypes.func.isRequired,
         getClosedOrders: PropTypes.func.isRequired,
         checkAuthentication: PropTypes.func.isRequired,
@@ -107,6 +111,9 @@ class OpenedOrders extends Component {
     };
 
     render () {
+        const { langMap } = this.props;
+        const text = propOr('openedOrders', {}, langMap);
+
         const {
             openOrders,
             closeOrderIndex,
@@ -116,16 +123,16 @@ class OpenedOrders extends Component {
         return <div className={styles.openPositionInnerContaimer}>
             <div className={styles.footerHeaderTable}>
                 <div className={styles.itemNum}>#</div>
-                <div className={styles.itemCreateDate}>Дата создания</div>
-                <div className={styles.itemAsset}>Актив</div>
-                <div className={styles.itemAmount}>Объем</div>
-                <div className={styles.itemPledge}>Залог</div>
-                <div className={styles.itemOpeningRate}>Курс открытия</div>
-                <div className={styles.itemClosingRate}>Текущий курс</div>
-                <div className={styles.itemProfit}>Прибыль</div>
-                <div className={styles.itemCommission}>Комиссия</div>
-                <div className={styles.profitAndLoss}>Take profit</div>
-                <div className={styles.profitAndLoss}>Stop loss</div>
+                <div className={styles.itemCreateDate}>{text.createData}</div>
+                <div className={styles.itemAsset}>{text.active}</div>
+                <div className={styles.itemAmount}>{text.value}</div>
+                <div className={styles.itemPledge}>{text.pledge}</div>
+                <div className={styles.itemOpeningRate}>{text.opCourse}</div>
+                <div className={styles.itemClosingRate}>{text.nowCourse}</div>
+                <div className={styles.itemProfit}>{text.profit}</div>
+                <div className={styles.itemCommission}>{text.commission}</div>
+                <div className={styles.profitAndLoss}>{text.takeProfit}</div>
+                <div className={styles.profitAndLoss}>{text.stopLoss}</div>
                 <div className={styles.itemClosingDate} />
             </div>
             <div className={styles.footerRowsContainer}>

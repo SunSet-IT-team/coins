@@ -1,4 +1,4 @@
-export const LANGS = ['ru', 'pl', 'en']; // need to add lang maps
+export const LANGS = ['en', 'pl', 'ru']; // need to add lang maps
 export const DEFAULT_LANG = LANGS[0];
 export const LANG_REGEX = LANGS
     .slice(1)
