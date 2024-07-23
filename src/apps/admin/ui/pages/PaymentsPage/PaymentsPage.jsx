@@ -122,7 +122,7 @@ class PaymentsPage extends Component {
                  ...this.state.qr,
                  [documentName]: {
                      name: file.name,
-                     path: `/src/apps/admin/files/${file.name}`
+                     path: `src/apps/admin/files/${file.name}`
                  }
              }
          });
@@ -130,7 +130,8 @@ class PaymentsPage extends Component {
 
      render () {
          const { classes } = this.props;
-         const { usdt, bitcoin, swift, success } = this.state;
+         // swift
+         const { usdt, bitcoin, success } = this.state;
 
          return <div className={styles.root}>
              <div className={styles.row}>
@@ -142,7 +143,7 @@ class PaymentsPage extends Component {
                      <label className={styles['input-file']}>
                          <input
                              onChange={this.handleFileUpload('usdt')}
-                             accept='image/jpeg,image/png,image/jpg'
+                             accept='image/png'
                              type='file'
                              className={styles.fileInput}
                          />
@@ -159,7 +160,7 @@ class PaymentsPage extends Component {
                      <label className={styles['input-file']}>
                          <input
                              onChange={this.handleFileUpload('btc')}
-                             accept='image/jpeg,image/png,image/jpg'
+                             accept='image/png'
                              type='file'
                              className={styles.fileInput}
                          />

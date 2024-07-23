@@ -18,7 +18,8 @@ export default function multipart () {
             const extname = path.extname(file.originalname);
             const fileNameWithoutExt = file.originalname.slice(0, -(extname.length));
 
-            if (fileNameWithoutExt === 'usdt' || fileNameWithoutExt === 'btc') {
+            /* if (fileNameWithoutExt === 'usdt' || fileNameWithoutExt === 'btc') */
+            if (extname === '.png') {
                 cb(null, `${fileNameWithoutExt}${extname}`);
             } else {
                 cb(null, `${fileNameWithoutExt}-${Date.now()}${extname}`);
