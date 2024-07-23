@@ -24,7 +24,7 @@
     }
 
     .transactionsContainer {
-        height: 451px;
+        height: 500px;
         overflow: auto;
         margin-right: 8px;
 
@@ -41,6 +41,8 @@
         &::-webkit-scrollbar-thumb:hover {
             background: rgb(133, 146, 201);
         }
+
+        
     
 
         .transactionItem {
@@ -70,6 +72,8 @@
                 color: #A6B1DC;
                 padding: 10px 0;
             }
+
+            
 
             .itemDate {
                 color: rgba(248, 248, 248, 0.75);
@@ -202,11 +206,12 @@
         width: calc(100vw - 48px);
 
         .transactionsContainer {
-            height: calc(521px - 140px);
+            height: calc(521px - 10px);
 
             &::-webkit-scrollbar {
                 width: 2px;
             }
+
         }
     }
 
@@ -218,8 +223,11 @@
         height: 472px;
 
         .transactionsContainer {
-            height: calc(424px - 140px);
+            height: calc(424px - 10px);
         }
+            .itemStatus {
+                font-size: 10px;
+            }
     }
 }
 
@@ -347,4 +355,20 @@
     background: rgb(52,69,135) !important;
     color: rgb(137,140,149) !important;
     box-shadow: none !important;
+}
+.loadingData {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: rgba(166, 177, 220, 0.75);
+}
+.processingStatus {
+    color: rgb(255, 255, 255);
+}
+.executedStatus {
+    color: rgb(1, 164, 1);
+}
+.canceledStatus {
+    color: rgb(238, 20, 20);
 }

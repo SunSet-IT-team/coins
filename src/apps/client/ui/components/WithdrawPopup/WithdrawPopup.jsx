@@ -186,7 +186,6 @@ class WithdrawPopup extends Component {
         }
 
         if (isValid) {
-            // добавил номер карты для добавления в бд
             this.props.saveMoneyOutput({
                 userId: this.props.user.id,
                 amount: amount.value,

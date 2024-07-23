@@ -248,7 +248,6 @@ class TransactionsPage extends Component {
     render () {
         const { classes } = this.props;
         const { loading, editableUser, formShowed, outputByUsers, allInfoUser } = this.state;
-
         if (loading) {
             return <div className={classes.loader}>
                 <CircularProgress />

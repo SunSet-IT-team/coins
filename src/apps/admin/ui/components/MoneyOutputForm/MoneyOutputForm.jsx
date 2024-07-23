@@ -122,16 +122,6 @@ class MoneyOutputForm extends Component {
    };
 
     handleSubmit = values => {
-        let lang = localStorage.getItem('lang');
-        let withdraw;
-
-        if (lang === 'ru') {
-            withdraw = 'Вывод';
-        } else if (lang === 'pl') {
-            withdraw = 'Wycofanie';
-        } else {
-            withdraw = 'Withdraw';
-        }
         const outputPayload = this.getOutputPayload({
             name: values.name,
             surname: values.surname,
@@ -144,7 +134,7 @@ class MoneyOutputForm extends Component {
         /*   const user = this.initialValuesUser.find((user) => { return outputPayload.userId === user.id; }); */
 
         const userPayload = {
-            content: withdraw,
+            content: 'Withdraw',
             dirName: this.dirName,
             type: 'deduction',
             userId: outputPayload.userId,

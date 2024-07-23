@@ -202,9 +202,11 @@ export default {
             loadButton: 'Pobierać'
         },
         transaction: {
+            loadingData: 'Ładowanie danych...',
             processing: 'W przetwórstwie',
             executed: 'Zakończony',
             canceled: 'Odwołany',
+            statusWithdraw: 'status',
             moneyWithdrawal: 'Wycofać',
             inputPlaceholder: 'Wypłata od $5,00',
             inputPlaceholderCard: 'Numer karty',
@@ -212,7 +214,8 @@ export default {
             inputPlaceholderWallet: 'Numer portfela',
             bonuses: 'Premia',
             deposit: 'Depozyt',
-            credFacilities: 'Кредит',
+            withdraw: 'Wypłacić pieniądze',
+            credFacilities: 'Kredyt',
             type: 'Rodzaj',
             summ: 'Kwota wypłaty',
             status: 'Opis',

@@ -1,5 +1,8 @@
-# pl-finance
+node version - 16.20.2
+yarn version - 1.22.22
+corepack version - 0.17.0
 
+# pl-finance
 ## Tech stack:
 
 * Frontend - ReactJs, ReduxJs

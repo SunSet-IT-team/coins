@@ -18,6 +18,9 @@ import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveTransaction from '../../../services/client/saveTransaction';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
+import getMoneyOutput from '../../../../admin/services/getMoneyOutput';
+import getUsers from '../../../../admin/services/getUsers';
+import outputWebsocketController from '../../../../admin/services/outputWebsocket';
 
 // import FormInput from '../FormInput/FormInput';
 import checkBalance from '../../../../../../server/api/admin/transaction/utils/checkBalance';
@@ -34,7 +37,9 @@ const mapDispatchToProps = (dispatch) => ({
     saveMoneyOutput: payload => dispatch(saveMoneyOutput(payload)),
     saveTransaction: payload => dispatch(saveTransaction(payload)),
     setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
-    setWithdrawSuccessPopup: payload => dispatch(setWithdrawSuccessPopup(payload))
+    setWithdrawSuccessPopup: payload => dispatch(setWithdrawSuccessPopup(payload)),
+    getUsers: payload => dispatch(getUsers(payload)),
+    getMoneyOutput: payload => dispatch(getMoneyOutput(payload))
 });
 
 class TransactionInfoPopup extends Component {
@@ -46,7 +51,9 @@ class TransactionInfoPopup extends Component {
         saveTransaction: PropTypes.func.isRequired,
         saveMoneyOutput: PropTypes.func.isRequired,
         isVisible: PropTypes.bool,
-        setWithdrawSuccessPopup: PropTypes.func.isRequired
+        setWithdrawSuccessPopup: PropTypes.func.isRequired,
+        getUsers: PropTypes.func.isRequired,
+        getMoneyOutput: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -61,20 +68,94 @@ class TransactionInfoPopup extends Component {
         };
     }
 
-    componentDidUpdate (prevProps) {
-        if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
+    componentDidUpdate (/* prevProps */) {
+        this.getData();
+        /* if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
             this.setState({
                 ...this.defaultState(),
                 error: ''
             });
-        }
+        } */
     }
 
     defaultState () {
         return {
-            amount: { value: '', focus: false, isValid: true }
+            amount: { value: '', focus: false, isValid: true },
+            outputByUsers: []
         };
     };
+
+    getData = () => {
+        return Promise.all([
+            this.props.getMoneyOutput(),
+            this.props.getUsers(false)
+        ])
+            .then(([outputs, users]) => {
+                this.setState({
+                    outputByUsers:
+                        outputs.payload.reduce((acc, item) => {
+                            const user = users.payload.find((user) => { return user.id === item.userId; });
+
+                            if (user) {
+                                acc.push({
+                                    name: user.name,
+                                    surname: user.surname,
+                                    status: item.status,
+                                    date: item.createdAt,
+                                    createdAt: item.createdAtDate,
+                                    amount: item.amount,
+                                    wallet: item.wallet,
+                                    numberCard: item.numberCard,
+                                    cardHolderName: item.cardHolderName,
+                                    id: item.id,
+                                    visited: item.visited,
+                                    balance: user.balance,
+                                    mainBalance: user.mainBalance,
+                                    userId: user.id
+                                });
+                            }
+
+                            return acc;
+                        }, [])
+                });
+            });
+    }
+
+    componentDidMount () {
+        outputWebsocketController.events.on('output', this.qwerty);
+
+        this.getData();
+    }
+
+    componentWillUnmount () {
+        outputWebsocketController.events.removeListener('output', this.qwerty);
+    }
+
+    qwerty = output => {
+        this.props.getUsers(false)
+            .then((users) => {
+                const user = users.payload.find((user) => { return user.id === output.userId; });
+
+                this.setState({
+                    outputByUsers: [...this.state.outputByUsers, {
+                        date: output.createdAt,
+                        createdAt: output.createdAtDate,
+                        name: user.name,
+                        surname: user.surname,
+                        status: output.status,
+                        amount: output.amount,
+                        wallet: output.wallet,
+                        numberCard: output.numberCard,
+                        cardHolderName: output.cardHolderName,
+                        id: output.id,
+                        visited: output.visited,
+                        balance: user.balance,
+                        mainBalance: user.mainBalance,
+                        userId: user.id
+                    }]
+                });
+            });
+    }
 
     handleChange = (name, value) => e => {
         e.stopPropagation();
@@ -180,8 +261,10 @@ class TransactionInfoPopup extends Component {
 
     render () {
         const { langMap, transactions } = this.props;
+        const { outputByUsers } = this.state;
 
-        // const { error } = this.state;
+        const transactionList = [...outputByUsers, ...transactions];
+
         const text = propOr('accountInfo', {}, langMap).transaction;
 
         return <div className={styles.transactionPopupContainer}>
@@ -192,16 +275,52 @@ class TransactionInfoPopup extends Component {
                 <div className={styles.itemDate}>{text.date}</div>
             </div>
             <div className={styles.transactionsContainer}>
-                {transactions
+                {transactionList
                     .sort((prev, next) => next.createdAt - prev.createdAt)
+                    .filter((item) => item.type !== 'deduction')
                     .map((item, i) => <div key={i} className={styles.transactionItem}>
                         <div className={styles.itemNum}>{i + 1}</div>
-                        <div className={styles.itemSum}>$ {item.value}</div>
+                        <div className={styles.itemSum}>$ {item.value || item.amount}</div>
                         <div className={styles.itemStatus}>
-                            {item.content}
+                            {item.content || <div>
+                                {item.status === 'Новая' && <p>{text.statusWithdraw}: <span className={styles.processingStatus}>{text.processing}</span></p>}
+                                {item.status === 'В обработке' &&
+                                <p>{text.statusWithdraw}: <span className={styles.processingStatus}>{text.processing}</span></p>}
+                                {item.status === 'Успешно' && <p>{text.statusWithdraw}: <span className={styles.executedStatus}>{text.executed}</span></p>}
+                                {item.status === 'Отменена' && <p>{text.statusWithdraw}: <span className={styles.canceledStatus}>{text.canceled}</span></p>}
+                                {item.wallet ? <p>{text.inputPlaceholderWallet}: {item.wallet}</p> : <div><p>{text.inputPlaceholderCard}: {item.numberCard}</p>
+                                    <p>{text.inputPlaceholderName}: {item.cardHolderName}</p></div>}
+                            </div>}
                         </div>
                         <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
+                    </div>)
+                }
+                {/*  {outputByUsers.length && outputByUsers
+                    .sort((prev, next) => next.createdAtDate - prev.createdAtDate)
+                    .map((item, i) => <div key={i} className={styles.transactionItem}>
+                        <div className={styles.itemNum}>{i + 1}</div>
+                        <div className={styles.itemSum}>$ {item.amount}</div>
+                        <div className={styles.itemStatus}>
+                            <p>Статус: {item.status}</p>
+                            <p>Карта: {item.numberCard}</p>
+                            <p>Владелец: {item.cardHolderName}</p>
+                        </div>
+                        <div className={styles.itemDate}>{this.getDate(item.createdAtDate)}</div>
                     </div>)}
+                {outputByUsers.length && transactions
+                    .sort((prev, next) => next.createdAt - prev.createdAt)
+                    .map((item, i) => {
+                        if (item.type !== 'deduction') {
+                            return (<div key={i} className={styles.transactionItem}>
+                                <div className={styles.itemNum}>{outputByUsers.length + 1}</div>
+                                <div className={styles.itemSum}>$ {item.value}</div>
+                                <div className={styles.itemStatus}>
+                                    {item.content}
+                                </div>
+                                <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
+                            </div>);
+                        }
+                    })} */}
             </div>
             {/*   <div className={styles.footer}> */}
             {/*  <div className={styles.funds}>{text.moneyWithdrawalTitle}</div> */}

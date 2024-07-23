@@ -175,9 +175,11 @@ export default {
             loadButton: 'Загрузить'
         },
         transaction: {
+            loadingData: 'Загрузка данных...',
             processing: 'В обработке',
             executed: 'Выполнен',
             canceled: 'Отменен',
+            statusWithdraw: 'Статус',
             moneyWithdrawal: 'Вывести',
             inputPlaceholder: 'Вывод от $ 5.00',
             inputPlaceholderCard: 'Номер карты',
@@ -190,6 +192,7 @@ export default {
             withdrawOnCard: 'Visa/Mastercard',
             withdrawOnCrypto: 'USDT TRC-20',
             withdrawOnBank: 'Bank Transfer',
+            withdraw: 'Вывод средств',
             cardNumberTitle: 'Номер платёжной карты',
             cardHolderName: 'Имя держателя карты',
             wallet: 'Кошелёк',

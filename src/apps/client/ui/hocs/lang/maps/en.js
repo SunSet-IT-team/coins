@@ -68,7 +68,7 @@ export default {
         currency: 'Currencies',
         assetsSearch: 'Asset search',
         assetsTitle: 'Assets',
-        onMainPage: 'to home',
+        onMainPage: 'Home',
         timingScaleValue: [{
             id: 1,
             label: '1',
@@ -202,9 +202,11 @@ export default {
             loadButton: 'Download'
         },
         transaction: {
+            loadingData: 'Loading data...',
             processing: 'In processing',
             executed: 'Completed',
             canceled: 'Canceled',
+            statusWithdraw: 'Status',
             moneyWithdrawal: 'Withdraw',
             inputPlaceholder: 'Withdrawal from $5.00',
             inputPlaceholderCard: 'Card number',
@@ -217,6 +219,7 @@ export default {
             summ: 'Amount withdrawal',
             status: 'Description',
             date: 'Date',
+            withdraw: 'Withdraw',
             moneyWithdrawalTitle: 'Withdrawals',
             withdrawOnCard: 'Visa/Mastercard',
             withdrawOnCrypto: 'USDT TRC-20',
