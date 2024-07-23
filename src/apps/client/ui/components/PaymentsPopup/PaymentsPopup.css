@@ -261,8 +261,15 @@
     overflow: hidden;
 }
 
+.qrBlock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
 .hiddenInfoOpen {
-    max-height: 74px;
+    max-height: 274px;
 }
 
 .titleTop {

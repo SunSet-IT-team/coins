@@ -69,7 +69,7 @@ class TransactionInfoPopup extends Component {
     }
 
     componentDidUpdate (/* prevProps */) {
-        this.getData();
+        /* this.getData(); */
         /* if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
             this.setState({
                 ...this.defaultState(),

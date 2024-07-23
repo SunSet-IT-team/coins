@@ -1,9 +1,9 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE, BAD_REQUEST_STATUS_CODE, QR_PAYMENTS } from '../../../../constants/constants';
-
-import includes from '@tinkoff/utils/array/includes';
+import { SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+/* , BAD_REQUEST_STATUS_CODE, QR_PAYMENTS, OKEY_STATUS_CODE  */
+/* import includes from '@tinkoff/utils/array/includes';
 import fs from 'fs';
+import updatePayments from '../../../../../src/apps/admin/services/updatePayment'; */
 import multipart from '../../../../helpers/multipart';
-import updatePayments from '../../../../../src/apps/admin/services/updatePayment';
 
 const uploader = multipart();
 
@@ -14,7 +14,7 @@ export default function uploadFilesQr (req, res) {
                 return res.status(SERVER_ERROR_STATUS_CODE).end();
             }
 
-            const file = req.files[0];
+            /* const file = req.files[0];
             const filePath = `/${file.path.replace(/\\/g, '/')}`;
             const { docName } = req.body;
 
@@ -33,7 +33,7 @@ export default function uploadFilesQr (req, res) {
                 })
                 .catch(() => {
                     res.status(SERVER_ERROR_STATUS_CODE).end();
-                });
+                }); */
         });
     } catch (e) {
         res.status(SERVER_ERROR_STATUS_CODE).end();

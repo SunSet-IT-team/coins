@@ -140,7 +140,7 @@ class PaymentsPopup extends Component {
         const { langMap, isVisible, payments } = this.props;
         const { activePayment, focusField, fieldError } = this.state;
         const text = propOr('payments', {}, langMap);
-
+        console.log(payments);
         return <div onClick={this.handleOutsideClick}
             className={classNames(styles.root, {
                 [styles.isVisible]: isVisible
@@ -177,6 +177,10 @@ class PaymentsPopup extends Component {
                                     </div>
                                 </div>
                                 <div className={classNames(styles.hiddenInfo, { [styles.hiddenInfoOpen]: this.state.showHidden })}>
+                                    <div className={styles.qrBlock}>
+                                        {this.state.activePayment === 'usdt' && <img width='200' height='200' src='../../../../../src/apps/admin/files/usdt.png'/>}
+                                        {this.state.activePayment === 'bitcoin' && <img width='200' height='200' src='../../../../../src/apps/admin/files/btc.png'/>}
+                                    </div>
                                     <div className={classNames(styles.titleTop, {
                                         [styles.isTitleFocus]: focusField,
                                         [styles.errorField]: fieldError && activePayment === 'qiwi'

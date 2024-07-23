@@ -88,7 +88,8 @@ class PaymentsPage extends Component {
         const data = {
             usdt: this.state.usdt,
             bitcoin: this.state.bitcoin,
-            swift: this.state.swift
+            swift: this.state.swift,
+            qr: this.state.qr
         };
 
         this.props.updatePayments(data)
@@ -116,14 +117,15 @@ class PaymentsPage extends Component {
          const file = event.target.files[0];
          event.target.value = '';
          this.uploadFile(documentName, file);
-         /* this.setState({
+         this.setState({
              qr: {
+                 ...this.state.qr,
                  [documentName]: {
                      name: file.name,
                      path: `/src/apps/admin/files/${file.name}`
                  }
              }
-         }); */
+         });
      };
 
      render () {
@@ -137,13 +139,14 @@ class PaymentsPage extends Component {
                  </label>
                  <input className={styles.input} type="text" value={usdt} onChange={this.handleChange('usdt')} />
                  <div className={styles.buttonBlock}>
-                     <label>
+                     <label className={styles['input-file']}>
                          <input
                              onChange={this.handleFileUpload('usdt')}
                              accept='image/jpeg,image/png,image/jpg'
                              type='file'
                              className={styles.fileInput}
                          />
+                         <span className={styles.button}>ВЫБЕРИТЕ ФАЙЛ</span>
                      </label>
                  </div>
              </div>
@@ -152,6 +155,17 @@ class PaymentsPage extends Component {
                     BTC:
                  </label>
                  <input className={styles.input} type="text" value={bitcoin} onChange={this.handleChange('bitcoin')} />
+                 <div className={styles.buttonBlock}>
+                     <label className={styles['input-file']}>
+                         <input
+                             onChange={this.handleFileUpload('btc')}
+                             accept='image/jpeg,image/png,image/jpg'
+                             type='file'
+                             className={styles.fileInput}
+                         />
+                         <span className={styles.button}>ВЫБЕРИТЕ ФАЙЛ</span>
+                     </label>
+                 </div>
              </div>
              <div className={styles.row}>
                  <label className={styles.label} >
