@@ -12,6 +12,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import updatePayments from '../../../services/updatePayment';
 import getPayments from '../../../services/getPaymentsRequisites';
+import uploadFilesQr from '../../../services/uploadFilesQr';
 
 const materialStyles = theme => ({
     buttons: {
@@ -50,14 +51,16 @@ const materialStyles = theme => ({
 
 const mapDispatchToProps = (dispatch) => ({
     updatePayments: payload => dispatch(updatePayments(payload)),
-    getPayments: payload => dispatch(getPayments(payload))
+    getPayments: payload => dispatch(getPayments(payload)),
+    uploadFilesQr: payload => dispatch(uploadFilesQr(payload))
 });
 
 class PaymentsPage extends Component {
     static propTypes = {
         classes: PropTypes.object,
         updatePayments: PropTypes.func.isRequired,
-        getPayments: PropTypes.func.isRequired
+        getPayments: PropTypes.func.isRequired,
+        uploadFilesQr: PropTypes.func.isRequired
     };
 
     constructor (props) {
@@ -74,9 +77,9 @@ class PaymentsPage extends Component {
     componentDidMount () {
         this.props.getPayments().then(
             payments => this.setState({
-                qiwi: payments[0].usdt,
+                usdt: payments[0].usdt,
                 bitcoin: payments[0].bitcoin,
-                gateway: payments[0].swift
+                swift: payments[0].swift
             })
         );
     }
@@ -99,45 +102,79 @@ class PaymentsPage extends Component {
             [field]: event.target.value
         });
     }
-    render () {
-        const { classes } = this.props;
-        const { usdt, bitcoin, swift, success } = this.state;
 
-        return <div className={styles.root}>
-            <div className={styles.row}>
-                <label className={styles.label} >
+    uploadFile = (documentName, file) => {
+        const formData = new FormData();
+
+        formData.append(file.name, file);
+        formData.append('docName', documentName);
+
+        return this.props.uploadFilesQr(formData);
+    };
+
+     handleFileUpload = documentName => event => {
+         const file = event.target.files[0];
+         event.target.value = '';
+         this.uploadFile(documentName, file);
+         /* this.setState({
+             qr: {
+                 [documentName]: {
+                     name: file.name,
+                     path: `/src/apps/admin/files/${file.name}`
+                 }
+             }
+         }); */
+     };
+
+     render () {
+         const { classes } = this.props;
+         const { usdt, bitcoin, swift, success } = this.state;
+
+         return <div className={styles.root}>
+             <div className={styles.row}>
+                 <label className={styles.label} >
                     USDT TRC20:
-                </label>
-                <input className={styles.input} type="text" value={usdt} onChange={this.handleChange('usdt')} />
-            </div>
-            <div className={styles.row}>
-                <label className={styles.label} >
+                 </label>
+                 <input className={styles.input} type="text" value={usdt} onChange={this.handleChange('usdt')} />
+                 <div className={styles.buttonBlock}>
+                     <label>
+                         <input
+                             onChange={this.handleFileUpload('usdt')}
+                             accept='image/jpeg,image/png,image/jpg'
+                             type='file'
+                             className={styles.fileInput}
+                         />
+                     </label>
+                 </div>
+             </div>
+             <div className={styles.row}>
+                 <label className={styles.label} >
                     BTC:
-                </label>
-                <input className={styles.input} type="text" value={bitcoin} onChange={this.handleChange('bitcoin')} />
-            </div>
-            <div className={styles.row}>
-                <label className={styles.label} >
+                 </label>
+                 <input className={styles.input} type="text" value={bitcoin} onChange={this.handleChange('bitcoin')} />
+             </div>
+             <div className={styles.row}>
+                 <label className={styles.label} >
                     SWIFT:
-                </label>
-                <input className={styles.input} type="text" value={swift} onChange={this.handleChange('swift')} />
-            </div>
-            <button className={styles.button} onClick={this.handleSubmit}>Сохранить</button>
-            {success
-                ? <div className={classes.successBlock}>
-                    <SnackbarContent
-                        className={classNames(classes.success, classes.margin)}
-                        message={
-                            <span id='client-snackbar' className={classes.message}>
-                                <CheckCircleIcon className={classNames(classes.icon, classes.iconVariant)} />
+                 </label>
+                 <input className={styles.input} type="text" value={swift} onChange={this.handleChange('swift')} />
+             </div>
+             <button className={styles.button} onClick={this.handleSubmit}>Сохранить</button>
+             {success
+                 ? <div className={classes.successBlock}>
+                     <SnackbarContent
+                         className={classNames(classes.success, classes.margin)}
+                         message={
+                             <span id='client-snackbar' className={classes.message}>
+                                 <CheckCircleIcon className={classNames(classes.icon, classes.iconVariant)} />
                                 Смена реквизитов успешна
-                            </span>
-                        }
-                    />
-                </div> : undefined
-            }
-        </div>;
-    }
+                             </span>
+                         }
+                     />
+                 </div> : undefined
+             }
+         </div>;
+     }
 }
 
 export default connect(null, mapDispatchToProps)(withStyles(materialStyles)(PaymentsPage));
