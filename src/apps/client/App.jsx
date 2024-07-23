@@ -167,7 +167,7 @@ class App extends Component {
                         <Switch>
                             <Route exact path='/' render={this.renderComponent(MainPage)} />
                             <Route exact path='/pl' render={this.renderComponent(MainPage)} />
-                            <Route exact path='/ru' render={this.renderComponent(MainPage)} />
+                            <Route exact path='/en' render={this.renderComponent(MainPage)} />
                             <Route render={this.renderComponent(NotFoundPage)} />
                         </Switch>
                     </div>

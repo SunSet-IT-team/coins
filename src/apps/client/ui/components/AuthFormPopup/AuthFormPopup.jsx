@@ -211,7 +211,7 @@ class AuthFormPopup extends Component {
                         />
                     </div>
                     <div className={styles.buttonContainer}>
-                        {error && <div className={styles.errorMessage}>{error}</div>}
+                        {error && <div className={styles.errorMessage}>{text.errorWrongPassOrLogin}</div>}
                         <button className={classNames(styles.button)} type='submit'>{text.signIn}</button>
                     </div>
                     <div className={styles.forgetPassordButton} onClick={this.handleForgetPassword}>{text.forgetPassword}</div>

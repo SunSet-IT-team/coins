@@ -394,7 +394,7 @@ class RegistrationFormPopup extends Component {
                                 this.state['dateInputMaskValue'].focus ||
                                 this.state['dateInputMaskValue'].value
                         })}>
-                            Дата рождения
+                            {text.inputs.date.placeholder}
                         </div>
                         {this.props.mediaWidth >= MOBILE_VERRSION && <div className={classNames(styles.datePickerContainer, {
                             [styles.dateErrorField]: !this.state['date'].isValid

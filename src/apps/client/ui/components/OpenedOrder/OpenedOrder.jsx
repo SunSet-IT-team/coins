@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 import format from 'date-fns/format';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import propOr from '@tinkoff/utils/object/propOr';
 
 import styles from './OpenedOrder.css';
 
@@ -20,8 +21,15 @@ const mapDispatchToProps = (dispatch) => ({
     closeOrder: payload => dispatch(closeOrder(payload))
 });
 
+const mapStateToProps = ({ application }) => {
+    return {
+        langMap: application.langMap
+    };
+};
+
 class OpenedOrder extends PureComponent {
     static propTypes = {
+        langMap: PropTypes.object.isRequired,
         item: PropTypes.object.isRequired,
         isLoading: PropTypes.object.isRequired,
         isConfirmDeal: PropTypes.bool.isRequired,
@@ -43,8 +51,10 @@ class OpenedOrder extends PureComponent {
             item,
             isConfirmDeal,
             isLoading,
-            orderIndex
+            orderIndex,
+            langMap
         } = this.props;
+        const text = propOr('openOrder', {}, langMap);
 
         return <div className={classNames(styles.footerItemTable, {
             [styles.activeItemTable]: isConfirmDeal
@@ -110,8 +120,8 @@ class OpenedOrder extends PureComponent {
                 [styles.activeClosingData]: isConfirmDeal
             })}>{
                     isConfirmDeal
-                        ? <div className={styles.closeDealButton}>Подтвердить</div>
-                        : <div className={styles.closeDealButton} onClick={this.props.onClose}>Закрыть сделку</div>
+                        ? <div className={styles.closeDealButton}>{text.accept}</div>
+                        : <div className={styles.closeDealButton} onClick={this.props.onClose}>{text.closeOrder}</div>
                 }
                 {isConfirmDeal && !isLoading.loading && [
                     <div onClick={this.props.onCloseConfirm} className={styles.arrowIcons} key={0}>
@@ -131,4 +141,4 @@ class OpenedOrder extends PureComponent {
     }
 }
 
-export default connect(undefined, mapDispatchToProps)(OpenedOrder);
+export default connect(mapStateToProps, mapDispatchToProps)(OpenedOrder);

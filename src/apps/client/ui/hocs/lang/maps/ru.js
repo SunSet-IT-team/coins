@@ -337,7 +337,8 @@ export default {
     },
     openOrder: {
         accept: 'Подтвердить',
-        some: 'Что то'
+        some: 'Что то',
+        closeOrder: 'Закрыть сделку'
     },
     chat: {
         title: 'Чат',

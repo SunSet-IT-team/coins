@@ -370,7 +370,8 @@ export default {
     },
     openOrder: {
         accept: 'Zamknąć pozycje',
-        some: 'Coś'
+        some: 'Coś',
+        closeOrder: 'Zamknięcie transakcji'
     },
     chat: {
         title: 'Czat',

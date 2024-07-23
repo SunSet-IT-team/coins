@@ -164,7 +164,12 @@ class AssetsButton extends Component {
                             <div className={styles.iconContainer}>
                                 <img src={chartSymbolGroup.img} />
                             </div>
-                            {chartSymbolGroup.title}
+                            {/* {chartSymbolGroup.title} */}
+                            {chartSymbolGroup.title === 'Криптовалюты' && text.actives.crypto}
+                            {chartSymbolGroup.title === 'Валюты' && text.actives.currencies}
+                            {chartSymbolGroup.title === 'Товары' && text.actives.products}
+                            {chartSymbolGroup.title === 'Акции' && text.actives.shares}
+                            {chartSymbolGroup.title === 'Индексы' && text.actives.indices}
                             <div className={classNames(styles.iconArrow, {
                                 [styles.iconArrowActive]: isInnerAssetsButtonOpen
                             })}>
@@ -180,7 +185,11 @@ class AssetsButton extends Component {
                                     <div className={styles.iconContainer}>
                                         <img src={item.img} />
                                     </div>
-                                    {item.title}
+                                    {item.title === 'Криптовалюты' && text.actives.crypto}
+                                    {item.title === 'Валюты' && text.actives.currencies}
+                                    {item.title === 'Товары' && text.actives.products}
+                                    {item.title === 'Акции' && text.actives.shares}
+                                    {item.title === 'Индексы' && text.actives.indices}
                                 </div>)}
                         </div>
                     </div>

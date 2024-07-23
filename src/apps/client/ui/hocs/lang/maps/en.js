@@ -369,7 +369,8 @@ export default {
     },
     openOrder: {
         accept: 'Close',
-        some: 'Something'
+        some: 'Something',
+        closeOrder: 'Close the deal'
     },
     chat: {
         title: 'Chat',

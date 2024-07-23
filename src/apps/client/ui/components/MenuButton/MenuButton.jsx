@@ -8,7 +8,7 @@ import propOr from '@tinkoff/utils/object/propOr';
 import classNames from 'classnames';
 
 import styles from './MenuButton.css';
-/* import stylesPrivateDataFormPopup from '../PrivateDataFormPopup/PrivateDataFormPopup.css'; */
+import stylesPrivateDataFormPopup from '../PrivateDataFormPopup/PrivateDataFormPopup.css';
 import { COUNTRY_INFO, SCROLL_TOP_LOCKED_EVENT_NAME, LANGUAGES } from '../../../constants/constants';
 import setAuthenticationPopup from './../../../actions/setAuthenticationPopup';
 import setAccountInfoPopup from './../../../actions/setAccountInfoPopup';
@@ -21,7 +21,7 @@ import logout from '../../../services/client/logOut';
 import lang from '../../hocs/lang/lang.jsx';
 
 import ChatPage from '../../pages/ChatPage/ChatPage';
-/* import LanguagesSelector from '../LanguagesSelector/LanguagesSelector'; */
+import LanguagesSelector from '../LanguagesSelector/LanguagesSelector';
 
 import outsideClick from '../../hocs/outsideClick.jsx';
 import maps from '../../hocs/lang/maps';
@@ -191,12 +191,12 @@ class MenuButton extends Component {
 
     render () {
         const { langMap, user } = this.props;
-        const { isMenuOpen, isChatOpen, unvisitedMessages } = this.state;
+        const { isMenuOpen, isChatOpen, unvisitedMessages, currentLanguage } = this.state;
         /* currentLanguage */ // добавить в стейт если нужен выбор языка
         const text = propOr('menu', {}, langMap);
         const textAuthorization = propOr('authorizationPanel', {}, langMap);
-        // const textDataInfo = propOr('accountInfo', {}, langMap);
-        /* const text2 = propOr('auth', {}, langMap); */
+        const textDataInfo = propOr('accountInfo', {}, langMap);
+        const text2 = propOr('auth', {}, langMap);
 
         return <div>
             <div className={classNames(styles.menuContent, {
@@ -281,7 +281,7 @@ class MenuButton extends Component {
                                         {text.logOut}
                                     </div>
                                 </div>
-                                {/* <div className={classNames(styles.contentItem, styles.languagesSelectorMargin)}>
+                                <div className={classNames(styles.contentItem, styles.languagesSelectorMargin)}>
                                     <div className={styles.contentItemTextLang}>
                                         <div className={stylesPrivateDataFormPopup.countryContainerField} onClick={this.handleLanguagesClick}>
                                             <LanguagesSelector
@@ -292,7 +292,7 @@ class MenuButton extends Component {
                                             <div className={stylesPrivateDataFormPopup.topLabel}>{text.language}</div>
                                         </div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                             : <div className={styles.contentContainer}>
                                 <div className={styles.contentItem}>
@@ -319,7 +319,7 @@ class MenuButton extends Component {
                                         <div className={styles.contentItemText}>{textAuthorization.signIn}</div>
                                     </div>
                                 </div>
-                                {/* <div className={classNames(styles.contentItem, styles.languagesSelectorMargin)}>
+                                <div className={classNames(styles.contentItem, styles.languagesSelectorMargin)}>
                                     <div className={styles.contentItemTextLang}>
                                         <div className={stylesPrivateDataFormPopup.countryContainerField} onClick={this.handleLanguagesClick}>
                                             <LanguagesSelector
@@ -330,7 +330,7 @@ class MenuButton extends Component {
                                             <div className={stylesPrivateDataFormPopup.topLabel}>{text2.inputs.country.placeholder}</div>
                                         </div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>}
                     </div>}
             </div>
