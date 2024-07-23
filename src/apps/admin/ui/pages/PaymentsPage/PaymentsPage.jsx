@@ -167,12 +167,12 @@ class PaymentsPage extends Component {
                      </label>
                  </div>
              </div>
-             <div className={styles.row}>
+             {/* <div className={styles.row}>
                  <label className={styles.label} >
                     SWIFT:
                  </label>
                  <input className={styles.input} type="text" value={swift} onChange={this.handleChange('swift')} />
-             </div>
+             </div> */}
              <button className={styles.button} onClick={this.handleSubmit}>Сохранить</button>
              {success
                  ? <div className={classes.successBlock}>

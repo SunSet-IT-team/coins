@@ -5,11 +5,12 @@
 
 .row{
     margin: 20px 0;
-    max-width: 500px;
+    max-width: 600px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 25px;
 }
 
 .input{
