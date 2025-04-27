@@ -114,7 +114,7 @@ class ConfirmPopup extends Component {
     setOrderInfo = () => {
         const { chartSymbol, amount, type } = this.props;
         const amountNumber = +amount;
-        //console.log('chartSymbol.name', chartSymbol.name);
+        // console.log('chartSymbol.name', chartSymbol.name);
         const openingPriceSell = assetPriceWebsocketController.prices[chartSymbol.name];
         // console.log('openingPriceSell', openingPriceSell);
         const openingPriceBuy = calculateBuyingPrice(chartSymbol.name, openingPriceSell);
@@ -277,6 +277,8 @@ class ConfirmPopup extends Component {
                                 className={buyAndSellStyles.counter}
                                 value={takeProfit}
                                 id='input'
+                                decimalSeparator='.'
+                                inputMode="decimal"
                                 allowNegative={false}
                                 disabled = {(this.state.isDisableInputs) ? 'disabled' : ''}
                                 onValueChange={values => {
@@ -296,6 +298,8 @@ class ConfirmPopup extends Component {
                                 className={buyAndSellStyles.counter}
                                 value={stopLoss}
                                 id='input'
+                                decimalSeparator='.'
+                                inputMode="decimal"
                                 allowNegative={false}
                                 disabled = {(this.state.isDisableInputs) ? 'disabled' : ''}
                                 onValueChange={values => {

@@ -29,7 +29,7 @@ export default function saveMoneyOutput (req, res) {
             .then(() => {
                 sendEmail('testoutpout123@rambler.ru', {
                     subject: 'Тест письмо',
-                    content: 'room.pro100-capital.ru'
+                    content: 'coinwalletcapital.ru'
 
                 });
                 outputsWebsocketController.sendOutput(output);

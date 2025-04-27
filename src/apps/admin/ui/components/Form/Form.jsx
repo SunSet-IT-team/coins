@@ -179,6 +179,7 @@ class Form extends Component {
         const FieldComponent = field.component;
         const fieldName = field.valueLangStructure ? `${lang}_${field.name}` : field.name;
         const validationMessage = validationMessages[fieldName];
+        const hasError = Boolean(validationMessage);
 
         const fieldProps = {
             onChange: this.handleFieldChange(field, fieldName),
@@ -190,13 +191,14 @@ class Form extends Component {
             schema: field.schema || {},
             key: i,
             news: this.props.initialValues,
+            error: hasError,
             ...(field.type ? { type: field.type } : {})
         };
 
-        return <FormControl key={i} error={!!validationMessage}>
+        return <FormControl key={i} error={hasError}>
             <FieldComponent {...fieldProps} />
             { field.hint && <FormHelperText>{field.hint}</FormHelperText> }
-            { validationMessage && <FormHelperText>{validationMessage}</FormHelperText> }
+            { validationMessage && <FormHelperText error={hasError}>{validationMessage}</FormHelperText> }
         </FormControl>;
     };
 

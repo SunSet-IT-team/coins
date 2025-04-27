@@ -10,15 +10,13 @@ export default class FormFieldCheckbox extends Component {
     static propTypes = {
         value: PropTypes.bool,
         schema: PropTypes.object,
-        onChange: PropTypes.func,
-        validationMessage: PropTypes.string
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
         value: false,
         schema: {},
-        onChange: noop,
-        validationMessage: ''
+        onChange: noop
     };
 
     handleChange = (event, checked) => {
@@ -28,12 +26,11 @@ export default class FormFieldCheckbox extends Component {
     };
 
     render () {
-        const { value, validationMessage, schema } = this.props;
+        const { value, schema } = this.props;
 
         return <FormControlLabel
             control={
                 <Checkbox
-                    error={!!validationMessage}
                     checked={value}
                     onChange={this.handleChange}
                     color='primary'

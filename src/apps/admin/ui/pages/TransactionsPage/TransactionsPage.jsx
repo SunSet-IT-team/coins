@@ -86,9 +86,10 @@ const materialStyles = theme => ({
     }
 });
 
-const mapStateToProps = ({ data }) => {
+const mapStateToProps = ({ data, application }) => {
     return {
-        output: data.output
+        output: data.output,
+        currentAdmin: application.currentAdmin
     };
 };
 
@@ -107,7 +108,11 @@ class TransactionsPage extends Component {
         getMoneyOutput: PropTypes.func.isRequired,
         editMoneyOutput: PropTypes.func.isRequired,
         deleteMoneyOutput: PropTypes.func.isRequired,
-        getUnvisitedMoneyOutput: PropTypes.func.isRequired
+        getUnvisitedMoneyOutput: PropTypes.func.isRequired,
+        currentAdmin: PropTypes.shape({
+            id: PropTypes.string,
+            email: PropTypes.string
+        })
     };
 
     constructor (...args) {
@@ -135,52 +140,47 @@ class TransactionsPage extends Component {
             this.props.getUsers(false)
         ])
             .then(([outputs, users]) => {
+                const { currentAdmin } = this.props;
+
+                const filteredUsers = currentAdmin && currentAdmin.id === 'manager_id'
+                    ? users.payload.filter(user => user.manager === currentAdmin.email)
+                    : users.payload;
+
+                const filteredOutputs = outputs.payload.reduce((acc, item) => {
+                    const user = filteredUsers.find(user => user.id === item.userId);
+                    if (user) {
+                        acc.push({
+                            name: user.name,
+                            surname: user.surname,
+                            status: item.status,
+                            date: item.createdAt,
+                            createdAtDate: item.createdAtDate,
+                            amount: item.amount,
+                            wallet: item.wallet,
+                            numberCard: item.numberCard,
+                            cardHolderName: item.cardHolderName,
+                            id: item.id,
+                            visited: item.visited,
+                            balance: user.balance,
+                            mainBalance: user.mainBalance,
+                            userId: user.id
+                        });
+                    }
+                    return acc;
+                }, []);
+
                 this.setState({
                     loading: false,
-                    allInfoUser:
-                    outputs.payload.reduce((acc, item) => {
-                        const user = users.payload.find((user) => { return user.id === item.userId; });
-                        if (user) {
-                            acc.push({
-                                ...user
-                            });
-                        }
-
-                        return acc;
-                    }, []),
-                    outputByUsers:
-                        outputs.payload.reduce((acc, item) => {
-                            const user = users.payload.find((user) => { return user.id === item.userId; });
-
-                            if (user) {
-                                acc.push({
-                                    name: user.name,
-                                    surname: user.surname,
-                                    status: item.status,
-                                    date: item.createdAt,
-                                    createdAtDate: item.createdAtDate,
-                                    amount: item.amount,
-                                    wallet: item.wallet,
-                                    numberCard: item.numberCard,
-                                    cardHolderName: item.cardHolderName,
-                                    id: item.id,
-                                    visited: item.visited,
-                                    balance: user.balance,
-                                    mainBalance: user.mainBalance,
-                                    userId: user.id
-                                });
-                            }
-
-                            return acc;
-                        }, [])
+                    allInfoUser: filteredUsers,
+                    outputByUsers: filteredOutputs
                 });
             });
     }
 
     componentDidMount () {
-        outputWebsocketController.events.on('output', this.qwerty);
-
+        console.log('TransactionsPage mounted');
         this.getData();
+        outputWebsocketController.events.on('output', this.qwerty);
     }
 
     componentWillUnmount () {
@@ -190,7 +190,12 @@ class TransactionsPage extends Component {
     qwerty = output => {
         this.props.getUsers(false)
             .then((users) => {
-                const user = users.payload.find((user) => { return user.id === output.userId; });
+                const { currentAdmin } = this.props;
+                const user = users.payload.find(user => user.id === output.userId);
+
+                if (!user || (currentAdmin && currentAdmin.id === 'manager_id' && user.manager !== currentAdmin.email)) {
+                    return;
+                }
 
                 this.setState({
                     outputByUsers: [...this.state.outputByUsers, {

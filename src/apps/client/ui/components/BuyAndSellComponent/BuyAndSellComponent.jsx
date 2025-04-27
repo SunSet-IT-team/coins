@@ -153,6 +153,7 @@ class BuyAndSellComponent extends Component {
                         id='input'
                         allowNegative={false}
                         decimalScale={2}
+                        inputMode="decimal"
                         thousandSeparator={true}
                         onBlur={() => {
                             if (!this.state.amount) {

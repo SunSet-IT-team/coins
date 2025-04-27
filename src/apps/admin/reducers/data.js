@@ -1,6 +1,7 @@
 import {
     SET_ARTICLES,
     SET_USERS,
+    SET_MANAGERS,
     SET_TRANSACTIONS,
     SET_ORDERS,
     SET_MONEY_OUTPUT,
@@ -11,6 +12,7 @@ import {
 const initialState = {
     articles: [],
     users: [],
+    managers: [],
     transactions: [],
     orders: [],
     output: [],
@@ -28,6 +30,8 @@ export default function (state = initialState, action) {
         return { ...state, unvisitedOutput: action.payload };
     case SET_USERS:
         return { ...state, users: action.payload };
+    case SET_MANAGERS:
+        return { ...state, managers: action.payload };
     case SET_TRANSACTIONS:
         return { ...state, transactions: action.payload };
     case SET_ORDERS:

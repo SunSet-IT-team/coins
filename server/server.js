@@ -28,6 +28,7 @@ import adminFilesApi from './api/admin/files';
 import adminDbApi from './api/admin/db';
 import adminUserApi from './api/admin/user';
 import clientUserApi from './api/client/user';
+import adminManagerApi from './api/admin/manager';
 import clientAuthenticationApi from './api/client/authentication';
 import adminQiwiApi from './api/admin/qiwi';
 import clientQiwiApi from './api/client/qiwi';
@@ -60,7 +61,8 @@ import Helmet from 'react-helmet';
 import App from '../src/apps/client/App.jsx';
 
 const rootPath = path.resolve(__dirname, '..');
-const PORT = process.env.NODE_ENV === 'production' ? +(process.env.PORT || 3000) + 1 : process.env.PORT || 3000;
+// const PORT = process.env.NODE_ENV === 'production' ? +(process.env.PORT || 3000) + 1 : process.env.PORT || 3000;
+const PORT = 3003;
 
 function createApp () {
     return new Promise(resolve => {
@@ -73,6 +75,41 @@ function createApp () {
         backups();
 
         httpsRedirect(app);
+        const fetch = require('node-fetch');
+
+        app.post('/api/redeploy', async (req, res) => {
+            try {
+                const response = await fetch('http://localhost:3002/deploy', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    res.send('Развёртывание успешно запущено.');
+                } else {
+                    res.status(500).send('Ошибка при запуске развёртывания.');
+                }
+            } catch (error) {
+                console.error(`Ошибка при отправке запроса на развёртывание: ${error.message}`);
+                res.status(500).send('Ошибка при запуске развёртывания.');
+            }
+        });
+
+        app.post('/api/reload', async (req, res) => {
+            try {
+                const response = await fetch('http://localhost:3002/reload', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    res.send('Быстрая перезагрузка успешно запущена.');
+                } else {
+                    res.status(500).send('Ошибка при перезагрузке.');
+                }
+            } catch (error) {
+                console.error(`Ошибка при отправке запроса на перезагрузку: ${error.message}`);
+                res.status(500).send('Ошибка при запуске перезагрузки.');
+            }
+        });
 
         // static
         app.get(/\.chunk\.(js|css)$/, expressStaticGzip(rootPath, {
@@ -103,6 +140,7 @@ function createApp () {
         app.use('/api/client/article', clientArticleApi);
         app.use('/api/admin/db', adminDbApi);
         app.use('/api/admin/user', adminUserApi);
+	app.use('/api/admin/manager', adminManagerApi);
         app.use('/api/client/user', clientUserApi);
         app.use('/api/client/authentication', clientAuthenticationApi);
         app.use('/api/admin/qiwi', adminQiwiApi);

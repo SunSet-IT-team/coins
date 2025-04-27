@@ -2,9 +2,9 @@ import io from 'socket.io-client';
 
 import { TOKEN_CLIENT_LOCAL_STORAGE_NAME } from '../../constants/constants';
 import EventEmitter from 'eventemitter3';
-import { AUTO_CLOSE_ORDER_EVENT, AUTO_CLOSE_ORDER_EVENT_CLIENT, DOMAIN } from '../../../../../server/constants/constants';
+import { AUTO_CLOSE_ORDER_EVENT, AUTO_CLOSE_ORDER_EVENT_CLIENT, DOMAIN, WS_MESSAGES_PORT } from '../../../../../server/constants/constants';
 
-const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? `wss://${DOMAIN}:2053` : 'ws://localhost:2053';
+const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? `wss://${DOMAIN}:${WS_MESSAGES_PORT}` : `ws://localhost:${WS_MESSAGES_PORT}`;
 
 class MessageWebsocketController {
     events = new EventEmitter();

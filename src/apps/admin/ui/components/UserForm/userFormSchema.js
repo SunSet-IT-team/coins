@@ -6,16 +6,17 @@ import FormFieldCheckbox from '../Form/fields/FormFieldCheckbox/FormFieldCheckbo
 import FormFieldDivider from '../Form/fields/FormFieldDivider/FormFieldDivider';
 import FormFieldDownload from '../Form/fields/FormFieldDownload/FormFieldDownload';
 import FormFieldSelect from '../Form/fields/FormFieldSelect/FormFieldSelect';
+import FormFieldBalance from '../Form/fields/FormFieldBalance/FormFieldBalance';
 
 import maps from '../../../../client/ui/hocs/lang/maps';
 
 const countries = [];
 
-for (const key in maps.ru.accountInfo.countryInfo) {
-    countries.push({ value: key, name: maps.ru.accountInfo.countryInfo[key] });
+for (const key in maps.en.accountInfo.countryInfo) {
+    countries.push({ value: key, name: maps.en.accountInfo.countryInfo[key] });
 }
 
-export default function ({ data: { title, dirName } = {} } = {}) {
+export default function ({ data: { title, dirName, isManager, balance } = {} } = {}) {
     return {
         fields: [
             {
@@ -47,6 +48,21 @@ export default function ({ data: { title, dirName } = {} } = {}) {
                 ]
             },
             {
+                component: FormFieldBalance,
+                name: 'balance',
+                schema: {
+                    label: 'Средства пользователя'
+                },
+                value: balance
+            },
+            ...(isManager ? [] : [{
+                component: FormFieldInput,
+                name: 'manager',
+                schema: {
+                    label: 'Email прикрепленного менеджера'
+                }
+            }]),
+            {
                 component: FormFieldCheckbox,
                 name: 'isVipStatus',
                 schema: {
@@ -76,7 +92,7 @@ export default function ({ data: { title, dirName } = {} } = {}) {
                     label: 'Активность',
                     options: [
                         { label: 'Активный', value: 'true' },
-                        { label: 'Неаквивный', value: 'false' }
+                        { label: 'Неактивный', value: 'false' }
                     ]
                 }
             },

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import classNames from 'classnames';
+import Typography from '@material-ui/core/Typography';
 
 import styles from './PaymentsPage.css';
 import PropTypes from 'prop-types';
@@ -70,6 +71,8 @@ class PaymentsPage extends Component {
             usdt: '',
             bitcoin: '',
             swift: '',
+            usdtName: '',
+            btcName: '',
             success: false
         };
     }
@@ -79,7 +82,8 @@ class PaymentsPage extends Component {
             payments => this.setState({
                 usdt: payments[0].usdt,
                 bitcoin: payments[0].bitcoin,
-                swift: payments[0].swift
+                swift: payments[0].swift,
+                qr: payments[0].qr
             })
         );
     }
@@ -115,6 +119,9 @@ class PaymentsPage extends Component {
 
      handleFileUpload = documentName => event => {
          const file = event.target.files[0];
+         this.setState({
+             [documentName + 'Name']: file.name
+         });
          event.target.value = '';
          this.uploadFile(documentName, file);
          this.setState({
@@ -131,7 +138,7 @@ class PaymentsPage extends Component {
      render () {
          const { classes } = this.props;
          // swift
-         const { usdt, bitcoin, success } = this.state;
+         const { usdt, bitcoin, success, usdtName, btcName } = this.state;
 
          return <div className={styles.root}>
              <div className={styles.row}>
@@ -149,6 +156,7 @@ class PaymentsPage extends Component {
                          />
                          <span className={styles.button}>ВЫБЕРИТЕ ФАЙЛ</span>
                      </label>
+                     {usdtName && <Typography className={classes.fileName}>{usdtName}</Typography>}
                  </div>
              </div>
              <div className={styles.row}>
@@ -166,6 +174,7 @@ class PaymentsPage extends Component {
                          />
                          <span className={styles.button}>ВЫБЕРИТЕ ФАЙЛ</span>
                      </label>
+                     {btcName && <Typography className={classes.fileName}>{btcName}</Typography>}
                  </div>
              </div>
              {/* <div className={styles.row}>

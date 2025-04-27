@@ -1,75 +1,82 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
+import { withStyles } from '@material-ui/core/styles';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
-import noop from '@tinkoff/utils/function/noop';
-
-export default class FormFieldRadios extends Component {
-    static propTypes = {
-        value: PropTypes.string,
-        schema: PropTypes.object,
-        onChange: PropTypes.func,
-        validationMessage: PropTypes.string
-    };
-
-    static defaultProps = {
-        value: '',
-        schema: {},
-        onChange: noop,
-        validationMessage: ''
-    };
-
-    constructor (...args) {
-        super(...args);
-
-        const { value } = this.props;
-
-        this.state = {
-            checked: value
-        };
+const styles = theme => ({
+    formControl: {
+        margin: theme.spacing.unit,
+        width: '100%'
+    },
+    formLabel: {
+        marginBottom: theme.spacing.unit
     }
+});
 
-    handleToggle = currentId => (event, checked) => {
-        if (checked) {
-            this.props.onChange(currentId);
-        } else {
-            this.props.onChange('');
-        }
+const FormFieldRadios = ({
+    classes,
+    schema,
+    value,
+    validationMessage,
+    onChange,
+    error
+}) => {
+    const handleChange = (event) => {
+        onChange(event.target.value);
     };
 
-    valueIsChecked = currentId => {
-        const { value } = this.props;
-
-        return currentId === value;
-    };
-
-    render () {
-        const { schema, validationMessage } = this.props;
-
-        return <FormControl>
-            <RadioGroup>
-                {schema.options.map((option, i) => {
-                    return (
+    return (
+        <div className={classes.formControl}>
+            <FormLabel className={classes.formLabel}>{schema.label}</FormLabel>
+            <RadioGroup
+                value={value || ''}
+                onChange={handleChange}
+                name={schema.name}
+            >
+                <FormGroup>
+                    {(schema.options || []).map((option, i) => (
                         <FormControlLabel
                             key={i}
-                            control={
-                                <Radio
-                                    error={!!validationMessage}
-                                    color='primary'
-                                    disabled={schema.disabled}
-                                    onChange={this.handleToggle(option.value)}
-                                    checked={this.valueIsChecked(option.value)}
-                                />
-                            }
+                            value={option.value}
+                            control={<Radio />}
                             label={option.label}
                         />
-                    );
-                })}
+                    ))}
+                </FormGroup>
             </RadioGroup>
-        </FormControl>;
-    }
-}
+            {validationMessage && <FormHelperText error={error}>{validationMessage}</FormHelperText>}
+        </div>
+    );
+};
+
+FormFieldRadios.propTypes = {
+    classes: PropTypes.object.isRequired,
+    schema: PropTypes.shape({
+        label: PropTypes.string,
+        name: PropTypes.string,
+        options: PropTypes.arrayOf(PropTypes.shape({
+            label: PropTypes.string,
+            value: PropTypes.string
+        }))
+    }),
+    value: PropTypes.string,
+    validationMessage: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    error: PropTypes.bool
+};
+
+FormFieldRadios.defaultProps = {
+    schema: {
+        options: []
+    },
+    value: '',
+    validationMessage: '',
+    error: false
+};
+
+export default withStyles(styles)(FormFieldRadios);

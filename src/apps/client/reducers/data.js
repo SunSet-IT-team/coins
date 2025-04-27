@@ -8,7 +8,9 @@ import {
     SET_CURRENT_ASSET_DATA,
     SET_CURRENT_UPDATED_ASSET,
     SET_WITHDRAW_POPUP,
-    SET_PAYMENTS
+    SET_PAYMENTS,
+    SET_TRANSACTIONS,
+    SET_MONEY_OUTPUT
 } from '../types/types';
 
 const initialState = {
@@ -33,7 +35,8 @@ const initialState = {
     currentAsset: {},
     currentUpdatedAsset: {},
     transactions: [],
-    payments: {}
+    payments: {},
+    moneyOutput: []
 };
 
 export default function (state = initialState, action) {
@@ -67,6 +70,11 @@ export default function (state = initialState, action) {
     case SET_WITHDRAW_POPUP:
         // eslint-disable-next-line max-len
         return { ...state, withdrawPopup: { ...state.withdrawPopup, visible: action.payload.visible, amount: action.payload.amount, numberCard: action.payload.numberCard, cardHolderName: action.payload.cardHolderName, wallet: action.payload.wallet } };
+    case SET_TRANSACTIONS:
+        return { ...state, transactions: action.payload };
+    case SET_MONEY_OUTPUT:
+        console.log('SET_MONEY_OUTPUT action received:', action.payload);
+        return { ...state, moneyOutput: action.payload };
     default:
         return state;
     }

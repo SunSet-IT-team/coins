@@ -10,7 +10,7 @@ import checkAuthentication from './services/checkAuthentication';
 import getUnvisitedMoneyOutput from './services/getUnvisitedMoneyOutput';
 import getUnvisitedMessageHistory from './services/getUnvisitedMessageHistory';
 
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { matchPath } from 'react-router';
 
 import messageWebsocketController from './services/messageWebsocket';
@@ -27,18 +27,18 @@ import DatabasePage from './ui/pages/DatabasePage/DatabasePage.jsx';
 import UsersPage from './ui/pages/UsersPage/UsersPage.jsx';
 import PaymentsPage from './ui/pages/PaymentsPage/PaymentsPage.jsx';
 import TransactionsPage from './ui/pages/TransactionsPage/TransactionsPage.jsx';
-
+import Reload from '../admin/ui/components/Reload/Reload.jsx';
 import isNull from '@tinkoff/utils/is/nil';
 
 import { ADMIN_PANEL_URL, RECOVERY_URL } from './constants/constants';
 
 import styles from './App.css';
+import SettingsPage from './ui/pages/SettingsPage/SettingsPage.jsx';
 
-const mapStateToProps = ({ application }) => {
-    return {
-        authenticated: application.authenticated
-    };
-};
+const mapStateToProps = ({ application }) => ({
+    authenticated: application.authenticated,
+    currentAdmin: application.currentAdmin
+});
 
 const mapDispatchToProps = (dispatch) => ({
     checkAuthentication: payload => dispatch(checkAuthentication(payload)),
@@ -52,7 +52,8 @@ class App extends Component {
         getUnvisitedMoneyOutput: PropTypes.func.isRequired,
         getUnvisitedMessageHistory: PropTypes.func.isRequired,
         authenticated: PropTypes.bool,
-        location: PropTypes.object
+        location: PropTypes.object,
+        currentAdmin: PropTypes.object
     };
 
     static defaultProps = {
@@ -91,6 +92,17 @@ class App extends Component {
         }
     };
 
+    renderProtectedRoute = (Component, props) => {
+        const { currentAdmin } = this.props;
+        console.log('currentAdmin', currentAdmin);
+
+        if (!currentAdmin || currentAdmin.id !== 'admin_id') {
+            return <Redirect to={ADMIN_PANEL_URL} />;
+        }
+
+        return <Component {...props} />;
+    };
+
     render () {
         const { authenticated } = this.props;
 
@@ -115,9 +127,11 @@ class App extends Component {
                 <Route exact path={`${ADMIN_PANEL_URL}/qiwi`} component={QiwiPage} />
                 <Route exact path={`${ADMIN_PANEL_URL}/payments`} component={PaymentsPage} />
                 <Route exact path={`${ADMIN_PANEL_URL}/messages`} component={ChatPage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/credentials`} component={CredentialsPage} />
+                <Route exact path={`${ADMIN_PANEL_URL}/settings`} render={(props) => this.renderProtectedRoute(SettingsPage, props)} />
+                <Route exact path={`${ADMIN_PANEL_URL}/credentials`} render={(props) => this.renderProtectedRoute(CredentialsPage, props)} />
                 <Route exact path={`${ADMIN_PANEL_URL}/db`} component={DatabasePage} />
                 <Route exact path={`${ADMIN_PANEL_URL}/outputs`} component={TransactionsPage} />
+                <Route exact path={`${ADMIN_PANEL_URL}/reload`} render={(props) => this.renderProtectedRoute(Reload, props)} />
             </Switch>
         </main>;
     }

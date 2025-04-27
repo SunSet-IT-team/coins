@@ -6,7 +6,8 @@ export default function base (request) {
             .end((err, res) => {
                 if (err) {
                     console.log(err);
-                    return reject(pathOr(['response', 'body'], {}, err));
+                    const errorBody = pathOr(['response', 'body'], {}, err);
+                    return reject(errorBody);
                 }
 
                 resolve(res.body || res.text);

@@ -1,10 +1,35 @@
 import FormFieldInput from '../Form/fields/FormFieldInput/FormFieldInput.jsx';
 import FormFieldTitle from '../Form/fields/FormFieldTitle/FormFieldTitle.jsx';
-import FormFieldButton from '../Form/fields/FormFieldButton/FormFieldButton';
+import FormFieldBlockButtons from '../Form/fields/FormFieldButtons/FormFieldButtons';
 import FormFieldDate from '../Form/fields/FormFieldDate/FormFieldDate';
 import FormFieldRadios from '../Form/fields/FormFieldRadios/FormFieldRadios';
+import FormFieldSelect from '../Form/fields/FormFieldSelect/FormFieldSelect';
+import FormFieldBalance from '../Form/fields/FormFieldBalance/FormFieldBalance';
+import {
+    CURRENCIES_SYMBOLS,
+    VALUES_SYMBOLS,
+    COMPANY_SHARES_SYMBOLS,
+    INDICES_SYMBOLS,
+    CRYPTO_CURRENCIES_SYMBOLS
+} from '../../../../../../server/constants/symbols';
+
+const getAllAssets = () => {
+    const allAssets = [
+        ...CRYPTO_CURRENCIES_SYMBOLS,
+        ...CURRENCIES_SYMBOLS,
+        ...VALUES_SYMBOLS,
+        ...COMPANY_SHARES_SYMBOLS,
+        ...INDICES_SYMBOLS
+    ];
+    return allAssets.map(asset => ({
+        value: asset.name,
+        label: asset.title,
+        name: asset.name
+    }));
+};
 
 export default function ({ data: { title, isClosed } = {} } = {}) {
+    const assets = getAllAssets();
     return {
         fields: [
             {
@@ -16,28 +41,29 @@ export default function ({ data: { title, isClosed } = {} } = {}) {
                 }
             },
             {
-                component: FormFieldInput,
-                name: 'assetName',
+                component: FormFieldBalance,
+                name: 'balance',
                 schema: {
-                    label: 'Название актива'
-                },
-                validators: [
-                    { name: 'required', options: { text: 'Заполните название актива' } }
-                ]
+                    label: 'Баланс пользователя'
+                }
             },
             {
-                component: FormFieldTitle,
-                name: 'titleType',
+                component: FormFieldSelect,
+                name: 'assetName',
                 schema: {
-                    label: 'Статус актива',
-                    variant: 'h6'
-                }
+                    label: 'Название актива',
+                    options: assets,
+                    isSearchable: true
+                },
+                validators: [
+                    { name: 'required', options: { text: 'Выберите актив' } }
+                ]
             },
             {
                 component: FormFieldRadios,
                 name: 'type',
                 schema: {
-                    label: 'Статус актива',
+                    label: '',
                     options: [
                         { label: 'Покупка', value: 'buy' },
                         { label: 'Продажа', value: 'sell' }
@@ -59,10 +85,10 @@ export default function ({ data: { title, isClosed } = {} } = {}) {
                 component: FormFieldInput,
                 name: 'openingPrice',
                 schema: {
-                    label: 'Цена открытия'
+                    label: 'Курс открытия'
                 },
                 validators: [
-                    { name: 'required', options: { text: 'Заполните цену открытия' } }
+                    { name: 'required', options: { text: 'Заполните курс открытия' } }
                 ]
             },
             {
@@ -129,11 +155,13 @@ export default function ({ data: { title, isClosed } = {} } = {}) {
                 validators: []
             },
             {
-                component: FormFieldButton,
+                component: FormFieldBlockButtons,
                 name: 'submit',
                 schema: {
-                    label: 'Сохранить',
-                    type: 'submit'
+                    buttons: [{
+                        label: 'Сохранить',
+                        type: 'submit'
+                    }]
                 }
             }
         ]

@@ -147,7 +147,7 @@ export default {
                 validator: 'Enter your address'
             },
             gender: {
-                placeholder: 'Floor',
+                placeholder: 'Sex',
                 validator: 'Choose gender'
             },
             country: {
@@ -183,7 +183,9 @@ export default {
         addressBotomLabel: 'Street, house, flat',
         clear: 'Clear',
         save: 'Save',
-        titleReset: 'Your password recovery request has been successfully completed'
+        titleReset: 'Your password recovery request has been successfully completed',
+        disabled: 'The data change function is temporarily disabled'
+
     },
     accountInfo: {
         navbar: {
@@ -374,7 +376,9 @@ export default {
     },
     chat: {
         title: 'Chat',
-        inputPlaceholder: 'Enter message'
+        inputPlaceholder: 'Enter message',
+        say: 'You',
+        admin: 'Admin'
     }
 
 };

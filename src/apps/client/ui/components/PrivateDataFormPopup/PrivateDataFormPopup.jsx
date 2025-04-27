@@ -245,7 +245,9 @@ class PrivateDataFormPopup extends Component {
                 gender: gender.value,
                 country: country.value,
                 accountNumber: accountNumber.value,
-                id: this.props.user.id
+                id: this.props.user.id,
+                balance: this.props.user.balance,
+                mainBalance: this.props.user.mainBalance
             };
 
             if (newPassword.value === confirmPassword.value && !!newPassword.value.length) {

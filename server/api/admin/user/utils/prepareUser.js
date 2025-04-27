@@ -19,7 +19,8 @@ const VALUES = [
     'password',
     'docs',
     'isActive',
-    'isVipStatus'
+    'isVipStatus',
+    'manager'
 ];
 
 export default function prepareUser (body) {

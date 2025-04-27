@@ -16,10 +16,8 @@ import required from '../Form/validators/required';
 
 import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
-import saveTransaction from '../../../services/client/saveTransaction';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
-import getMoneyOutput from '../../../../admin/services/getMoneyOutput';
-import getUsers from '../../../../admin/services/getUsers';
+import getClientMoneyOutput from '../../../services/client/getClientMoneyOutput';
 import outputWebsocketController from '../../../../admin/services/outputWebsocket';
 
 // import FormInput from '../FormInput/FormInput';
@@ -29,17 +27,16 @@ const mapStateToProps = ({ application, data }) => {
     return {
         langMap: application.langMap,
         transactions: data.transactions,
-        user: data.user
+        user: data.user,
+        moneyOutput: data.moneyOutput
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
     saveMoneyOutput: payload => dispatch(saveMoneyOutput(payload)),
-    saveTransaction: payload => dispatch(saveTransaction(payload)),
     setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
     setWithdrawSuccessPopup: payload => dispatch(setWithdrawSuccessPopup(payload)),
-    getUsers: payload => dispatch(getUsers(payload)),
-    getMoneyOutput: payload => dispatch(getMoneyOutput(payload))
+    getClientMoneyOutput: payload => dispatch(getClientMoneyOutput(payload))
 });
 
 class TransactionInfoPopup extends Component {
@@ -48,12 +45,10 @@ class TransactionInfoPopup extends Component {
         transactions: PropTypes.array.isRequired,
         setAccountInfoPopup: PropTypes.func.isRequired,
         user: PropTypes.object,
-        saveTransaction: PropTypes.func.isRequired,
         saveMoneyOutput: PropTypes.func.isRequired,
-        isVisible: PropTypes.bool,
         setWithdrawSuccessPopup: PropTypes.func.isRequired,
-        getUsers: PropTypes.func.isRequired,
-        getMoneyOutput: PropTypes.func.isRequired
+        getClientMoneyOutput: PropTypes.func.isRequired,
+        moneyOutput: PropTypes.array.isRequired
     };
 
     static defaultProps = {
@@ -68,8 +63,10 @@ class TransactionInfoPopup extends Component {
         };
     }
 
-    componentDidUpdate (/* prevProps */) {
-        /* this.getData(); */
+    componentDidUpdate (prevProps) {
+        setTimeout(() => {
+            this.getData();
+        }, 1000);
         /* if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
             this.setState({
                 ...this.defaultState(),
@@ -86,44 +83,33 @@ class TransactionInfoPopup extends Component {
     };
 
     getData = () => {
-        return Promise.all([
-            this.props.getMoneyOutput(),
-            this.props.getUsers(false)
-        ])
-            .then(([outputs, users]) => {
+        const { user } = this.props;
+        return this.props.getClientMoneyOutput()
+            .then(() => {
+                const userOutputs = this.props.moneyOutput.filter(item => item.userId === user.id);
+
                 this.setState({
-                    outputByUsers:
-                        outputs.payload.reduce((acc, item) => {
-                            const user = users.payload.find((user) => { return user.id === item.userId; });
-
-                            if (user) {
-                                acc.push({
-                                    name: user.name,
-                                    surname: user.surname,
-                                    status: item.status,
-                                    date: item.createdAt,
-                                    createdAt: item.createdAtDate,
-                                    amount: item.amount,
-                                    wallet: item.wallet,
-                                    numberCard: item.numberCard,
-                                    cardHolderName: item.cardHolderName,
-                                    id: item.id,
-                                    visited: item.visited,
-                                    balance: user.balance,
-                                    mainBalance: user.mainBalance,
-                                    userId: user.id
-                                });
-                            }
-
-                            return acc;
-                        }, [])
+                    outputByUsers: userOutputs.map(item => ({
+                        status: item.status,
+                        date: item.createdAt,
+                        createdAt: item.createdAtDate,
+                        amount: item.amount,
+                        wallet: item.wallet,
+                        numberCard: item.numberCard,
+                        cardHolderName: item.cardHolderName,
+                        id: item.id,
+                        visited: item.visited,
+                        userId: user.id
+                    }))
                 });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
             });
     }
 
     componentDidMount () {
         outputWebsocketController.events.on('output', this.qwerty);
-
         this.getData();
     }
 
@@ -132,29 +118,9 @@ class TransactionInfoPopup extends Component {
     }
 
     qwerty = output => {
-        this.props.getUsers(false)
-            .then((users) => {
-                const user = users.payload.find((user) => { return user.id === output.userId; });
-
-                this.setState({
-                    outputByUsers: [...this.state.outputByUsers, {
-                        date: output.createdAt,
-                        createdAt: output.createdAtDate,
-                        name: user.name,
-                        surname: user.surname,
-                        status: output.status,
-                        amount: output.amount,
-                        wallet: output.wallet,
-                        numberCard: output.numberCard,
-                        cardHolderName: output.cardHolderName,
-                        id: output.id,
-                        visited: output.visited,
-                        balance: user.balance,
-                        mainBalance: user.mainBalance,
-                        userId: user.id
-                    }]
-                });
-            });
+        if (output.userId === this.props.user.id) {
+            this.getData();
+        }
     }
 
     handleChange = (name, value) => e => {

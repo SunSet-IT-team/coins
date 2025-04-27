@@ -4,7 +4,7 @@ import setCookiesAgreement from '../../actions/setCookiesAgreement';
 
 export default function getEvents (req) {
     return dispatch => {
-        const agreement = req.cookies[COOKIE_AGREEMENT_NAME];
+        const agreement = req.cookies && req.cookies[COOKIE_AGREEMENT_NAME];
 
         return Promise.resolve(dispatch(setCookiesAgreement(!!agreement)));
     };

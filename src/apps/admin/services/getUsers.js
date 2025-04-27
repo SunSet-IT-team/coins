@@ -1,8 +1,6 @@
 import request from 'superagent';
 import base from './base';
-
 import setUsersAction from '../actions/setUsers';
-
 import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
 
 export default function getUsers () {
@@ -12,7 +10,9 @@ export default function getUsers () {
         return base(
             request
                 .get('/api/admin/user/all')
-                .query({ token })
+                .query({
+                    token
+                })
         )
             .then(users => {
                 return dispatch(setUsersAction(users));

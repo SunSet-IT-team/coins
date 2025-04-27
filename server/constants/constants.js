@@ -7,7 +7,7 @@ export const SERVER_ERROR_STATUS_CODE = 500;
 export const MONGODB_DUPLICATE_CODE = 11000;
 export const APP_FORM_FILE_FIELD_NAME_REGEX = /app-form-file-/g;
 
-export const DOMAIN = 'room.pro100-capital.ru';
+export const DOMAIN = 'coinwalletcapital.ru';
 
 export const DATABASE_URL = 'mongodb://localhost/pl-finance';
 
@@ -15,9 +15,9 @@ export const FILES_FOLDER_PATH = 'src/apps/admin/files';
 
 // TODO: добавьте финхаб ключи здесь
 // Важно создать разные аккаунты финхаб. Т.к. финхаб разрешает только 1 вебсокет подключение для конкретного ключа
-export const FINNHUB_API_KEY_DEV = 'c9c1602ad3i8r0u4b46g';
+export const FINNHUB_API_KEY_DEV = 'ct7de3pr01qoi5r2gq50ct7de3pr01qoi5r2gq5g';
 
-export const FINNHUB_API_KEY_PROD = 'cq0jm6pr01qkg1bevsrgcq0jm6pr01qkg1bevss0';
+export const FINNHUB_API_KEY_PROD = 'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10';
 export const FINNHUB_API_KEY = process.env.NODE_ENV === 'production' ? FINNHUB_API_KEY_PROD : FINNHUB_API_KEY_DEV;
 // export const FINNHUB_API_KEY = FINNHUB_API_KEY_PROD;
 
@@ -30,11 +30,11 @@ export const AUTO_CLOSE_ORDER_EVENT_CLIENT = 'AUTO_CLOSE_ORDER_EVENT_CLIENT';
 // https://myaccount.google.com/lesssecureapps - разрешить к почте подключаться не только через сайт gmail
 // https://accounts.google.com/b/0/DisplayUnlockCaptcha - разрешить подключиться незнакомому устрайству (серверу сайта)
 export const DEV_MAIL_CREDENTIALS = {
-    login: 'admin@pro100-capital.ru',
+    login: 'admin@coinwalletcapital.ru',
     password: 'пароль от почты дк'
 };
 export const PROD_MAIL_CREDENTIALS = {
-    login: 'admin@pro100-capital.ru',
+    login: 'admin@coinwalletcapital.ru',
     password: 'пароль от почты дк'
 };
 export const MAIL_CREDENTIALS = process.env.NODE_ENV === 'production' ? PROD_MAIL_CREDENTIALS : DEV_MAIL_CREDENTIALS;
@@ -54,3 +54,5 @@ export const REQUIRED_DOC = [
     'cardFront',
     'cardBack'
 ];
+
+export const WS_MESSAGES_PORT = 2053;

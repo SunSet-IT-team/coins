@@ -29,12 +29,20 @@ const mapDispatchToProps = (dispatch) => ({
     getUnvisitedMessageHistory: payload => dispatch(getUnvisitedMessageHistory(payload))
 });
 
+const mapStateToProps = ({ application }) => ({
+    currentAdmin: application.currentAdmin
+});
+
 class MainPage extends Component {
-    propTypes = {
+    static propTypes = {
         getMessageHistory: PropTypes.func.isRequired,
         getUsers: PropTypes.func.isRequired,
         editMessage: PropTypes.func.isRequired,
-        getUnvisitedMessageHistory: PropTypes.func.isRequired
+        getUnvisitedMessageHistory: PropTypes.func.isRequired,
+        currentAdmin: PropTypes.shape({
+            id: PropTypes.string,
+            email: PropTypes.string
+        })
     };
 
     constructor (props) {
@@ -64,21 +72,37 @@ class MainPage extends Component {
         }
     }
 
-    filterChatsBySearch = (chats, search = this.state.search) => {
-        return chats.filter(messagesByUser => {
-            const user = this.state.usersMap[messagesByUser.userId];
-            const name = user && `${user.name} ${user.surname}`.toLowerCase();
+    filterChatsByManager = (chats) => {
+        const { currentAdmin } = this.props;
 
-            return !search || name && name.indexOf(search.toLowerCase()) !== -1;
+        if (currentAdmin && currentAdmin.id === 'manager_id') {
+            return chats.filter(chat => {
+                const user = this.state.usersMap[chat.userId];
+                return user && user.manager === currentAdmin.email;
+            });
+        }
+        return chats;
+    };
+
+    filterChatsBySearch = (chats, search = this.state.search) => {
+        const filteredByManager = this.filterChatsByManager(chats);
+
+        return filteredByManager.filter(messagesByUser => {
+            const user = this.state.usersMap[messagesByUser.userId];
+            return user && `${user.name} ${user.surname}`.toLowerCase().includes(search.toLowerCase());
         });
     };
 
     handleSearchChange = event => {
         const newValue = event.target.value;
+        const filteredMessages = this.state.messagesByUsers.filter(messagesByUser => {
+            const user = this.state.usersMap[messagesByUser.userId];
+            return user && `${user.name} ${user.surname}`.toLowerCase().includes(newValue.toLowerCase());
+        });
 
         this.setState({
             search: newValue,
-            showedMessagesByUsers: this.filterChatsBySearch(this.state.messagesByUsers, newValue)
+            showedMessagesByUsers: filteredMessages
         });
     };
 
@@ -107,15 +131,21 @@ class MainPage extends Component {
             .then(([messages, users]) => {
                 const allUsers = users.payload;
 
+                const filteredUsers = this.props.currentAdmin && this.props.currentAdmin.id === 'manager_id'
+                    ? allUsers.filter(user => user.manager === this.props.currentAdmin.email)
+                    : allUsers;
+
+                const usersMap = allUsers.reduce((result, user) => ({
+                    ...result,
+                    [user.id]: user
+                }), {});
+
                 this.setState({
-                    users: allUsers,
-                    usersMap: allUsers.reduce((result, user) => ({
-                        ...result,
-                        [user.id]: user
-                    }), {})
+                    users: filteredUsers,
+                    usersMap
                 });
 
-                const newMessagesByUsers = allUsers
+                const newMessagesByUsers = filteredUsers
                     .reduce((result, user) => {
                         const currentUserMessages = messages.filter((item) => { return user.id === item.senderId || user.id === item.receiverId; });
                         const sortedByDateMessages = currentUserMessages.reduce((acc, item) => {
@@ -154,7 +184,7 @@ class MainPage extends Component {
                     });
 
                 this.setState({
-                    activeTabId: newMessagesByUsers[0].userId,
+                    activeTabId: newMessagesByUsers[0].userId || null,
                     messagesByUsers: newMessagesByUsers,
                     showedMessagesByUsers: newMessagesByUsers
                 });
@@ -280,12 +310,19 @@ class MainPage extends Component {
                     <div ref={this.messagesWrapper} className={styles.messagesWrapper}>
                         {(messagesByUsers.find(messagesByUser => messagesByUser.userId === activeTabId) || { messages: [] }).messages.map((item, i) => {
                             if (item.length) {
-                                return <div className={styles.messagesContainer} data-attr={this.getDateHelper(item[0].createdAt)}>
-                                    {item.map((message, i) => {
+                                return <div
+                                    className={styles.messagesContainer}
+                                    key={`message-container-${i}`}
+                                    data-attr={this.getDateHelper(item[0].createdAt)}
+                                >
+                                    {item.map((message, j) => {
                                         const isMyMessage = message.senderId === 'admin';
                                         const user = usersMap[message.senderId];
 
-                                        return <div key={i} className={classNames(styles.message, { [styles.messageYou]: isMyMessage })}>
+                                        return <div
+                                            key={`message-${j}-${message.createdAt}`}
+                                            className={classNames(styles.message, { [styles.messageYou]: isMyMessage })}
+                                        >
                                             <div className={styles.messageContent}>
                                                 <div className={styles.messageContentTop}>
                                                     <div className={styles.messageName}>
@@ -324,8 +361,8 @@ class MainPage extends Component {
                         <div className={styles.inputWrapper}>
                             <input className={styles.input} value={value} onChange={this.handleChange} type="text" />
                         </div>
-                        {value ? <button className={styles.button} type='submit' >Отправить</button>
-                            : <button className={styles.buttonDisabled} type='button' >Отправить</button>}
+                        {value ? <button className={styles.button} type='submit' >Отправить1</button>
+                            : <button className={styles.buttonDisabled} type='button' >Отправить2</button>}
                     </div>
                 </div>
             </form >
@@ -333,4 +370,4 @@ class MainPage extends Component {
     }
 }
 
-export default connect(undefined, mapDispatchToProps)(MainPage);
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);

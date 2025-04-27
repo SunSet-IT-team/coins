@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
 import EventEmitter from 'eventemitter3';
 
-const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? 'wss://room.pro100-capital.ru:6060' : 'ws://localhost:6060';
+const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? 'wss://coinwalletcapital.ru:6060' : 'ws://localhost:6060';
 
 class OutputWebsocketController {
     events = new EventEmitter();

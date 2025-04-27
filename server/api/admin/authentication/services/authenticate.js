@@ -33,8 +33,11 @@ export default function authenticate (req, res) {
                     res.status(OKEY_STATUS_CODE).json({
                         token: token,
                         user: {
+                            id: admin.id,
+                            login: admin.login,
                             email: admin.email,
-                            login: admin.login
+                            name: admin.name,
+                            surname: admin.surname
                         }
                     });
                 });

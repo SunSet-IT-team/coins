@@ -66,7 +66,7 @@ class CountrySelector extends Component {
                     .map(country => <div key={country.id} className={styles.countryContainer} onClick={this.handleSetCountry(country)}>
                         <img className={styles.iconFlag} src={country.flag} alt={country.name} />
                         <div className={styles.countryNameBlock}>
-                            <div className={styles.countryNameText}>{langsMap.ru.accountInfo.countryInfo[country.name]}</div>
+                            <div className={styles.countryNameText}>{langsMap.en.accountInfo.countryInfo[country.name]}</div>
                         </div>
                     </div>)}
             </div>

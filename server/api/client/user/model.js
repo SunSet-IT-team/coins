@@ -7,7 +7,7 @@ const User = new Schema({
     surname: { type: String, required: true },
     id: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
-    balance: { type: Number, required: true },
+    balance: { type: Number, required: false },
     mainBalance: { type: Number, required: false },
     password: { type: String, required: false },
     phone: { type: String, required: true },
@@ -26,6 +26,7 @@ const User = new Schema({
     confirmPassword: { type: String },
     bonuses: { type: Number, required: false },
     credFacilities: { type: Number, required: false },
+    manager: { type: String, required: false },
     createdAt: { type: Number, required: true },
     updatedAt: { type: Number }
 });

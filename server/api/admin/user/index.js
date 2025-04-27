@@ -5,6 +5,8 @@ import verification from '../../../middlewares/verification';
 import getUsers from './services/getUsers';
 import saveUser from './services/saveUser';
 import editUser from './services/editUser';
+import assignUser from './services/assignUser';
+import detachUser from './services/detachUser';
 import deleteByIds from './services/deleteByIds';
 
 const router = express.Router();
@@ -19,6 +21,12 @@ router.route('/save')
 
 router.route('/edit')
     .put(editUser);
+
+router.route('/assign')
+    .put(assignUser);
+
+router.route('/detach')
+    .put(detachUser);
 
 router.route('/delete-few')
     .delete(deleteByIds);

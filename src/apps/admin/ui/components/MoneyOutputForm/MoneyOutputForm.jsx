@@ -143,13 +143,15 @@ class MoneyOutputForm extends Component {
 
         const { editMoneyOutput, onDone, saveTransaction } = this.props;
 
-        saveTransaction(userPayload).then(() => {
-            onDone();
-        }).catch(() => {
-            this.setState({
-                errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова'
+        if (values.status === 'Успешно') {
+            saveTransaction(userPayload).then(() => {
+                onDone();
+            }).catch(() => {
+                this.setState({
+                    errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова'
+                });
             });
-        }); ;;
+        }
 
         editMoneyOutput(outputPayload)
             .then(() => {

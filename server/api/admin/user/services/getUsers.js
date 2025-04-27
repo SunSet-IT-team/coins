@@ -1,9 +1,5 @@
 import getAllUsers from '../../../client/user/queries/getAllUsers';
-
-import {
-    OKEY_STATUS_CODE,
-    SERVER_ERROR_STATUS_CODE
-} from '../../../../constants/constants';
+import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
 
 export default function getUsers (req, res) {
     try {
@@ -11,10 +7,10 @@ export default function getUsers (req, res) {
             .then(users => {
                 res.status(OKEY_STATUS_CODE).send(users);
             })
-            .catch((e) => {
+            .catch(() => {
                 res.status(SERVER_ERROR_STATUS_CODE).end();
             });
-    } catch (e) {
+    } catch (error) {
         res.status(SERVER_ERROR_STATUS_CODE).end();
     }
 }

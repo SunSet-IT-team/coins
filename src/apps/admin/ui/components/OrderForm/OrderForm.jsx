@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import getSchema from './orderFormSchema';
 import editOrder from '../../../services/editOrder';
-
+import saveOrder from '../../../services/saveOrder';
 import Form from '../Form/Form';
-
 import noop from '@tinkoff/utils/function/noop';
 import prop from '@tinkoff/utils/object/prop';
 import pick from '@tinkoff/utils/object/pick';
 import uniqid from 'uniqid';
 import format from 'date-fns/format';
-
 import { getPledge, getOpeningSlotPrice } from '../../../../client/utils/getAssetValues';
 import { CHART_SYMBOL_INFO_MAP } from '../../../../../../server/constants/symbols';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -43,16 +40,28 @@ const materialStyles = theme => ({
     },
     margin: {
         margin: theme.spacing.unit
+    },
+    errorMessage: {
+        color: theme.palette.error.main,
+        marginTop: theme.spacing.unit,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    root: {
+        position: 'relative'
     }
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    editOrder: payload => dispatch(editOrder(payload))
+    editOrder: payload => dispatch(editOrder(payload)),
+    saveOrder: payload => dispatch(saveOrder(payload))
 });
 
 class OrderForm extends Component {
     static propTypes = {
         editOrder: PropTypes.func.isRequired,
+        saveOrder: PropTypes.func.isRequired,
         onDone: PropTypes.func,
         order: PropTypes.object,
         users: PropTypes.array,
@@ -70,16 +79,16 @@ class OrderForm extends Component {
     constructor (props) {
         super(props);
 
-        const { order, activeUser } = this.props;
+        const { order } = this.props;
         this.dirName = order.dirName || uniqid();
         this.isClosed = order.isClosed;
         this.initialValues = {
             assetName: order.assetName || '',
-            createdAt: order.createdAt ? format(order.createdAt, "yyyy-MM-dd'T'HH:mm") : format(new Date(), 'yyyy-MM-dd'),
+            createdAt: order.createdAt ? format(order.createdAt, "yyyy-MM-dd'T'HH:mm") : format(new Date(), "yyyy-MM-dd'T'HH:mm"),
             openingPrice: order.openingPrice || '',
             amount: order.amount || '',
             pledge: order.pledge || '',
-            type: order.type || 'buy',
+            type: order.type && ['buy', 'sell'].includes(order.type) ? order.type : 'buy',
             ...(order.closedAt ? { closedAt: format(order.closedAt, "yyyy-MM-dd'T'HH:mm") } : {}),
             ...(order.closedPrice ? { closedPrice: order.closedPrice } : {}),
             ...pick(ORDERS_VALUES, order),
@@ -88,7 +97,6 @@ class OrderForm extends Component {
         };
         this.id = prop('id', order);
         this.state = {
-            activeUser: activeUser,
             errorText: ''
         };
     }
@@ -110,27 +118,31 @@ class OrderForm extends Component {
         return {
             assetName,
             createdAt: +new Date(createdAt),
-            openingPrice,
-            amount,
-            pledge,
+            openingPrice: Number(openingPrice),
+            amount: Number(amount),
+            pledge: Number(pledge),
             type,
             ...(closedAt ? { closedAt: +new Date(closedAt) } : {}),
-            ...(closedPrice ? { closedPrice } : {}),
+            ...(closedPrice ? { closedPrice: Number(closedPrice) } : {}),
             dirName: this.dirName,
             userId: activeUser.id,
-            isClosed: this.isClosed,
-            takeProfit,
-            stopLoss
+            isClosed: this.isClosed || false,
+            takeProfit: takeProfit ? Number(takeProfit) : 0,
+            stopLoss: stopLoss ? Number(stopLoss) : 0
         };
     };
 
     handleSubmit = async values => {
         const orderPayload = this.getOrderPayload(values);
-        const { editOrder, onDone } = this.props;
+        const { editOrder, saveOrder, onDone } = this.props;
 
         return new Promise(async (resolve, reject) => {
             try {
-                await editOrder({ ...orderPayload, id: this.id });
+                if (this.id) {
+                    await editOrder({ ...orderPayload, id: this.id });
+                } else {
+                    await saveOrder(orderPayload);
+                }
                 onDone();
                 resolve();
             } catch (e) {
@@ -140,9 +152,12 @@ class OrderForm extends Component {
     };
 
     handleChange = (values, changes) => {
-        switch (Object.keys(changes)[0]) {
+        const changeKey = Object.keys(changes)[0];
+        const changeValue = changes[changeKey];
+
+        switch (changeKey) {
         case 'userId':
-            const activeUser = this.props.users.find(user => user.id === changes.userId);
+            const activeUser = this.props.users.find(user => user.id === changeValue);
             const { lang } = this.state;
 
             values.orderId = activeUser.texts[lang].order[0].id;
@@ -150,11 +165,28 @@ class OrderForm extends Component {
         case 'amount':
             const asset = CHART_SYMBOL_INFO_MAP[values.assetName];
             const openingSlotPrice = getOpeningSlotPrice(asset, values.openingPrice);
-            const pledge = getPledge(+changes.amount, openingSlotPrice);
+            const pledge = getPledge(+changeValue, openingSlotPrice);
 
             values.pledge = pledge;
             break;
+        case 'openingPrice':
+            if (values.amount) {
+                const asset = CHART_SYMBOL_INFO_MAP[values.assetName];
+                const openingSlotPrice = getOpeningSlotPrice(asset, changeValue);
+                const pledge = getPledge(+values.amount, openingSlotPrice);
+                values.pledge = pledge;
+            }
+            break;
+        case 'type':
+            const validTypes = ['buy', 'sell'];
+            values.type = validTypes.includes(changeValue) ? changeValue : 'buy';
+            break;
         }
+    };
+
+    handleInputChange = (e) => {
+        const { name, value } = e.target;
+        this.handleChange({ [name]: value }, { [name]: value });
     };
 
     handleHideFailMessage = () => {
@@ -163,13 +195,22 @@ class OrderForm extends Component {
         });
     };
 
+    handleClose = () => {
+        this.handleHideFailMessage();
+    };
+
     render () {
-        const { classes } = this.props;
+        const { classes, activeUser } = this.props;
         const { errorText } = this.state;
+
+        const initialValues = {
+            ...this.initialValues,
+            balance: activeUser.mainBalance || 0
+        };
 
         return <div>
             <Form
-                initialValues={this.initialValues}
+                initialValues={initialValues}
                 schema={getSchema({
                     data: {
                         title: this.id ? 'Редактирование ордера' : 'Добавление ордера',

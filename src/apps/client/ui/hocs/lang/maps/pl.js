@@ -183,7 +183,8 @@ export default {
         addressBotomLabel: 'Ulica, dom, mieszkanie',
         clear: 'Jasny',
         save: 'Zapisać',
-        titleReset: 'Twoja prośba o odzyskanie hasła została pomyślnie zakończona'
+        titleReset: 'Twoja prośba o odzyskanie hasła została pomyślnie zakończona',
+        disabled: 'Funkcja zmiany danych jest tymczasowo wyłączona'
     },
     accountInfo: {
         navbar: {
@@ -375,6 +376,8 @@ export default {
     },
     chat: {
         title: 'Czat',
-        inputPlaceholder: 'Wpisz wiadomość'
+        inputPlaceholder: 'Wpisz wiadomość',
+        say: 'Ty',
+        admin: 'Administrator'
     }
 };

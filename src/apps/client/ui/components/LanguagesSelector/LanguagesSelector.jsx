@@ -59,6 +59,9 @@ class LanguagesSelector extends Component {
         const { title, currentLanguage } = this.props;
         const { isLanguageOpen } = this.state;
 
+        // Проверяем, что LANGUAGES существует и является массивом
+        const availableLanguages = Array.isArray(LANGUAGES) ? LANGUAGES.filter(language => language && language.id !== currentLanguage.id) : [];
+
         return <div className={classNames(styles.selectorContainer, {
             [styles.selectorContainerActive]: isLanguageOpen
         })} onClick={this.handleLanguagesClick}>
@@ -68,10 +71,9 @@ class LanguagesSelector extends Component {
             <div className={classNames(styles.innerCountryContainer, {
                 [styles.innerCountryContainerOpen]: isLanguageOpen
             })}>
-                {LANGUAGES
-                    .filter(language => language.id !== currentLanguage.id)
+                {availableLanguages
                     .map(language => <div key={language.id} className={styles.countryContainer} onClick={this.handleSetLanguage(language)}>
-                        <img className={styles.iconFlag} src={this.setFlag(language.countryCode)} alt={language.name} />
+                        <img className={styles.iconFlag} src={language.flag || this.setFlag(language.countryCode)} alt={language.name} />
                         <div className={styles.countryNameBlock}>
                             <div className={styles.countryNameText}>{language.name}</div>
                         </div>

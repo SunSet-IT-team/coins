@@ -33,6 +33,9 @@ const materialStyles = {
     title: {
         flexGrow: 1
     },
+    userInfo: {
+        marginRight: '16px'
+    },
     popper: {
         zIndex: 1
     },
@@ -52,10 +55,11 @@ const materialStyles = {
     }
 };
 
-const mapStateToProps = ({ data }) => {
+const mapStateToProps = ({ data, application }) => {
     return {
         outputs: data.unvisitedOutput.length,
-        messages: data.unvisitedMessages.length
+        messages: data.unvisitedMessages.length,
+        currentAdmin: application.currentAdmin
     };
 };
 
@@ -69,7 +73,8 @@ class Header extends Component {
         classes: PropTypes.object.isRequired,
         logout: PropTypes.func.isRequired,
         outputs: PropTypes.number.isRequired,
-        messages: PropTypes.number.isRequired
+        messages: PropTypes.number.isRequired,
+        currentAdmin: PropTypes.object
     };
 
     static defaultProps = {
@@ -106,8 +111,9 @@ class Header extends Component {
     };
 
     render () {
-        const { classes, outputs, messages } = this.props;
+        const { classes, outputs, messages, currentAdmin } = this.props;
         const { menuShowed } = this.state;
+        const isManager = currentAdmin && currentAdmin.id === 'manager_id';
 
         return <AppBar position='static'>
             <Toolbar>
@@ -132,7 +138,7 @@ class Header extends Component {
                                 <ClickAwayListener onClickAway={this.handleClose}>
                                     <MenuList>
                                         {routes.map((route, i) => {
-                                            if (route.notMenu) {
+                                            if (route.notMenu || (route.adminOnly && isManager)) {
                                                 return null;
                                             }
                                             return <MenuItem key={i} component={Link} onClick={this.handleClose} to={route.path}>
@@ -150,7 +156,19 @@ class Header extends Component {
                 <Typography variant='h6' color='inherit' className={classes.title}>
                     {this.getHeaderTitle()}
                 </Typography>
-                <Button color='inherit' component={Link} to={`${ADMIN_PANEL_URL}/credentials`} className={classes.button}>Сменить учетные данные</Button>
+                {isManager
+                    ? <Typography color='inherit' className={classes.userInfo}>
+                        {currentAdmin.name || currentAdmin.surname ? (currentAdmin.name + ' ' + currentAdmin.surname).trim() : currentAdmin.email}
+                        {' '}(менеджер)
+                    </Typography>
+                    : <Button color='inherit'
+                        component={Link}
+                        to={`${ADMIN_PANEL_URL}/credentials`}
+                        className={classes.button}
+                    >
+                        Сменить учетные данные
+                    </Button>
+                }
                 <Button color='inherit' onClick={this.handleLogout}>Выйти</Button>
             </Toolbar>
         </AppBar >;

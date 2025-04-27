@@ -3,7 +3,7 @@ import base from './base';
 
 import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
 
-export default function saveOrder (order) {
+export default function editOrder (order) {
     return () => {
         const token = localStorage.getItem(TOKEN_LOCAL_STORAGE_NAME);
 

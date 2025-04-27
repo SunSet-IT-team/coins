@@ -125,7 +125,7 @@ class ChatPage extends Component {
                         </div>
                         <div className={isMyMessage ? styles.messageInfo : styles.messageInfoAdmin}>
                             <div className={styles.senderTime}>
-                                <div className={styles.sender}>{isMyMessage ? 'Вы' : 'Админ'}</div>
+                                <div className={styles.sender}>{isMyMessage ? text.say : text.admin}</div>
                                 <div className={styles.timeSent}>
                                     {isToday(message.createdAt)
                                         ? format(message.createdAt, 'HH:mm')

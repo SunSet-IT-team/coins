@@ -2,6 +2,7 @@ import request from 'superagent';
 import base from './base';
 
 import authenticateAction from '../actions/authenticate';
+import setCurrentAdminAction from '../actions/setCurrentAdmin';
 
 import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
 
@@ -14,11 +15,13 @@ export default function authenticate () {
                 .get('/api/admin/authentication/check')
                 .query({ token })
         )
-            .then(() => {
-                return dispatch(authenticateAction(true));
+            .then((response) => {
+                dispatch(authenticateAction(true));
+                dispatch(setCurrentAdminAction(response));
             })
             .catch(() => {
-                return dispatch(authenticateAction(false));
+                dispatch(authenticateAction(false));
+                dispatch(setCurrentAdminAction(null));
             });
     };
 }

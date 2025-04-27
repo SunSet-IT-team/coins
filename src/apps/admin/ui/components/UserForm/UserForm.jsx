@@ -49,7 +49,11 @@ class UserForm extends Component {
         editUser: PropTypes.func.isRequired,
         classes: PropTypes.object.isRequired,
         onDone: PropTypes.func,
-        user: PropTypes.object
+        user: PropTypes.object,
+        currentAdmin: PropTypes.shape({
+            id: PropTypes.string,
+            email: PropTypes.string
+        })
     };
 
     static defaultProps = {
@@ -77,6 +81,7 @@ class UserForm extends Component {
             password: '',
             isActive: user.isActive || 'null',
             isVipStatus: user.isVipStatus || false,
+            manager: user.manager || '',
             identity: (user.docs && user.docs.identity ? [{
                 path: user.docs.identity.path,
                 name: user.docs.identity.name,
@@ -101,7 +106,8 @@ class UserForm extends Component {
                 type: item.type,
                 path: item.path,
                 id: uniqid()
-            })) : [])
+            })) : []),
+            balance: user.mainBalance || 0
         };
 
         this.id = prop('id', user);
@@ -126,6 +132,7 @@ class UserForm extends Component {
         {
             name,
             surname,
+            manager,
             accountNumber,
             email,
             phone,
@@ -146,6 +153,7 @@ class UserForm extends Component {
         return {
             name,
             surname,
+            manager,
             accountNumber,
             email,
             phone,
@@ -236,9 +244,10 @@ class UserForm extends Component {
                         dirName: this.dirName
                     }
                 })}
-                onSubmit={this.handleSubmit}
                 onChange={this.handleChange}
+                onSubmit={this.handleSubmit}
             />
+
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -253,7 +262,7 @@ class UserForm extends Component {
                     message={
                         <span id='client-snackbar' className={classes.message}>
                             <ErrorIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            {errorText}
+                            { errorText }
                         </span>
                     }
                 />
@@ -262,4 +271,4 @@ class UserForm extends Component {
     }
 }
 
-export default withStyles(materialStyles)(connect(null, mapDispatchToProps)(UserForm));
+export default connect(null, mapDispatchToProps)(withStyles(materialStyles)(UserForm));

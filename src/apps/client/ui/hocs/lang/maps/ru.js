@@ -156,7 +156,8 @@ export default {
         addressBotomLabel: 'Улица, дом, квартира',
         clear: 'Очистить',
         save: 'Сохранить',
-        titleReset: 'Ваш запрос на востановление пароля успешно выполнен'
+        titleReset: 'Ваш запрос на востановление пароля успешно выполнен',
+        disabled: 'Функция сменны данных временно отключена'
     },
     accountInfo: {
         navbar: {
@@ -342,7 +343,9 @@ export default {
     },
     chat: {
         title: 'Чат',
-        inputPlaceholder: 'Введите сообщение'
+        inputPlaceholder: 'Введите сообщение',
+        say: 'Вы',
+        admin: 'Админ'
     }
 
 };

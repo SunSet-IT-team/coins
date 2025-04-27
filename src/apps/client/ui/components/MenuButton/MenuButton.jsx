@@ -91,8 +91,17 @@ class MenuButton extends Component {
     setCurrenLanguage () {
         if (typeof window !== 'undefined' && localStorage.lang) {
             const lang = _find(LANGUAGES, { langCode: localStorage.lang });
+            if (!lang || !lang.countryCode) {
+                // Если не нашли язык или у него нет countryCode, используем первый язык по умолчанию
+                const defaultLang = LANGUAGES[0];
+                this.setState({ currentLanguage: { flag: defaultLang.flag, id: defaultLang.id, name: defaultLang.name } });
+                return;
+            }
+
             const item = _find(COUNTRY_INFO, { name: lang.countryCode });
             if (!item) {
+                // Если не нашли соответствующий флаг, используем флаг из объекта языка
+                this.setState({ currentLanguage: { flag: lang.flag, id: lang.id, name: lang.name } });
                 return;
             }
 
@@ -101,9 +110,9 @@ class MenuButton extends Component {
         }
 
         if (typeof window !== 'undefined' && !localStorage.lang) {
-            // this.state = COUNTRY_INFO[0];
-            const lang = _find(LANGUAGES, { langCode: COUNTRY_INFO[0].name });
-            this.setState({ currentLanguage: { flag: COUNTRY_INFO[0].flag, id: lang.id, name: lang.name } });
+            // Если язык не сохранен в localStorage, используем первый язык из списка
+            const defaultLang = LANGUAGES[0];
+            this.setState({ currentLanguage: { flag: defaultLang.flag, id: defaultLang.id, name: defaultLang.name } });
         }
     }
 
@@ -115,8 +124,34 @@ class MenuButton extends Component {
 
     componentWillReceiveProps (nextProps) {
         const currentLanguage = _find(LANGUAGES, { langCode: nextProps.lang });
+        if (!currentLanguage) {
+            return;
+        }
+
+        if (currentLanguage.flag) {
+            // Если у языка есть флаг, используем его напрямую
+            this.setState({
+                currentLanguage: {
+                    id: currentLanguage.id,
+                    name: currentLanguage.name,
+                    flag: currentLanguage.flag
+                }
+            });
+            return;
+        }
+
         const item = _find(COUNTRY_INFO, { name: currentLanguage.countryCode });
-        this.setState({ currentLanguage: { id: currentLanguage.id, name: currentLanguage.name, flag: item.flag } });
+        if (!item) {
+            return;
+        }
+
+        this.setState({
+            currentLanguage: {
+                id: currentLanguage.id,
+                name: currentLanguage.name,
+                flag: item.flag
+            }
+        });
     }
 
     componentWillUnmount () {

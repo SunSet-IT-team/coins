@@ -40,7 +40,8 @@ export default function editOrder (req, res) {
 
                             const updatedUser = {
                                 id: order.userId,
-                                balance: user.balance - prevProfit + prevCommission + profit - commission
+                                balance: user.balance - prevProfit + prevCommission + profit - commission,
+                                mainBalance: user.mainBalance - prevProfit + prevCommission + profit - commission
                             };
 
                             Promise.all([

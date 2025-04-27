@@ -1,8 +1,10 @@
-export const LANGS = ['ru', 'pl', 'en']; // need to add lang maps
+// export const LANGS = ['ru', 'pl', 'en']; // need to add lang maps
+export const LANGS = ['en', 'ru', 'pl']; // need to add lang maps
 export const DEFAULT_LANG = LANGS[0];
-export const LANG_REGEX = LANGS
-    .slice(1)
-    .join('|');
+// export const LANG_REGEX = LANGS
+//     .slice(1)
+//     .join('|');
+export const LANG_REGEX = 'ru|pl'; // Регулярное выражение для дополнительных языков
 export const DEFAULT_LANG_ROUTE = '';
 export const SCROLL_TOP_LOCKED_EVENT_NAME = 'SCROLL_TOP_LOCKED_EVENT_NAME';
 export const COOKIE_AGREEMENT_NAME = 'pl-finance-cookies-agreement';
@@ -101,7 +103,7 @@ export const AMOUNT = [
 ];
 
 export const LANGUAGES = [
-    { id: 1, langCode: 'ru', countryCode: 'ru', name: 'Russian' },
-    { id: 2, langCode: 'pl', countryCode: 'PL', name: 'Polish' },
-    { id: 3, langCode: 'en', countryCode: 'GB', name: 'English' }
+    { id: 1, langCode: 'en', countryCode: 'GB', name: 'English', flag: '/src/apps/client/constants/images/gb.svg' },
+    { id: 2, langCode: 'ru', countryCode: 'ru', name: 'Russian', flag: '/src/apps/client/constants/images/ru_flag.svg' },
+    { id: 3, langCode: 'pl', countryCode: 'PL', name: 'Polish', flag: '/src/apps/client/constants/images/pl.svg' }
 ];

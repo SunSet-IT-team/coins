@@ -14,7 +14,7 @@ import http from 'http';
 import fs from 'fs';
 import express from 'express';
 import { pricesEvents } from './pricesController';
-import { AUTO_CLOSE_ORDER_EVENT } from '../constants/constants';
+import { AUTO_CLOSE_ORDER_EVENT, WS_MESSAGES_PORT } from '../constants/constants';
 
 const credentials = {
     key: fs.readFileSync('server/https/private-new.key'),
@@ -35,7 +35,7 @@ class MessagesWebsocketController {
             const app = express();
             const server = process.env.NODE_ENV === 'production' ? https.createServer(credentials, app) : http.createServer(app);
 
-            server.listen(5050, () => { });
+            server.listen(WS_MESSAGES_PORT, () => { });
 
             this.io = socketIo(server);
         }

@@ -20,6 +20,7 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
 import CheckIcon from '@material-ui/icons/Check';
 import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
@@ -52,9 +53,14 @@ import OrderCloseForm from '../../components/OrderCloseForm/OrderCloseForm';
 import CloseFormDialog from '../../components/CloseFormDialog/CloseFormDialog';
 
 import arrayMove from '../../../utils/arrayMove';
+import { getProfit } from '../../../../client/utils/getAssetValues';
+import { CHART_SYMBOL_INFO_MAP } from '../../../../../../server/constants/symbols';
+import formatNumberToString from '../../../../client/utils/formatNumberToString';
 
 import getUsers from '../../../services/getUsers';
 import editUser from '../../../services/editUser';
+import assignUser from '../../../services/assignUser';
+import detachUser from '../../../services/detachUser';
 import editOrder from '../../../services/editOrder';
 import deleteUsersByIds from '../../../services/deleteUserByIds';
 import getOrders from '../../../services/getOrders';
@@ -76,7 +82,7 @@ const ORDERS_TYPE_TEXT = [
     { id: 2, type: 'sell', text: 'Продажа' }
 ];
 
-const ItemSortable = ({ onFormOpen, onUserDelete, name, onUserClick, value, classes }) => (
+const ItemSortable = ({ onFormOpen, onUserDelete, onUserDetach, name, onUserClick, value, classes, isManager }) => (
     <ListItem onClick={onUserClick(value)} button className={classes.row}>
         <ListItemIcon>
             <AccountCircleRoundedIcon {
@@ -101,9 +107,15 @@ const ItemSortable = ({ onFormOpen, onUserDelete, name, onUserClick, value, clas
                 <IconButton onClick={onFormOpen(value)}>
                     <EditIcon />
                 </IconButton>
-                <IconButton onClick={onUserDelete(value)} edge="end" aria-label="delete">
-                    <DeleteIcon />
-                </IconButton>
+                {isManager ? (
+                    <IconButton onClick={onUserDetach(value)} edge="end" aria-label="detach">
+                        <LinkOffIcon />
+                    </IconButton>
+                ) : (
+                    <IconButton onClick={onUserDelete(value)} edge="end" aria-label="delete">
+                        <DeleteIcon />
+                    </IconButton>
+                )}
             </ListItemSecondaryAction>
         </div>
     </ListItem>
@@ -115,7 +127,9 @@ ItemSortable.propTypes = {
     name: PropTypes.string,
     onUserClick: PropTypes.func,
     value: PropTypes.object,
-    classes: PropTypes.object
+    classes: PropTypes.object,
+    onUserDetach: PropTypes.func,
+    isManager: PropTypes.bool
 };
 
 const SortableWrapper = (
@@ -141,6 +155,9 @@ const headerOrderRows = [
     { id: 'itemNum', label: '№' },
     { id: 'nameAsset', label: 'Актив' },
     { id: 'type', label: 'Тип актива' },
+    { id: 'amount', label: 'Объем' },
+    { id: 'pledge', label: 'Залог' },
+    { id: 'profit', label: 'Прибыль' },
     { id: 'createdAt', label: 'Дата создания' },
     { id: 'closedAt', label: 'Дата закрытия' },
     { id: 'isClosed', label: 'Позиция(открытый)' }
@@ -149,8 +166,18 @@ const tableOrderCells = [
     { prop: orders => orders.itemNum },
     { prop: orders => orders.assetName },
     { prop: orders => find(type => type.type === orders.type, ORDERS_TYPE_TEXT).text },
+    { prop: orders => formatNumberToString(orders.amount) },
+    { prop: orders => `$ ${formatNumberToString(orders.pledge)}` },
+    { prop: orders => {
+        const asset = CHART_SYMBOL_INFO_MAP[orders.assetName];
+        const profit = getProfit(orders.amount, orders.openingPrice, orders.closedPrice || orders.openingPrice, orders.type, asset);
+        const profitStr = formatNumberToString(profit);
+        return <span style={{ color: profit > 0 ? 'green' : profit < 0 ? 'red' : 'inherit' }}>
+            {profit > 0 ? '+' : ''}{profitStr}
+        </span>;
+    } },
     { prop: orders => format(new Date(orders.createdAt), 'dd.MM.yyyy HH:mm') },
-    { prop: orders => orders.closedAt ? format(new Date(orders.closedAt), 'dd.MM.yyyy HH:mm') : 'dd.MM.yyyy HH:mm' },
+    { prop: orders => orders.closedAt ? format(new Date(orders.closedAt), 'dd.MM.yyyy HH:mm') : '-' },
     { prop: orders => orders.isClosed ? <CloseIcon /> : <CheckIcon /> }
 ];
 
@@ -173,7 +200,42 @@ const materialStyles = theme => ({
             flexDirection: 'column-reverse'
         }
     },
-
+    addForm: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: '16px',
+        gap: '8px'
+    },
+    addInput: {
+        flex: 1,
+        padding: '8px',
+        margin: '4px 0',
+        border: '1px solid rgba(0, 0, 0, 0.23)',
+        borderRadius: '4px',
+        outline: 'none',
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        fontSize: '14px',
+        '&:focus': {
+            borderColor: theme.palette.grey[500]
+        }
+    },
+    addButton: {
+        whiteSpace: 'nowrap',
+        minWidth: 'fit-content',
+        background: 'linear-gradient(to right, #3f51b5 0%,rgb(82, 97, 185) 100%)',
+        color: 'white',
+        padding: '10px',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        fontSize: '14px',
+        height: '36px',
+        '&:hover': {
+            backgroundColor: blue[700]
+        }
+    },
     drawer: {
         display: 'grid',
 
@@ -195,7 +257,7 @@ const materialStyles = theme => ({
     },
     drawerPaper: {
         display: 'grid',
-        gridTemplateRows: '60px 0px 40px 0px 0px 100vh',
+        gridTemplateRows: 'auto auto auto 1fr',
         flex: '1 0 auto',
         height: '100%',
         outline: '0',
@@ -235,7 +297,7 @@ const materialStyles = theme => ({
         color: 'white'
     },
     toolbar: {
-        height: '0px'
+        height: '6px'
     },
     toolbarNav: {
         display: 'flex',
@@ -294,7 +356,7 @@ const materialStyles = theme => ({
         width: '1200px',
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
-        padding: theme.spacing.unit * 4,
+        padding: theme.spacing(4),
         outline: 'none',
         overflowY: 'auto',
         maxHeight: '100vh',
@@ -315,7 +377,9 @@ const materialStyles = theme => ({
     },
     columns: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        height: 'calc(100vh - 200px)', // Set fixed height minus header/search/etc
+        overflow: 'hidden'
     },
     userColWrapper: {
         textAlign: 'center',
@@ -355,15 +419,16 @@ const materialStyles = theme => ({
         alignItems: 'center'
     },
     margin: {
-        margin: theme.spacing.unit
+        margin: theme.spacing(1)
     }
 });
 
-const mapStateToProps = ({ data }) => {
+const mapStateToProps = ({ data, application }) => {
     return {
         users: data.users,
         transactions: data.transactions,
-        orders: data.orders
+        orders: data.orders,
+        currentAdmin: application.currentAdmin
     };
 };
 
@@ -371,6 +436,8 @@ const mapDispatchToProps = dispatch => ({
     getUsers: payload => dispatch(getUsers(payload)),
     deleteUsers: payload => dispatch(deleteUsersByIds(payload)),
     editUser: payload => dispatch(editUser(payload)),
+    assignUser: (managerEmail, userEmail) => dispatch(assignUser(managerEmail, userEmail)),
+    detachUser: (userEmail) => dispatch(detachUser(userEmail)),
     editOrder: payload => dispatch(editOrder(payload)),
     getOrders: payload => dispatch(getOrders(payload)),
     deleteOrders: payload => dispatch(deleteOrdersByIds(payload)),
@@ -379,6 +446,7 @@ const mapDispatchToProps = dispatch => ({
     deleteTransactions: payload => dispatch(deleteTransactionsByIds(payload))
 });
 
+const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const DEFAULT_LANG = 'ru';
 const DEFAULT_ACTIVE_SERVICE = { name: '', id: '' };
 
@@ -389,12 +457,20 @@ class UsersPage extends Component {
         getUsers: PropTypes.func.isRequired,
         deleteUsers: PropTypes.func.isRequired,
         editUser: PropTypes.func.isRequired,
+        assignUser: PropTypes.func.isRequired,
+        detachUser: PropTypes.func.isRequired,
         getOrders: PropTypes.func.isRequired,
         deleteOrders: PropTypes.func.isRequired,
         orders: PropTypes.array,
         getTransactions: PropTypes.func.isRequired,
         deleteTransactions: PropTypes.func.isRequired,
-        transactions: PropTypes.array
+        transactions: PropTypes.array,
+        currentAdmin: PropTypes.shape({
+            id: PropTypes.string,
+            email: PropTypes.string,
+            name: PropTypes.string,
+            surname: PropTypes.string
+        })
     };
 
     static defaultProps = {
@@ -405,7 +481,8 @@ class UsersPage extends Component {
         deleteUsers: noop,
         editUser: noop,
         getOrders: noop,
-        getTransactions: noop
+        getTransactions: noop,
+        currentAdmin: null
     };
 
     state = {
@@ -432,7 +509,9 @@ class UsersPage extends Component {
         inputValue: '',
         isClickedSubmit: false,
         showSuccess: false,
-        errorText: ''
+        successMessage: '',
+        errorText: '',
+        newUserEmail: ''
     };
 
     componentDidMount () {
@@ -442,22 +521,70 @@ class UsersPage extends Component {
             this.props.getUsers()
         ])
             .then(() => {
+                const filteredUsers = this.filterUsersByManager(this.props.users);
+                const firstUser = filteredUsers[0] || DEFAULT_ACTIVE_SERVICE;
+
                 this.setState({
                     loading: false,
                     users: this.props.users,
-                    activeUser: this.props.users[0] || DEFAULT_ACTIVE_SERVICE,
+                    activeUser: firstUser,
                     orders: this.getUserOrders(this.props.users[0]),
                     transactions: this.getUserTransactions(this.props.users[0])
                 });
             });
     }
 
+    componentDidUpdate (prevProps) {
+        if (prevProps.users !== this.props.users) {
+            const filteredUsers = this.filterUsersByManager(this.props.users);
+            const currentActiveUser = filteredUsers.find(u => u.id === this.state.activeUser.id);
+
+            this.setState({
+                users: filteredUsers,
+                activeUser: currentActiveUser || filteredUsers[0] || DEFAULT_ACTIVE_SERVICE,
+                orders: this.getUserOrders(currentActiveUser || filteredUsers[0]),
+                transactions: this.getUserTransactions(currentActiveUser || filteredUsers[0])
+            });
+        }
+    }
+
+    filterUsersByManager = (users) => {
+        const { currentAdmin } = this.props;
+        if (currentAdmin && currentAdmin.id === 'manager_id') {
+            return users.filter(user => user.manager === currentAdmin.email);
+        }
+        return users;
+    }
+
     getUserOrders = (activeUser = this.state.activeUser) => {
-        return this.props.orders.length ? this.props.orders.filter(order => order.userId === activeUser.id) : [];
+        const { orders, currentAdmin } = this.props;
+
+        if (!orders.length) return [];
+
+        if (currentAdmin && currentAdmin.id === 'manager_id') {
+            return orders.filter(order => {
+                const orderUser = this.props.users.find(u => u.id === order.userId);
+                return orderUser && orderUser.manager === currentAdmin.email && order.userId === activeUser.id;
+            });
+        }
+
+        return orders.filter(order => order.userId === activeUser.id);
     };
 
     getUserTransactions = (activeUser = this.state.activeUser) => {
-        return this.props.transactions.length ? this.props.transactions.filter(transaction => transaction.userId === activeUser.id) : [];
+        const { transactions, currentAdmin } = this.props;
+
+        if (!transactions.length) return [];
+
+        // Filter transactions for manager's users only
+        if (currentAdmin && currentAdmin.id === 'manager_id') {
+            return transactions.filter(transaction => {
+                const transactionUser = this.props.users.find(u => u.id === transaction.userId);
+                return transactionUser && transactionUser.manager === currentAdmin.email && transaction.userId === activeUser.id;
+            });
+        }
+
+        return transactions.filter(transaction => transaction.userId === activeUser.id);
     };
 
     handleOrderFormOpen = order => () => {
@@ -502,7 +629,6 @@ class UsersPage extends Component {
             .then(() => {
                 const { users } = this.props;
 
-                // console.log('activeUser handleUserFormDone', activeUser);
                 this.setState({
                     users: users,
                     activeUser: users.find(user => user.id === activeUser.id) || users[0]
@@ -591,7 +717,6 @@ class UsersPage extends Component {
                         });
                     });
             }).catch(e => {
-                console.log(777);
                 this.setState({ errorText: e.error });
             });
     };
@@ -672,6 +797,53 @@ class UsersPage extends Component {
         });
     };
 
+    handleAssignUser = () => {
+        console.log('Прикрепляю пользователя');
+        const { currentAdmin } = this.props;
+        const { newUserEmail } = this.state;
+
+        if (!newUserEmail) {
+            this.setState({ errorText: 'Email пользователя обязателен' });
+            return;
+        }
+
+        if (!EMAIL_PATTERN.test(newUserEmail)) {
+            this.setState({ errorText: 'Введите валидный email' });
+            return;
+        }
+
+        this.props.assignUser(currentAdmin.email, newUserEmail)
+            .then(() => {
+                this.setState({
+                    newUserEmail: '',
+                    showSuccess: true,
+                    successMessage: 'Пользователь успешно прикреплен'
+                });
+                this.props.getUsers();
+            })
+            .catch(error => {
+                this.setState({
+                    errorText: error.message || 'Ошибка при добавлении пользователя'
+                });
+            });
+    };
+
+    handleUserDetach = user => () => {
+        this.props.detachUser(user.email)
+            .then(() => {
+                this.setState({
+                    showSuccess: true,
+                    successMessage: 'Пользователь успешно откреплен'
+                });
+                this.props.getUsers();
+            })
+            .catch(error => {
+                this.setState({
+                    errorText: error.message || 'Ошибка при откреплении пользователя'
+                });
+            });
+    };
+
     onDragEnd = ({ oldIndex, newIndex }) => {
         const { users } = this.state;
         const newValues = arrayMove(users, oldIndex, newIndex);
@@ -738,6 +910,7 @@ class UsersPage extends Component {
                         users={users}
                         activeUser={activeUser}
                         order={editableOrder}
+                        orders={this.state.orders}
                         onDone={this.handleOrderFormDone} />
                 </Paper>
             </Modal>
@@ -820,7 +993,8 @@ class UsersPage extends Component {
                 onDelete={this.handleOrderDelete}
                 onFormOpen={this.handleOrderFormOpen}
                 onFormClose={this.handleOrderCloseFormOpen}
-                isAddButton={false}
+                isAddButton={true}
+                onAdd={this.handleOrderAdd}
                 isClosedButton={true}
             />
         </div>;
@@ -846,8 +1020,15 @@ class UsersPage extends Component {
         </div>;
     };
 
+    handleOrderAdd = () => {
+        this.setState({
+            editableOrder: {},
+            orderFormShowed: true
+        });
+    };
+
     render () {
-        const { classes } = this.props;
+        const { classes, currentAdmin } = this.props;
         const {
             editableUser,
             valueForDelete,
@@ -866,15 +1047,22 @@ class UsersPage extends Component {
             </div>;
         }
 
-        const filteredUsers = users.filter(user => {
+        const filteredByManagerUsers = currentAdmin && currentAdmin.id === 'manager_id'
+            ? users.filter(user => user.manager === currentAdmin.email)
+            : users;
+
+        const searchFilteredUsers = filteredByManagerUsers.filter(user => {
             return user.name.toLowerCase().includes(inputValue.toLowerCase()) ||
             user.surname.toLowerCase().includes(inputValue.toLowerCase()) ||
             `${user.name} ${user.surname}`.toLowerCase().includes(inputValue.toLowerCase());
         });
 
-        const activeUsers = (!inputValue ? users : filteredUsers).filter(user => user.isActive === 'true');
-        const inactiveUsers = (!inputValue ? users : filteredUsers).filter(user => user.isActive === 'false');
-        const newUsers = (!inputValue ? users : filteredUsers).filter(user => user.isActive === 'null');
+        const activeUsers = (!inputValue ? filteredByManagerUsers : searchFilteredUsers)
+            .filter(user => user.isActive === 'true');
+        const inactiveUsers = (!inputValue ? filteredByManagerUsers : searchFilteredUsers)
+            .filter(user => user.isActive === 'false');
+        const newUsers = (!inputValue ? filteredByManagerUsers : searchFilteredUsers)
+            .filter(user => user.isActive === 'null');
 
         return <main className={classes.root}>
             <div className={classes.boom}>
@@ -890,6 +1078,23 @@ class UsersPage extends Component {
             >
                 <div className={classes.toolbarNav}>
                     <Typography variant='h6' className={classes.userTitle}>Пользователи</Typography>
+                </div>
+                <Divider />
+                <div className={classes.userTypes}>
+                    <div className={classes.addForm}>
+                        <input
+                            placeholder="Email пользователя"
+                            className={classes.addInput}
+                            value={this.state.newUserEmail}
+                            onChange={(e) => this.setState({ newUserEmail: e.target.value })}
+                        />
+                        <button
+                            className={classes.addButton}
+                            onClick={this.handleAssignUser}
+                        >
+                            Прикрепить пользователя
+                        </button>
+                    </div>
                 </div>
                 <Divider />
                 <div className={classes.userTypes}>
@@ -909,11 +1114,13 @@ class UsersPage extends Component {
                             axis='xy'
                             onFormOpen={this.handleUserFormOpen}
                             onUserDelete={this.handleUserDelete}
+                            onUserDetach={this.handleUserDetach}
                             onUserClick={this.handleUserClick}
                             onProductClone={this.handleUserClone}
                             users={activeUsers}
                             lang={lang}
                             classes={classes}
+                            isManager={currentAdmin && currentAdmin.id === 'manager_id'}
                         />
                     </div>
                     <div className={classes.userColWrapper}>
@@ -922,11 +1129,13 @@ class UsersPage extends Component {
                             axis='xy'
                             onFormOpen={this.handleUserFormOpen}
                             onUserDelete={this.handleUserDelete}
+                            onUserDetach={this.handleUserDetach}
                             onUserClick={this.handleUserClick}
                             onProductClone={this.handleUserClone}
                             users={inactiveUsers}
                             lang={lang}
                             classes={classes}
+                            isManager={currentAdmin && currentAdmin.id === 'manager_id'}
                         />
                     </div>
                     <div className={classes.userColWrapper}>
@@ -935,11 +1144,13 @@ class UsersPage extends Component {
                             axis='xy'
                             onFormOpen={this.handleUserFormOpen}
                             onUserDelete={this.handleUserDelete}
+                            onUserDetach={this.handleUserDetach}
                             onUserClick={this.handleUserClick}
                             onProductClone={this.handleUserClone}
                             users={newUsers}
                             lang={lang}
                             classes={classes}
+                            isManager={currentAdmin && currentAdmin.id === 'manager_id'}
                         />
                     </div>
                 </div>
@@ -981,7 +1192,7 @@ class UsersPage extends Component {
                     message={
                         <span id='client-snackbar' className={classes.message}>
                             <CheckCircleIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            Операция успешно сохранена
+                            {this.state.successMessage || 'Операция успешно сохранена'}
                         </span>
                     }
                 />
