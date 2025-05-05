@@ -9,7 +9,7 @@ export const APP_FORM_FILE_FIELD_NAME_REGEX = /app-form-file-/g;
 
 export const DOMAIN = 'coinwalletcapital.ru';
 
-export const DATABASE_URL = 'mongodb://localhost/pl-finance';
+export const DATABASE_URL = 'mongodb://coinwalletcapital.ru/pl-finance';
 
 export const FILES_FOLDER_PATH = 'src/apps/admin/files';
 
@@ -18,7 +18,8 @@ export const FILES_FOLDER_PATH = 'src/apps/admin/files';
 export const FINNHUB_API_KEY_DEV = 'ct7de3pr01qoi5r2gq50ct7de3pr01qoi5r2gq5g';
 
 export const FINNHUB_API_KEY_PROD = 'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10';
-export const FINNHUB_API_KEY = process.env.NODE_ENV === 'production' ? FINNHUB_API_KEY_PROD : FINNHUB_API_KEY_DEV;
+export const FINNHUB_API_KEY =
+    process.env.NODE_ENV === 'production' ? FINNHUB_API_KEY_PROD : FINNHUB_API_KEY_DEV;
 // export const FINNHUB_API_KEY = FINNHUB_API_KEY_PROD;
 
 export const SYMBOL_PRICE_CHANGE_EVENT = 'symbol_price_change';
@@ -31,13 +32,14 @@ export const AUTO_CLOSE_ORDER_EVENT_CLIENT = 'AUTO_CLOSE_ORDER_EVENT_CLIENT';
 // https://accounts.google.com/b/0/DisplayUnlockCaptcha - разрешить подключиться незнакомому устрайству (серверу сайта)
 export const DEV_MAIL_CREDENTIALS = {
     login: 'admin@coinwalletcapital.ru',
-    password: 'пароль от почты дк'
+    password: 'пароль от почты дк',
 };
 export const PROD_MAIL_CREDENTIALS = {
     login: 'admin@coinwalletcapital.ru',
-    password: 'пароль от почты дк'
+    password: 'пароль от почты дк',
 };
-export const MAIL_CREDENTIALS = process.env.NODE_ENV === 'production' ? PROD_MAIL_CREDENTIALS : DEV_MAIL_CREDENTIALS;
+export const MAIL_CREDENTIALS =
+    process.env.NODE_ENV === 'production' ? PROD_MAIL_CREDENTIALS : DEV_MAIL_CREDENTIALS;
 
 export const DOC_NAMES = ['identity', 'residence', 'cardFront', 'cardBack', 'others'];
 
@@ -45,14 +47,9 @@ export const AMOUNT = [
     { id: 1, name: 'gold', value: 1000 },
     { id: 2, name: 'platinum', value: 5000 },
     { id: 3, name: 'diamond', value: 20000 },
-    { id: 4, name: 'vip' }
+    { id: 4, name: 'vip' },
 ];
 
-export const REQUIRED_DOC = [
-    'identity',
-    'residence',
-    'cardFront',
-    'cardBack'
-];
+export const REQUIRED_DOC = ['identity', 'residence', 'cardFront', 'cardBack'];
 
 export const WS_MESSAGES_PORT = 2053;
