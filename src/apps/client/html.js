@@ -1,3 +1,5 @@
+const ASSET_HOST = process.env.ASSET_HOST || '';
+
 export default function (html, helmet, preloadedState = {}) {
     return `
     <!doctype html>
@@ -8,7 +10,7 @@ export default function (html, helmet, preloadedState = {}) {
             <meta name='viewport' content='width=device-width, initial-scale=1'>
             ${helmet.title.toString()}
             ${helmet.meta.toString()}
-            <link rel='stylesheet' type='text/css' href='/public/client.chunk.css'>
+            <link rel='stylesheet' type='text/css' href='${ASSET_HOST}/public/client.chunk.css'>
             <link rel='shortcut icon' href='/client/images/favicon.png' type='image/png'>
         </head>
         <body>
@@ -16,11 +18,14 @@ export default function (html, helmet, preloadedState = {}) {
             <script>
                 // WARNING: See the following for security issues around embedding JSON in HTML:
                 // http://redux.js.org/recipes/ServerRendering.html#security-considerations
-                window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\\\\\\\\u003c')}
+                window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(
+                    /</g,
+                    '\\\\\\\\\u003c',
+                )}
             </script>
             <script src="//www.instagram.com/embed.js" defer='defer'></script>
-            <script src='/public/vendors-client.chunk.js' defer='defer'></script>
-            <script src='/public/client.chunk.js' defer='defer'></script>
+            <script src='${ASSET_HOST}/public/vendors-client.chunk.js' defer='defer'></script>
+            <script src='${ASSET_HOST}/public/client.chunk.js' defer='defer'></script>
         </body>
     </html>`;
 }

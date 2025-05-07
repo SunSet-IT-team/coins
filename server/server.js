@@ -61,17 +61,20 @@ import Helmet from 'react-helmet';
 import App from '../src/apps/client/App.jsx';
 
 const rootPath = path.resolve(__dirname, '..');
-// const PORT = process.env.NODE_ENV === 'production' ? +(process.env.PORT || 3000) + 1 : process.env.PORT || 3000;
 const PORT = 3003;
 
-function createApp () {
-    return new Promise(resolve => {
+function createApp() {
+    return new Promise((resolve) => {
         const app = express();
 
         app.use(helmet());
 
         // mongodb
-        mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
+        mongoose.connect(DATABASE_URL, {
+            useNewUrlParser: true,
+            useFindAndModify: false,
+            useCreateIndex: true,
+        });
         backups();
 
         httpsRedirect(app);
@@ -80,7 +83,7 @@ function createApp () {
         app.post('/api/redeploy', async (req, res) => {
             try {
                 const response = await fetch('http://localhost:3002/deploy', {
-                    method: 'POST'
+                    method: 'POST',
                 });
 
                 if (response.ok) {
@@ -97,7 +100,7 @@ function createApp () {
         app.post('/api/reload', async (req, res) => {
             try {
                 const response = await fetch('http://localhost:3002/reload', {
-                    method: 'POST'
+                    method: 'POST',
                 });
 
                 if (response.ok) {
@@ -112,10 +115,13 @@ function createApp () {
         });
 
         // static
-        app.get(/\.chunk\.(js|css)$/, expressStaticGzip(rootPath, {
-            enableBrotli: true,
-            orderPreference: ['br']
-        }));
+        app.get(
+            /\.chunk\.(js|css)$/,
+            expressStaticGzip(rootPath, {
+                enableBrotli: true,
+                orderPreference: ['br'],
+            }),
+        );
         app.use(compression());
         app.use((req, res, next) => {
             const isCodeFiles = req.url.match(/(.js|.jsx|.json|.css|.key|.pem)$/i);
@@ -140,7 +146,7 @@ function createApp () {
         app.use('/api/client/article', clientArticleApi);
         app.use('/api/admin/db', adminDbApi);
         app.use('/api/admin/user', adminUserApi);
-	app.use('/api/admin/manager', adminManagerApi);
+        app.use('/api/admin/manager', adminManagerApi);
         app.use('/api/client/user', clientUserApi);
         app.use('/api/client/authentication', clientAuthenticationApi);
         app.use('/api/admin/qiwi', adminQiwiApi);
@@ -169,32 +175,27 @@ function createApp () {
         // app
         app.get('*', handleApp);
 
-        function handleApp (req, res) {
+        function handleApp(req, res) {
             const store = getStore();
-            Promise.all(map(
-                actionFunc => {
+            Promise.all(
+                map((actionFunc) => {
                     return actionFunc(req, res)(store.dispatch);
-                },
-                actions
-            ))
-                .then(() => {
-                    const context = {};
-                    const html = renderToString(
-                        <Provider store={store}>
-                            <StaticRouter
-                                location={req.originalUrl}
-                                context={context}
-                            >
-                                <App />
-                            </StaticRouter>
-                        </Provider>
-                    );
-                    const helmet = Helmet.renderStatic();
-                    const preloadedState = store.getState();
-                    const page = renderAppPage(html, helmet, preloadedState);
+                }, actions),
+            ).then(() => {
+                const context = {};
+                const html = renderToString(
+                    <Provider store={store}>
+                        <StaticRouter location={req.originalUrl} context={context}>
+                            <App />
+                        </StaticRouter>
+                    </Provider>,
+                );
+                const helmet = Helmet.renderStatic();
+                const preloadedState = store.getState();
+                const page = renderAppPage(html, helmet, preloadedState);
 
-                    res.send(page);
-                });
+                res.send(page);
+            });
         }
 
         app.listen(isMainThread ? PORT : workerData.port, () => {
@@ -217,7 +218,7 @@ function createApp () {
 }
 
 // eslint-disable-next-line no-inner-declarations
-async function startMain () {
+async function startMain() {
     console.log('start main');
 
     const env = process.env.NODE_ENV;

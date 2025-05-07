@@ -19,12 +19,12 @@ const mapStateToProps = ({ application, data }) => {
     return {
         lang: application.lang,
         langMap: application.langMap,
-        user: data.user
+        user: data.user,
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    setPaymentsPopup: (payload) => dispatch(setPaymentsPopup(payload))
+    setPaymentsPopup: (payload) => dispatch(setPaymentsPopup(payload)),
 });
 
 @lang
@@ -36,19 +36,19 @@ class Header extends Component {
         user: PropTypes.object,
         setPaymentsPopup: PropTypes.func.isRequired,
         setLang: PropTypes.func.isRequired,
-        setLangMap: PropTypes.func.isRequired
-    }
+        setLangMap: PropTypes.func.isRequired,
+    };
 
     static defaultProps = {
-        user: {}
+        user: {},
     };
 
     state = {
         time: new Date(),
-        currentLanguage: ''
-    }
+        currentLanguage: '',
+    };
 
-    componentDidMount () {
+    componentDidMount() {
         setInterval(() => {
             this.setState({ time: new Date() });
         }, 1000);
@@ -56,7 +56,7 @@ class Header extends Component {
         this.setCurrenLanguage();
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         this.setState({ currentLanguage: nextProps.lang });
     }
 
@@ -66,13 +66,13 @@ class Header extends Component {
 
     setLang = (lang) => {
         const langMap = maps[lang];
-        typeof window !== 'undefined' ? localStorage.lang = lang : '';
+        typeof window !== 'undefined' ? (localStorage.lang = lang) : '';
 
         this.props.setLangMap(langMap);
         this.props.setLang(lang);
-    }
+    };
 
-    setCurrenLanguage () {
+    setCurrenLanguage() {
         if (typeof window !== 'undefined' && localStorage.lang) {
             this.setState({ currentLanguage: localStorage.lang });
         }
@@ -82,24 +82,34 @@ class Header extends Component {
         }
     }
 
-    render () {
+    render() {
         const { time, currentLanguage } = this.state;
         const { langMap, events, user } = this.props;
         const text = propOr('header', {}, langMap);
 
-        const CURRENT_TIME = ('0' + time.getHours()).slice(-2) + ':' + ('0' + time.getMinutes()).slice(-2) + ':' + ('0' + time.getSeconds()).slice(-2);
+        const CURRENT_TIME =
+            ('0' + time.getHours()).slice(-2) +
+            ':' +
+            ('0' + time.getMinutes()).slice(-2) +
+            ':' +
+            ('0' + time.getSeconds()).slice(-2);
 
-        return <div className={styles.root}>
-            <div className={styles.mobileNavBarItems}>
-                <MenuButton events={events} />
-                <ChartLineButton events={events} />
-                <TimingScaleButton events={events} />
-            </div>
-            <a href="/">
-                <img className={styles.logo} src="/src/apps/client/ui/components/Header/images/mainLogo.png" alt="logo" />
-            </a>
-            <div className={styles.timeLangWrapper}>
-            {/* <div className={styles.langBlock}>
+        return (
+            <div className={styles.root}>
+                <div className={styles.mobileNavBarItems}>
+                    <MenuButton events={events} />
+                    <ChartLineButton events={events} />
+                    <TimingScaleButton events={events} />
+                </div>
+                <a href="/">
+                    <img
+                        className={styles.logo}
+                        src="/src/apps/client/ui/components/Header/images/mainLogo.png"
+                        alt="logo"
+                    />
+                </a>
+                <div className={styles.timeLangWrapper}>
+                    {/* <div className={styles.langBlock}>
                     <a onClick={(e) => {
                         e.preventDefault();
                         this.setLang('ru');
@@ -115,24 +125,36 @@ class Header extends Component {
                         this.setLang('en');
                     }} className={currentLanguage === 'en' ? styles.activeLangLink : styles.langLink}>EN</a>
                 </div> */}
-                <div className={styles.timeContainer}>
-                    <img className={styles.timeIcon} src="/src/apps/client/ui/components/Header/images/time.svg" alt="time" />
-                    <div className={styles.timeInnerContainer}>
-                        <div className={styles.time}>
-                            {CURRENT_TIME}
+                    <div className={styles.timeContainer}>
+                        <img
+                            className={styles.timeIcon}
+                            src="/src/apps/client/ui/components/Header/images/time.svg"
+                            alt="time"
+                        />
+                        <div className={styles.timeInnerContainer}>
+                            <div className={styles.time}>{CURRENT_TIME}</div>
                         </div>
+                        <div className={styles.timeFormat}>{text.timeFormat}</div>
                     </div>
-                    <div className={styles.timeFormat}>{text.timeFormat}</div>
                 </div>
+
+                {user && (
+                    <div className={styles.buyAndSellContainer}>
+                        <BuyAndSellComponent />
+                    </div>
+                )}
+                <AuthorizationPanel />
+                {user && (
+                    <div className={styles.depositButton} onClick={this.handleAccountInfoPopup}>
+                        <img
+                            className={styles.depositButton}
+                            src="/src/apps/client/ui/components/Header/images/deposit.svg"
+                            alt="deposit"
+                        />
+                    </div>
+                )}
             </div>
-
-            {user && <div className={styles.buyAndSellContainer}><BuyAndSellComponent /></div>}
-            <AuthorizationPanel />
-            {user && <div className={styles.depositButton} onClick={this.handleAccountInfoPopup}>
-                <img className={styles.depositButton} src="/src/apps/client/ui/components/Header/images/deposit.svg" alt="deposit" />
-            </div>}
-
-        </div>;
+        );
     }
 }
 

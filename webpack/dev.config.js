@@ -11,10 +11,7 @@ const host = process.env.HOST || 'localhost';
 const port = process.env.PORT || 4000;
 const babelConfig = require('./babel.config');
 
-const babelLoaderConfig = babelConfig(
-    'development',
-    process.env.ES || 'dev'
-);
+const babelLoaderConfig = babelConfig('development', process.env.ES || 'dev');
 
 const config = {
     mode: 'development',
@@ -22,48 +19,46 @@ const config = {
     cache: true,
     output: {
         path: buildPath,
-        publicPath: `http://${host}:${port}/public/`,
+        publicPath: `/public/`,
         filename: '[name].chunk.js',
-        chunkFilename: '[name].chunk.js'
+        chunkFilename: '[name].chunk.js',
     },
     module: {
         rules: [
             {
                 test: /\.js[x]?$/,
-                exclude: [
-                    /node_modules/
-                ],
+                exclude: [/node_modules/],
                 use: [
                     'thread-loader',
                     {
                         loader: 'cache-loader',
                         options: {
-                            cacheDirectory: path.resolve('.tmp/cache-loader')
-                        }
+                            cacheDirectory: path.resolve('.tmp/cache-loader'),
+                        },
                     },
                     {
                         loader: 'babel-loader',
-                        options: babelLoaderConfig
-                    }
-                ]
-            }
-        ]
+                        options: babelLoaderConfig,
+                    },
+                ],
+            },
+        ],
     },
     resolve: {
-        unsafeCache: true
+        unsafeCache: true,
     },
     plugins: [
         new WebpackNotifierPlugin({
-            excludeWarnings: true // убрать, была проблема с варнингом ajv
+            excludeWarnings: true, // убрать, была проблема с варнингом ajv
         }),
         new webpack.PrefetchPlugin('react'),
         new ExtractCssPlugin({
             filename: '[name].chunk.css',
-            ignoreOrder: true
+            ignoreOrder: true,
         }),
         new ProgressBarPlugin(),
-        new webpack.NoEmitOnErrorsPlugin()
-    ]
+        new webpack.NoEmitOnErrorsPlugin(),
+    ],
 };
 
 const admin = merge.smart(common.admin, config);

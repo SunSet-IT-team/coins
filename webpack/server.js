@@ -15,23 +15,23 @@ let config = require('./dev.config');
 let compiler = webpack(config);
 let timeoutId;
 
-function retry (cb) {
-    const client = net.connect(
-        { port: 3000 },
-        () => {
-            clearTimeout(timeoutId);
-            cb();
-            client.end();
-            timeoutId && process.stdout.write(' Done');
-            timeoutId = null;
-        }
-    );
+function retry(cb) {
+    const client = net.connect({ port: 3000 }, () => {
+        clearTimeout(timeoutId);
+        cb();
+        client.end();
+        timeoutId && process.stdout.write(' Done');
+        timeoutId = null;
+    });
 
     client.on('error', () => {
-        process.stdout.clearLine();
-        process.stdout.cursorTo(0);
+        if (process.stdout.isTTY && typeof process.stdout.clearLine === 'function') {
+            process.stdout.clearLine();
+        }
+        if (process.stdout.isTTY && typeof process.stdout.cursorTo === 'function') {
+            process.stdout.cursorTo(0);
+        }
         process.stdout.write('Waiting for server...');
-        timeoutId = setTimeout(() => retry(cb), 100);
     });
 }
 
@@ -51,8 +51,8 @@ const instance = require('webpack-dev-middleware')(compiler, {
         assets: false,
         errorDetails: true,
         children: false,
-        warnings: true
-    }
+        warnings: true,
+    },
 });
 
 app.use(instance);
@@ -61,12 +61,14 @@ app.use(express.static(rootPath));
 
 // Proxy api requests
 app.all('*', function (req, res) {
-    retry(() => apiProxy.web(req, res, {
-        target: {
-            port: 3000,
-            host: 'localhost'
-        }
-    }));
+    retry(() =>
+        apiProxy.web(req, res, {
+            target: {
+                port: 3000,
+                host: 'localhost',
+            },
+        }),
+    );
 });
 
 instance.waitUntilValid(() => {
@@ -76,5 +78,5 @@ instance.waitUntilValid(() => {
     console.log('|-------------------------------------|');
 });
 
-app.listen(port, host, err => err && console.log(err));
+app.listen(port, host, (err) => err && console.log(err));
 console.info('Running static webpack server on port', port); // eslint-disable-line no-console
