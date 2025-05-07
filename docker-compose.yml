@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+    mongo:
+        image: mongo
+        container_name: pl-mongo
+        ports:
+            - '27017:27017'
+        volumes:
+            - mongo-data:/data/db
+
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        container_name: pl-backend
+        volumes:
+            - .:/app
+            - /app/node_modules
+        ports:
+            - '3003:3003'
+        environment:
+            - NODE_ENV=development
+            - DATABASE_URL=mongodb://mongo:27017/pl-finance
+            - FRONTEND_HOST=http://frontend:4000
+            - ASSET_HOST=http://localhost:4000
+        command: yarn server
+        depends_on:
+            - mongo
+            - frontend
+
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        container_name: pl-frontend
+        volumes:
+            - .:/app
+            - /app/node_modules
+        ports:
+            - '4000:4000'
+        environment:
+            - NODE_ENV=development
+            - HOST=0.0.0.0
+            - PORT=4000
+        command: yarn static
+        depends_on:
+            - mongo
+
+volumes:
+    mongo-data:

@@ -1,0 +1,19 @@
+# Игнорируем ненужные для работы приложения файлы
+.git/
+.idea/
+.vscode/
+node_modules/
+dist/
+build/
+backups/
+compiled/
+*.log
+*.md
+*.tar
+*.gz
+*.br
+
+# Исключаем большие или конфиденциальные файлы
+npm-debug.log
+yarn-error.log
+.DS_Store
