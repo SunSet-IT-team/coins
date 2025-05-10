@@ -13,6 +13,18 @@ const babelConfig = require('./babel.config');
 
 const babelLoaderConfig = babelConfig('development', process.env.ES || 'dev');
 
+const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
+
+common.client.entry.client = [
+    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr&reload=true&timeout=1000',
+    './src/apps/client/index.js',
+];
+
+common.admin.entry.main = [
+    'webpack-hot-middleware/client?reload=true&timeout=1000',
+    ...toArray(common.admin.entry.main),
+];
+
 const config = {
     mode: 'development',
     devtool: 'source-map',
@@ -58,6 +70,7 @@ const config = {
         }),
         new ProgressBarPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
     ],
 };
 

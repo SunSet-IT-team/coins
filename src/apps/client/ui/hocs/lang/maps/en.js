@@ -3,7 +3,7 @@
 export default {
     content: {
         title: 'Content',
-        langs: 'Language selection'
+        langs: 'Language selection',
     },
     footer: {
         operations: 'Operations',
@@ -16,17 +16,17 @@ export default {
         marginLevel: 'Margin level:',
         facilities: 'Facilities:',
         pledge: 'Pledge:',
-        free: 'Free:'
+        free: 'Free:',
     },
     header: {
         timeFormat: 'UTC',
         buy: 'Buy',
         sell: 'Sell',
-        deposit: 'Deposit'
+        deposit: 'Deposit',
     },
     authorizationPanel: {
         signIn: 'Log in',
-        signUp: 'Sign up'
+        signUp: 'Sign up',
     },
     confirmPopup: {
         confirm: 'Confirm ',
@@ -45,7 +45,7 @@ export default {
         failedDay: 'This market is closed on weekends',
         takeProfit: 'Take profit',
         stopLoss: 'Stop loss',
-        inputsName: 'Take profit & Stop loss'
+        inputsName: 'Take profit & Stop loss',
     },
     menu: {
         actives: {
@@ -53,7 +53,7 @@ export default {
             currencies: 'Currencies',
             products: 'Products',
             shares: 'Stock',
-            indices: 'Indices'
+            indices: 'Indices',
         },
         menuTitleOpen: 'Menu',
         menuTitleClose: 'Close',
@@ -69,103 +69,112 @@ export default {
         assetsSearch: 'Asset search',
         assetsTitle: 'Assets',
         onMainPage: 'Home',
-        timingScaleValue: [{
-            id: 1,
-            label: '1',
-            value: '1'
-        }, {
-            id: 2,
-            label: '5',
-            value: '5'
-        }, {
-            id: 3,
-            label: '15',
-            value: '15'
-        }, {
-            id: 4,
-            label: '30',
-            value: '30'
-        }, {
-            id: 5,
-            label: '1h',
-            value: '60'
-        }, {
-            id: 6,
-            label: '1d',
-            value: 'D'
-        }, {
-            id: 7,
-            label: '1w',
-            value: 'W'
-        }, {
-            id: 8,
-            label: '1m',
-            value: 'M'
-        }],
-        language: 'Language'
+        timingScaleValue: [
+            {
+                id: 1,
+                label: '1',
+                value: '1',
+            },
+            {
+                id: 2,
+                label: '5',
+                value: '5',
+            },
+            {
+                id: 3,
+                label: '15',
+                value: '15',
+            },
+            {
+                id: 4,
+                label: '30',
+                value: '30',
+            },
+            {
+                id: 5,
+                label: '1h',
+                value: '60',
+            },
+            {
+                id: 6,
+                label: '1d',
+                value: 'D',
+            },
+            {
+                id: 7,
+                label: '1w',
+                value: 'W',
+            },
+            {
+                id: 8,
+                label: '1m',
+                value: 'M',
+            },
+        ],
+        language: 'Language',
     },
     cookiesAgreement: {
         text: 'Our site uses files cookie',
-        agree: 'Ок'
+        agree: 'Ок',
     },
     auth: {
         inputs: {
             email: {
                 placeholder: 'Mail',
-                validator: 'Enter your email'
+                validator: 'Enter your email',
             },
             password: {
                 placeholder: 'Password',
-                validator: 'Minimum 8 characters'
+                validator: 'Minimum 8 characters',
             },
             name: {
                 placeholder: 'Name',
-                validator: 'Enter your name'
+                validator: 'Enter your name',
             },
             surname: {
                 placeholder: 'Surname',
-                validator: 'Enter your last name'
+                validator: 'Enter your last name',
             },
             promoGroup: {
                 placeholder: 'Promo code',
-                validator: 'Enter promo code'
+                validator: 'Enter promo code',
             },
             phone: {
                 placeholder: 'Phone number',
-                validator: 'Enter your phone number'
+                validator: 'Enter your phone number',
             },
             date: {
                 placeholder: 'Date of Birth',
-                validator: 'Enter your date of birth'
+                validator: 'Enter your date of birth',
             },
             city: {
                 placeholder: 'City',
-                validator: 'Enter your city'
+                validator: 'Enter your city',
             },
             address: {
                 placeholder: 'The address',
-                validator: 'Enter your address'
+                validator: 'Enter your address',
             },
             gender: {
                 placeholder: 'Sex',
-                validator: 'Choose gender'
+                validator: 'Choose gender',
             },
             country: {
                 placeholder: 'The country',
-                validator: 'Choose the country'
+                validator: 'Choose the country',
             },
             accountNumber: {
                 placeholder: 'Account number',
-                validator: 'Enter account number'
+                validator: 'Enter account number',
             },
             newPassword: {
                 placeholder: 'New Password',
-                validator: 'Minimum 8 characters'
+                validator: 'Minimum 8 characters',
             },
             confirmPassword: {
                 placeholder: 'Confirm password',
-                validator: 'Password doesn`t match'
-            }
+                validator: 'Password doesn`t match',
+            },
         },
         errorPromo: 'Invalid promo code',
         errorWrongPassOrLogin: 'Wrong username or password',
@@ -184,15 +193,14 @@ export default {
         clear: 'Clear',
         save: 'Save',
         titleReset: 'Your password recovery request has been successfully completed',
-        disabled: 'The data change function is temporarily disabled'
-
+        disabled: 'The data change function is temporarily disabled',
     },
     accountInfo: {
         navbar: {
             privateData: 'Personal Information',
             documents: 'Documentation',
             transaction: 'Transactions',
-            tradeHistory: 'Trading history'
+            tradeHistory: 'Trading history',
         },
         documents: {
             personality: 'Identity Verification',
@@ -201,7 +209,7 @@ export default {
             creditFrontSide: 'Credit card (front side)',
             creditBackSide: 'Credit card (reverse)',
             anotherDocuments: 'Other documents',
-            loadButton: 'Download'
+            loadButton: 'Download',
         },
         transaction: {
             loadingData: 'Loading data...',
@@ -229,12 +237,13 @@ export default {
             cardNumberTitle: 'Payment card number',
             cardHolderName: 'Card holder name',
             wallet: 'Wallet',
-            bankTransferText: 'To make a withdrawal via Bank Transfer, please contact the support chat.',
+            bankTransferText:
+                'To make a withdrawal via Bank Transfer, please contact the support chat.',
             error: {
                 failedBalance: 'Insufficient funds',
                 failedMinValue: 'Incorrect data',
-                failedMinValueNumber: 'Incorrect number'
-            }
+                failedMinValueNumber: 'Incorrect number',
+            },
         },
         tradeHistory: {
             dateTitle: 'Date of creation',
@@ -248,13 +257,13 @@ export default {
             commissionTitle: 'Commission',
             takeProfit: 'Take profit',
             stopLoss: 'Stop loss',
-            closingDate: 'Closing time'
+            closingDate: 'Closing time',
         },
         dataInfo: {
             gender: {
                 male: 'Male',
-                female: 'Female'
-            }
+                female: 'Female',
+            },
         },
         countryInfo: {
             ru: 'Russia (Россия)',
@@ -317,26 +326,26 @@ export default {
             GB: 'United Kingdom',
             US: 'United States',
             VN: 'Vietnam',
-            by: 'Belarus (Беларусь)'
-        }
+            by: 'Belarus (Беларусь)',
+        },
     },
     payments: {
         qiwi: {
-            title: 'QIWI'
+            title: 'QIWI',
         },
         bitcoin: {
-            title: 'Bitcoin'
+            title: 'Bitcoin',
         },
         usdt: {
-            title: 'USDT TRC-20'
+            title: 'USDT TRC-20',
         },
         swift: {
             title: 'SWIFT',
-            text: 'To top up funds by Bank Transfer, please contact the support chat.'
+            text: 'To top up funds by Bank Transfer, please contact the support chat.',
         },
         visa: {
             title: 'USDT',
-            subtitle: 'Visa/Mastercard'
+            subtitle: 'Visa/Mastercard',
         },
         replenishment: 'Choose a deposit method',
         info: {
@@ -346,14 +355,14 @@ export default {
             adressBottomTitle: 'After the transaction, contact our manager',
             copied: 'Copied',
             qiwiTopTitle: 'Our PayP address',
-            failedIncorrect: 'Incorrect data'
-        }
+            failedIncorrect: 'Incorrect data',
+        },
     },
     withdrawSuccess: {
         topTitle: 'Your withdrawal request $ ',
         success: 'successfully',
         sended: 'sent',
-        bottomTitle: 'Funds will be credited to your account within 3 days'
+        bottomTitle: 'Funds will be credited to your account within 3 days',
     },
     openedOrders: {
         createData: 'Date of creation',
@@ -367,18 +376,17 @@ export default {
         takeProfit: 'Take profit',
         stopLoss: 'Stop loss',
         closingDate: 'Closing date',
-        closingTime: 'Closing time'
+        closingTime: 'Closing time',
     },
     openOrder: {
         accept: 'Close',
         some: 'Something',
-        closeOrder: 'Close the deal'
+        closeOrder: 'Close the deal',
     },
     chat: {
         title: 'Chat',
         inputPlaceholder: 'Enter message',
         say: 'You',
-        admin: 'Admin'
-    }
-
+        admin: 'Admin',
+    },
 };

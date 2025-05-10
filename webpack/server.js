@@ -3,6 +3,7 @@
 let path = require('path');
 let express = require('express');
 let webpack = require('webpack');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 let httpProxy = require('http-proxy');
 let ip = require('ip');
 let net = require('net');
@@ -40,7 +41,7 @@ const instance = require('webpack-dev-middleware')(compiler, {
     publicPath: config[0].output.publicPath,
     quiet: false,
     noInfo: true,
-    hot: false,
+    hot: true,
     inline: false,
     serverSideRender: true,
     stats: {
@@ -53,9 +54,19 @@ const instance = require('webpack-dev-middleware')(compiler, {
         children: false,
         warnings: true,
     },
+    watchOptions: {
+        poll: 1000,
+        ignored: /node_modules/,
+    },
 });
 
 app.use(instance);
+app.use(
+    webpackHotMiddleware(compiler, {
+        log: console.log, // Логирование ошибок и событий
+        path: '/__webpack_hmr',
+    }),
+);
 
 app.use(express.static(rootPath));
 
