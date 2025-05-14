@@ -17,6 +17,8 @@ services:
             - /app/node_modules
         ports:
             - '3003:3003'
+            - '8443:8443'
+            - '2053:2053'
         environment:
             - NODE_ENV=development
             - DATABASE_URL=mongodb://mongo:27017/pl-finance

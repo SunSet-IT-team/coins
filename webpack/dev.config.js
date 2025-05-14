@@ -1,4 +1,3 @@
-/* eslint-disable import/no-commonjs */
 const WebpackNotifierPlugin = require('webpack-notifier');
 const path = require('path');
 const webpack = require('webpack');
@@ -16,13 +15,13 @@ const babelLoaderConfig = babelConfig('development', process.env.ES || 'dev');
 const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
 
 common.client.entry.client = [
-    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr&reload=true&timeout=1000',
+    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr_client&reload=true&timeout=1000000',
     './src/apps/client/index.js',
 ];
 
 common.admin.entry.main = [
-    'webpack-hot-middleware/client?reload=true&timeout=1000',
-    ...toArray(common.admin.entry.main),
+    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr_admin&reload=true&timeout=10000',
+    './src/apps/client/index.js',
 ];
 
 const config = {
@@ -31,7 +30,7 @@ const config = {
     cache: true,
     output: {
         path: buildPath,
-        publicPath: `/public/`,
+        publicPath: `http://localhost:4000/public/`,
         filename: '[name].chunk.js',
         chunkFilename: '[name].chunk.js',
     },
@@ -74,7 +73,14 @@ const config = {
     ],
 };
 
-const admin = merge.smart(common.admin, config);
-const client = merge.smart(common.client, config);
+const admin = merge.smart(common.admin, {
+    name: 'admin',
+    ...config,
+});
+
+const client = merge.smart(common.client, {
+    name: 'client',
+    ...config,
+});
 
 module.exports = [admin, client];
