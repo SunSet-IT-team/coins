@@ -28,15 +28,15 @@ const mapStateToProps = ({ application, data }) => {
         langMap: application.langMap,
         transactions: data.transactions,
         user: data.user,
-        moneyOutput: data.moneyOutput
+        moneyOutput: data.moneyOutput,
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    saveMoneyOutput: payload => dispatch(saveMoneyOutput(payload)),
-    setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
-    setWithdrawSuccessPopup: payload => dispatch(setWithdrawSuccessPopup(payload)),
-    getClientMoneyOutput: payload => dispatch(getClientMoneyOutput(payload))
+    saveMoneyOutput: (payload) => dispatch(saveMoneyOutput(payload)),
+    setAccountInfoPopup: (payload) => dispatch(setAccountInfoPopup(payload)),
+    setWithdrawSuccessPopup: (payload) => dispatch(setWithdrawSuccessPopup(payload)),
+    getClientMoneyOutput: (payload) => dispatch(getClientMoneyOutput(payload)),
 });
 
 class TransactionInfoPopup extends Component {
@@ -48,25 +48,25 @@ class TransactionInfoPopup extends Component {
         saveMoneyOutput: PropTypes.func.isRequired,
         setWithdrawSuccessPopup: PropTypes.func.isRequired,
         getClientMoneyOutput: PropTypes.func.isRequired,
-        moneyOutput: PropTypes.array.isRequired
+        moneyOutput: PropTypes.array.isRequired,
     };
 
     static defaultProps = {
-        transactions: []
-    }
+        transactions: [],
+    };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = {
             ...this.defaultState(),
-            error: ''
+            error: '',
         };
     }
 
-    componentDidUpdate (prevProps) {
-        setTimeout(() => {
-            this.getData();
-        }, 1000);
+    componentDidUpdate(prevProps) {
+        // setTimeout(() => {
+        //     this.getData();
+        // }, 1000);
         /* if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
             this.setState({
                 ...this.defaultState(),
@@ -75,21 +75,24 @@ class TransactionInfoPopup extends Component {
         } */
     }
 
-    defaultState () {
+    defaultState() {
         return {
             amount: { value: '', focus: false, isValid: true },
-            outputByUsers: []
+            outputByUsers: [],
         };
-    };
+    }
 
     getData = () => {
         const { user } = this.props;
-        return this.props.getClientMoneyOutput()
+        return this.props
+            .getClientMoneyOutput()
             .then(() => {
-                const userOutputs = this.props.moneyOutput.filter(item => item.userId === user.id);
+                const userOutputs = this.props.moneyOutput.filter(
+                    (item) => item.userId === user.id,
+                );
 
                 this.setState({
-                    outputByUsers: userOutputs.map(item => ({
+                    outputByUsers: userOutputs.map((item) => ({
                         status: item.status,
                         date: item.createdAt,
                         createdAt: item.createdAtDate,
@@ -99,73 +102,84 @@ class TransactionInfoPopup extends Component {
                         cardHolderName: item.cardHolderName,
                         id: item.id,
                         visited: item.visited,
-                        userId: user.id
-                    }))
+                        userId: user.id,
+                    })),
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching data:', error);
             });
-    }
+    };
 
-    componentDidMount () {
+    componentDidMount() {
         outputWebsocketController.events.on('output', this.qwerty);
         this.getData();
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         outputWebsocketController.events.removeListener('output', this.qwerty);
     }
 
-    qwerty = output => {
+    qwerty = (output) => {
         if (output.userId === this.props.user.id) {
             this.getData();
         }
-    }
+    };
 
-    handleChange = (name, value) => e => {
+    handleChange = (name, value) => (e) => {
         e.stopPropagation();
         const actualValue = isUndefined(value) ? e.target.value : value;
 
         if (actualValue.length > this.state.maxLength) return;
 
         this.setState({
-            [name]: { ...this.state[name], value: actualValue, focus: isUndefined(value), isValid: true },
-            error: ''
+            [name]: {
+                ...this.state[name],
+                value: actualValue,
+                focus: isUndefined(value),
+                isValid: true,
+            },
+            error: '',
         });
     };
 
-    onFocus = name => e => {
+    onFocus = (name) => (e) => {
         e.stopPropagation();
         this.setState({
-            [name]: { ...this.state[name], focus: !this.state[name].focus }
+            [name]: { ...this.state[name], focus: !this.state[name].focus },
         });
     };
 
-    onBlur = name => {
+    onBlur = (name) => {
         const currentState = this.handleCheckErrors([name]);
 
         this.setState({
-            [name]: { ...this.state[name], focus: false, isValid: currentState[name].isValid }
+            [name]: { ...this.state[name], focus: false, isValid: currentState[name].isValid },
         });
     };
 
     handleCheckErrors = (names = []) => {
         const thisState = {};
         this.setState({
-            error: ''
+            error: '',
         });
 
-        names.forEach(name => {
+        names.forEach((name) => {
             const property = this.state[name];
 
             if (isObject(property) && !isArray(property)) {
                 let isValid = true;
                 let error;
 
-                if (this.state[name].value < 5 && !!this.state[name].value || !this.state[name].value) {
+                if (
+                    (this.state[name].value < 5 && !!this.state[name].value) ||
+                    !this.state[name].value
+                ) {
                     error = 'MinValue';
-                } else if (!checkBalance(this.props.user.balance - this.state[name].value) && !!this.state[name].value) {
+                } else if (
+                    !checkBalance(this.props.user.balance - this.state[name].value) &&
+                    !!this.state[name].value
+                ) {
                     error = 'Balance';
                 }
 
@@ -178,7 +192,7 @@ class TransactionInfoPopup extends Component {
 
                 this.setState({
                     [name]: newValue,
-                    error
+                    error,
                 });
             }
         });
@@ -186,7 +200,7 @@ class TransactionInfoPopup extends Component {
         return thisState;
     };
 
-    handleSubmit = e => {
+    handleSubmit = (e) => {
         e.preventDefault();
 
         const { amount } = this.state;
@@ -201,15 +215,16 @@ class TransactionInfoPopup extends Component {
         }
 
         if (isValid) {
-            this.props.saveMoneyOutput({
-                userId: this.props.user.id,
-                amount: amount.value
-            })
+            this.props
+                .saveMoneyOutput({
+                    userId: this.props.user.id,
+                    amount: amount.value,
+                })
                 .then(() => {
                     this.props.setWithdrawSuccessPopup({ visible: true, amount: amount.value });
                     setTimeout(() => this.closePopup(), 2000);
                 })
-                .catch(e => {
+                .catch((e) => {
                     this.setState({ error: e.message });
                 });
         }
@@ -220,12 +235,12 @@ class TransactionInfoPopup extends Component {
         this.props.setAccountInfoPopup();
     };
 
-    getDate = currentDate => {
+    getDate = (currentDate) => {
         const date = new Date(currentDate);
         return format(date, 'dd.MM.yyyy HH:mm');
     };
 
-    render () {
+    render() {
         const { langMap, transactions } = this.props;
         const { outputByUsers } = this.state;
 
@@ -233,35 +248,82 @@ class TransactionInfoPopup extends Component {
 
         const text = propOr('accountInfo', {}, langMap).transaction;
 
-        return <div className={styles.transactionPopupContainer}>
-            <div className={styles.navbar}>
-                <div className={styles.itemNum}>#</div>
-                <div className={styles.itemSum}>{text.summ}</div>
-                <div className={styles.itemStatus}>{text.status}</div>
-                <div className={styles.itemDate}>{text.date}</div>
-            </div>
-            <div className={styles.transactionsContainer}>
-                {transactionList
-                    .sort((prev, next) => next.createdAt - prev.createdAt)
-                    .filter((item) => item.type !== 'deduction')
-                    .map((item, i) => <div key={i} className={styles.transactionItem}>
-                        <div className={styles.itemNum}>{i + 1}</div>
-                        <div className={styles.itemSum}>$ {item.value || item.amount}</div>
-                        <div className={styles.itemStatus}>
-                            {item.content || <div>
-                                {item.status === 'Новая' && <p>{text.statusWithdraw}: <span className={styles.processingStatus}>{text.processing}</span></p>}
-                                {item.status === 'В обработке' &&
-                                <p>{text.statusWithdraw}: <span className={styles.processingStatus}>{text.processing}</span></p>}
-                                {item.status === 'Успешно' && <p>{text.statusWithdraw}: <span className={styles.executedStatus}>{text.executed}</span></p>}
-                                {item.status === 'Отменена' && <p>{text.statusWithdraw}: <span className={styles.canceledStatus}>{text.canceled}</span></p>}
-                                {item.wallet ? <p>{text.inputPlaceholderWallet}: {item.wallet}</p> : <div><p>{text.inputPlaceholderCard}: {item.numberCard}</p>
-                                    <p>{text.inputPlaceholderName}: {item.cardHolderName}</p></div>}
-                            </div>}
-                        </div>
-                        <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
-                    </div>)
-                }
-                {/*  {outputByUsers.length && outputByUsers
+        return (
+            <div className={styles.transactionPopupContainer}>
+                <div className={styles.navbar}>
+                    <div className={styles.itemNum}>#</div>
+                    <div className={styles.itemSum}>{text.summ}</div>
+                    <div className={styles.itemStatus}>{text.status}</div>
+                    <div className={styles.itemDate}>{text.date}</div>
+                </div>
+                <div className={styles.transactionsContainer}>
+                    {transactionList
+                        .sort((prev, next) => next.createdAt - prev.createdAt)
+                        .filter((item) => item.type !== 'deduction')
+                        .map((item, i) => (
+                            <div key={i} className={styles.transactionItem}>
+                                <div className={styles.itemNum}>{i + 1}</div>
+                                <div className={styles.itemSum}>$ {item.value || item.amount}</div>
+                                <div className={styles.itemStatus}>
+                                    {item.content || (
+                                        <div>
+                                            {item.status === 'Новая' && (
+                                                <p>
+                                                    {text.statusWithdraw}:{' '}
+                                                    <span className={styles.processingStatus}>
+                                                        {text.processing}
+                                                    </span>
+                                                </p>
+                                            )}
+                                            {item.status === 'В обработке' && (
+                                                <p>
+                                                    {text.statusWithdraw}:{' '}
+                                                    <span className={styles.processingStatus}>
+                                                        {text.processing}
+                                                    </span>
+                                                </p>
+                                            )}
+                                            {item.status === 'Успешно' && (
+                                                <p>
+                                                    {text.statusWithdraw}:{' '}
+                                                    <span className={styles.executedStatus}>
+                                                        {text.executed}
+                                                    </span>
+                                                </p>
+                                            )}
+                                            {item.status === 'Отменена' && (
+                                                <p>
+                                                    {text.statusWithdraw}:{' '}
+                                                    <span className={styles.canceledStatus}>
+                                                        {text.canceled}
+                                                    </span>
+                                                </p>
+                                            )}
+                                            {item.wallet ? (
+                                                <p>
+                                                    {text.inputPlaceholderWallet}: {item.wallet}
+                                                </p>
+                                            ) : (
+                                                <div>
+                                                    <p>
+                                                        {text.inputPlaceholderCard}:{' '}
+                                                        {item.numberCard}
+                                                    </p>
+                                                    <p>
+                                                        {text.inputPlaceholderName}:{' '}
+                                                        {item.cardHolderName}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.itemDate}>
+                                    {this.getDate(item.createdAt)}
+                                </div>
+                            </div>
+                        ))}
+                    {/*  {outputByUsers.length && outputByUsers
                     .sort((prev, next) => next.createdAtDate - prev.createdAtDate)
                     .map((item, i) => <div key={i} className={styles.transactionItem}>
                         <div className={styles.itemNum}>{i + 1}</div>
@@ -287,14 +349,14 @@ class TransactionInfoPopup extends Component {
                             </div>);
                         }
                     })} */}
-            </div>
-            {/*   <div className={styles.footer}> */}
-            {/*  <div className={styles.funds}>{text.moneyWithdrawalTitle}</div> */}
-            {/*   <div className={styles.rightContainer}> */}
-            {/*       <div className={styles.summ}>{text.summ}, $</div> */}
-            {/*      <form className={styles.form} onSubmit={this.handleSubmit} > */}
-            {/*        <div className={styles.amountContainerField}> */}
-            {/*          <FormInput
+                </div>
+                {/*   <div className={styles.footer}> */}
+                {/*  <div className={styles.funds}>{text.moneyWithdrawalTitle}</div> */}
+                {/*   <div className={styles.rightContainer}> */}
+                {/*       <div className={styles.summ}>{text.summ}, $</div> */}
+                {/*      <form className={styles.form} onSubmit={this.handleSubmit} > */}
+                {/*        <div className={styles.amountContainerField}> */}
+                {/*          <FormInput
                                 texts={{ amount: text.inputPlaceholder }}
                                 name='amount'
                                 onFocus={this.onFocus}
@@ -304,25 +366,26 @@ class TransactionInfoPopup extends Component {
                                 focus={this.state.amount.value}
                                 type='number'
                             /> */}
-            {/*    </div> */}
-            {/*      <button type='submit' className={classNames(styles.button, {
+                {/*    </div> */}
+                {/*      <button type='submit' className={classNames(styles.button, {
                             [styles.buttonUnactive]: !this.state['amount'].isValid || error
                         })}> */}
-            {/*    {text.moneyWithdrawal} */}
-            {/*   <div className={classNames(styles.failedPopup, {
+                {/*    {text.moneyWithdrawal} */}
+                {/*   <div className={classNames(styles.failedPopup, {
                                 [styles.isFailedPopup]: !this.state['amount'].isValid || error
                             })}> */}
-            {/*       <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" /> */}
-            {/*       <div className={styles.title}> */}
-            {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
-            {/*         {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]} */}
-            {/*       </div> */}
-            {/*     </div> */}
-            {/*    </button> */}
-            {/*    </form> */}
-            {/*  </div> */}
-            {/*    </div> */}
-        </div>;
+                {/*       <img src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg" alt="info" /> */}
+                {/*       <div className={styles.title}> */}
+                {/* {!this.state['amount'].isValid && (error || 'Недостаточно средств')} */}
+                {/*         {text.error[`failed${!this.state['amount'].isValid || error ? error : ''}`]} */}
+                {/*       </div> */}
+                {/*     </div> */}
+                {/*    </button> */}
+                {/*    </form> */}
+                {/*  </div> */}
+                {/*    </div> */}
+            </div>
+        );
     }
 }
 

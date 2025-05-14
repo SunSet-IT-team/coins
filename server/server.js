@@ -198,7 +198,7 @@ function createApp() {
             });
         }
 
-        app.listen(isMainThread ? PORT : workerData.port, () => {
+        app.listen(isMainThread ? PORT : workerData.port, '0.0.0.0', () => {
             console.log('listening on port', isMainThread ? PORT : workerData.port); // eslint-disable-line no-console
 
             if (isMainThread) {

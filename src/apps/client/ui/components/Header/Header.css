@@ -14,36 +14,41 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
-    position: relative;
-    height: 100%;
+    position: sticky;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 100dvh;
     max-height: 84px;
     z-index: 12;
     font-family: FuturaPT-Medium;
 
-@media(max-width: 1024px) {
-    flex-direction: row-reverse;
-    padding-right: 0px;
-    z-index: 13;
-}
+    @media (max-width: 1024px) {
+        flex-direction: row-reverse;
+        padding-right: 0px;
+        z-index: 13;
+    }
 
-@media(max-width: 756px) {
-    padding: 0;
-    padding-left: 14px;
-}
+    @media (max-width: 756px) {
+        padding: 0;
+        padding-left: 14px;
+    }
 
-@media(max-width: 544px) {
-    max-height: 56px;
-}
+    @media (max-width: 544px) {
+        max-height: 56px;
+    }
 
-@media(max-height: 544px) {
-    max-height: 56px;
+    @media (max-height: 544px) {
+        max-height: 56px;
+    }
 }
-}
-.logo {width: 90px;}
 .logo {
-@media(max-width: 1024px) {
-    display: none;
+    width: 90px;
 }
+.logo {
+    @media (max-width: 1024px) {
+        display: none;
+    }
 }
 .timeLangWrapper {
     display: flex;
@@ -54,10 +59,10 @@
     font-family: FuturaPT-Medium;
     font-weight: 500;
     color: rgba(166, 177, 220, 0.5);
-    &:hover{
-         color: rgba(166, 177, 220, 0.9);
-         cursor: pointer;
-     }
+    &:hover {
+        color: rgba(166, 177, 220, 0.9);
+        cursor: pointer;
+    }
 }
 .activeLangLink {
     text-decoration: none;
@@ -65,12 +70,12 @@
     font-weight: 500;
     color: white;
     cursor: pointer;
-    &:hover{
-         color: white;
-     }
+    &:hover {
+        color: white;
+    }
 }
 .iconStick {
-    color: #A6B1DC;
+    color: #a6b1dc;
     font-size: 20px;
     margin-top: -4px;
 }
@@ -78,7 +83,6 @@
     margin-right: 30px;
     display: flex;
     align-items: center;
-
 }
 .timeContainer {
     display: flex;
@@ -91,33 +95,37 @@
     max-width: 114px;
     width: 100%;
 
-.timeIcon {
-    margin-right: 8px;
-}
+    .timeIcon {
+        margin-right: 8px;
+    }
 
-.timeInnerContainer {
-    width: 61px;
-    margin: auto;
+    .timeInnerContainer {
+        width: 61px;
+        margin: auto;
 
-.time {
-    margin-right: 6px;
-    font-size: 16px;
-    line-height: 21px;
-}
-}
+        .time {
+            margin-right: 6px;
+            font-size: 16px;
+            line-height: 21px;
+        }
+    }
 
-.timeFormat {
-    font-size: 12px;
-    line-height: 15px;
-    margin-top: 4px;
-}
+    .timeFormat {
+        font-size: 12px;
+        line-height: 15px;
+        margin-top: 4px;
+    }
 
-@media(max-width: 1024px) {
-    display: none;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 }
+.depositButton:hover {
+    background: rgba(101, 176, 255, 0.44);
 }
-.depositButton:hover{background: rgba(101, 176, 255, 0.44);}
-.depositButton img{    padding: 8px;}
+.depositButton img {
+    padding: 8px;
+}
 .depositButton {
     background: #65b0ff;
     border-radius: 3px;
@@ -133,36 +141,36 @@
     justify-content: center;
     align-items: center;
 
-@media(max-width: 544px) {
-    font-size: 12px;
-    line-height: 15px;
-    margin-right: 0px;
-    height: 36px;
-    width: 48px;
-    padding: 8px;
-    border-radius:3px;
+    @media (max-width: 544px) {
+        font-size: 12px;
+        line-height: 15px;
+        margin-right: 0px;
+        height: 36px;
+        width: 48px;
+        padding: 8px;
+        border-radius: 3px;
+    }
+
+    @media (max-height: 544px) {
+        font-size: 12px;
+        line-height: 15px;
+        margin-right: 0px;
+        height: 36px;
+    }
 }
 
-@media(max-height: 544px) {
-    font-size: 12px;
-    line-height: 15px;
-    margin-right: 0px;
-    height: 36px;
-}
-}
-
-.mobileNavBarItems{
+.mobileNavBarItems {
     display: none;
 
-@media(max-width: 1024px) {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-}
+    @media (max-width: 1024px) {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+    }
 }
 
 .buyAndSellContainer {
-@media(max-width: 1024px) {
-    display: none
-}
+    @media (max-width: 1024px) {
+        display: none;
+    }
 }

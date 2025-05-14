@@ -15,7 +15,7 @@ export const FILES_FOLDER_PATH = 'src/apps/admin/files';
 
 // TODO: добавьте финхаб ключи здесь
 // Важно создать разные аккаунты финхаб. Т.к. финхаб разрешает только 1 вебсокет подключение для конкретного ключа
-export const FINNHUB_API_KEY_DEV = 'ct7de3pr01qoi5r2gq50ct7de3pr01qoi5r2gq5g';
+export const FINNHUB_API_KEY_DEV = 'cpkt1rhr01qulsvjo5m0cpkt1rhr01qulsvjo5mg';
 
 export const FINNHUB_API_KEY_PROD = 'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10';
 export const FINNHUB_API_KEY =
