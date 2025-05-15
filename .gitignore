@@ -12,3 +12,4 @@ src/apps/admin/files
 *.DS_Store
 package-lock.json
 server/api/admin/db/temp
+.env
