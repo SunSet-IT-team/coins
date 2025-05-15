@@ -16,8 +16,6 @@ let config = require('./dev.config');
 
 const multiCompiler = webpack(config);
 
-console.log(multiCompiler);
-
 const adminCompiler = multiCompiler.compilers.find((c) => c.name === 'admin');
 const clientCompiler = multiCompiler.compilers.find((c) => c.name === 'client');
 

@@ -2,11 +2,11 @@
 const { Seeder } = require('mongo-seeding');
 const path = require('path');
 
-const DATABASE_URL = 'mongodb://localhost/pl-finance';
+const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://mongo:27017/pl-finance';
 
 const config = {
     database: DATABASE_URL,
-    dropDatabase: true
+    dropDatabase: true,
 };
 
 const seeder = new Seeder(config);
@@ -18,6 +18,6 @@ seeder
     .then(() => {
         console.log('Success!');
     })
-    .catch(err => {
+    .catch((err) => {
         console.log(err);
     });

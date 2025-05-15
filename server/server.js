@@ -166,6 +166,7 @@ function createApp() {
 
         // admin
         const adminUrlRegex = new RegExp(`^${ADMIN_PANEL_URL}`);
+
         app.get(adminUrlRegex, function (req, res) {
             const page = renderAdminPage();
 

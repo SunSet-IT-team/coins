@@ -12,16 +12,14 @@ const babelConfig = require('./babel.config');
 
 const babelLoaderConfig = babelConfig('development', process.env.ES || 'dev');
 
-const toArray = (v) => (!v ? [] : Array.isArray(v) ? v : [v]);
-
 common.client.entry.client = [
-    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr_client&reload=true&timeout=1000000',
+    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr_client&reload=true',
     './src/apps/client/index.js',
 ];
 
-common.admin.entry.main = [
-    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr_admin&reload=true&timeout=10000',
-    './src/apps/client/index.js',
+common.admin.entry.admin = [
+    'webpack-hot-middleware/client?path=http://localhost:4000/__webpack_hmr_admin&reload=true',
+    './src/apps/admin/index.js',
 ];
 
 const config = {

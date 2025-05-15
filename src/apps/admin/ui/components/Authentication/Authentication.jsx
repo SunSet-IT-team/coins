@@ -17,34 +17,34 @@ import { ADMIN_PANEL_URL } from '../../../constants/constants';
 
 import styles from './Authentication.css';
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     error: {
-        backgroundColor: theme.palette.error.dark
+        backgroundColor: theme.palette.error.dark,
     },
     icon: {
-        fontSize: 20
+        fontSize: 20,
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing.unit,
     },
     message: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     margin: {
-        margin: theme.spacing.unit
-    }
+        margin: theme.spacing.unit,
+    },
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    authenticate: payload => dispatch(authenticate(payload))
+    authenticate: (payload) => dispatch(authenticate(payload)),
 });
 
 class Authentication extends Component {
     static propTypes = {
         authenticate: PropTypes.func.isRequired,
-        classes: PropTypes.object.isRequired
+        classes: PropTypes.object.isRequired,
     };
 
     state = {
@@ -52,18 +52,18 @@ class Authentication extends Component {
         password: '',
         errors: {
             login: false,
-            password: false
+            password: false,
         },
-        authFailed: false
+        authFailed: false,
     };
 
-    handleChange = credential => event => {
+    handleChange = (credential) => (event) => {
         this.setState({
             [credential]: event.target.value,
             errors: {
                 ...this.state.errors,
-                [credential]: false
-            }
+                [credential]: false,
+            },
         });
     };
 
@@ -73,92 +73,102 @@ class Authentication extends Component {
         const { login, password } = this.state;
         const credentials = {
             login: login.trim(),
-            password: password.trim()
+            password: password.trim(),
         };
 
         if (!credentials.login || !credentials.password) {
             return this.setState({
                 errors: {
                     login: !login,
-                    password: !password
-                }
+                    password: !password,
+                },
             });
         }
 
-        this.props.authenticate(credentials)
-            .catch(() => {
-                this.setState({
-                    password: '',
-                    errors: {
-                        login: !login,
-                        password: !password
-                    },
-                    authFailed: true
-                });
+        this.props.authenticate(credentials).catch(() => {
+            this.setState({
+                password: '',
+                errors: {
+                    login: !login,
+                    password: !password,
+                },
+                authFailed: true,
             });
+        });
     };
 
     handleHideFailMessage = () => {
         this.setState({
-            authFailed: false
+            authFailed: false,
         });
     };
 
-    render () {
+    render() {
         const { classes } = this.props;
         const { login, password, errors, authFailed } = this.state;
 
-        return <div className={styles.container}>
-            <h1 className={styles.title}>Вход</h1>
-            <form className={styles.form} noValidate autoComplete='off' onSubmit={this.handleSubmit}>
-                <TextField
-                    label='Логин'
-                    value={login}
-                    onChange={this.handleChange('login')}
-                    margin='normal'
-                    variant='outlined'
-                    error={errors.login}
-                />
-                <TextField
-                    label='Пароль'
-                    value={password}
-                    onChange={this.handleChange('password')}
-                    margin='normal'
-                    variant='outlined'
-                    error={errors.password}
-                    type='password'
-                />
-                <div className={styles.button}>
-                    <Button variant='contained' color='primary' type='submit' fullWidth>
-                        Войти
-                    </Button>
-                </div>
-                <div className={styles.button}>
-                    <Button variant='contained' color='default' fullWidth href={`${ADMIN_PANEL_URL}/recovery`}>
-                        Забыли пароль?
-                    </Button>
-                </div>
-            </form>
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                onClose={this.handleHideFailMessage}
-                open={authFailed}
-                autoHideDuration={2000}
-            >
-                <SnackbarContent
-                    className={classNames(classes.error, classes.margin)}
-                    message={
-                        <span id='client-snackbar' className={classes.message}>
-                            <ErrorIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            Вы ввели неправильный логин или пароль
-                        </span>
-                    }
-                />
-            </Snackbar>
-        </div>;
+        return (
+            <div className={styles.container}>
+                <h1 className={styles.title}>Вход</h1>
+                <form
+                    className={styles.form}
+                    noValidate
+                    autoComplete="off"
+                    onSubmit={this.handleSubmit}>
+                    <TextField
+                        label="Логин"
+                        value={login}
+                        onChange={this.handleChange('login')}
+                        margin="normal"
+                        variant="outlined"
+                        error={errors.login}
+                    />
+                    <TextField
+                        label="Пароль"
+                        value={password}
+                        onChange={this.handleChange('password')}
+                        margin="normal"
+                        variant="outlined"
+                        error={errors.password}
+                        type="password"
+                    />
+                    <div className={styles.button}>
+                        <Button variant="contained" color="primary" type="submit" fullWidth>
+                            Войти
+                        </Button>
+                    </div>
+                    <div className={styles.button}>
+                        <Button
+                            variant="contained"
+                            color="default"
+                            fullWidth
+                            href={`${ADMIN_PANEL_URL}/recovery`}>
+                            Забыли пароль?
+                        </Button>
+                    </div>
+                </form>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={this.handleHideFailMessage}
+                    open={authFailed}
+                    autoHideDuration={2000}>
+                    <SnackbarContent
+                        className={classNames(classes.error, classes.margin)}
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon
+                                    className={classNames(classes.icon, classes.iconVariant)}
+                                />
+                                Вы ввели неправильный логин или пароль
+                            </span>
+                        }
+                    />
+                </Snackbar>
+            </div>
+        );
     }
 }
 

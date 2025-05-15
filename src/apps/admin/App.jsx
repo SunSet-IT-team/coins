@@ -37,13 +37,13 @@ import SettingsPage from './ui/pages/SettingsPage/SettingsPage.jsx';
 
 const mapStateToProps = ({ application }) => ({
     authenticated: application.authenticated,
-    currentAdmin: application.currentAdmin
+    currentAdmin: application.currentAdmin,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    checkAuthentication: payload => dispatch(checkAuthentication(payload)),
-    getUnvisitedMoneyOutput: payload => dispatch(getUnvisitedMoneyOutput(payload)),
-    getUnvisitedMessageHistory: payload => dispatch(getUnvisitedMessageHistory(payload))
+    checkAuthentication: (payload) => dispatch(checkAuthentication(payload)),
+    getUnvisitedMoneyOutput: (payload) => dispatch(getUnvisitedMoneyOutput(payload)),
+    getUnvisitedMessageHistory: (payload) => dispatch(getUnvisitedMessageHistory(payload)),
 });
 
 class App extends Component {
@@ -53,22 +53,24 @@ class App extends Component {
         getUnvisitedMessageHistory: PropTypes.func.isRequired,
         authenticated: PropTypes.bool,
         location: PropTypes.object,
-        currentAdmin: PropTypes.object
+        currentAdmin: PropTypes.object,
     };
 
     static defaultProps = {
-        location: {}
+        location: {},
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { location: { pathname } } = this.props;
+        const {
+            location: { pathname },
+        } = this.props;
 
         this.isRecovery = matchPath(pathname, RECOVERY_URL);
     }
 
-    componentDidMount () {
+    componentDidMount() {
         this.props.checkAuthentication();
         this.props.getUnvisitedMoneyOutput();
         this.props.getUnvisitedMessageHistory();
@@ -76,8 +78,11 @@ class App extends Component {
         outputWebsocketController.events.on('output', this.props.getUnvisitedMoneyOutput);
     }
 
-    componentWillReceiveProps (nextProps) {
-        if (!isNull(nextProps.authenticated) && this.props.authenticated !== nextProps.authenticated) {
+    componentWillReceiveProps(nextProps) {
+        if (
+            !isNull(nextProps.authenticated) &&
+            this.props.authenticated !== nextProps.authenticated
+        ) {
             this.setMessageConnection(nextProps.authenticated);
         }
     }
@@ -103,7 +108,7 @@ class App extends Component {
         return <Component {...props} />;
     };
 
-    render () {
+    render() {
         const { authenticated } = this.props;
 
         if (this.isRecovery) {
@@ -111,29 +116,45 @@ class App extends Component {
         }
 
         if (isNull(authenticated)) {
-            return <div className={styles.loader}>
-                <CircularProgress />
-            </div>;
+            return (
+                <div className={styles.loader}>
+                    <CircularProgress />
+                </div>
+            );
         }
 
         if (!authenticated) {
             return <Authentication />;
         }
 
-        return <main className={styles.stop}>
-            <Header />
-            <Switch>
-                <Route exact path={ADMIN_PANEL_URL} component={UsersPage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/qiwi`} component={QiwiPage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/payments`} component={PaymentsPage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/messages`} component={ChatPage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/settings`} render={(props) => this.renderProtectedRoute(SettingsPage, props)} />
-                <Route exact path={`${ADMIN_PANEL_URL}/credentials`} render={(props) => this.renderProtectedRoute(CredentialsPage, props)} />
-                <Route exact path={`${ADMIN_PANEL_URL}/db`} component={DatabasePage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/outputs`} component={TransactionsPage} />
-                <Route exact path={`${ADMIN_PANEL_URL}/reload`} render={(props) => this.renderProtectedRoute(Reload, props)} />
-            </Switch>
-        </main>;
+        return (
+            <main className={styles.stop}>
+                <Header />
+                <Switch>
+                    <Route exact path={ADMIN_PANEL_URL} component={UsersPage} />
+                    <Route exact path={`${ADMIN_PANEL_URL}/qiwi`} component={QiwiPage} />
+                    <Route exact path={`${ADMIN_PANEL_URL}/payments`} component={PaymentsPage} />
+                    <Route exact path={`${ADMIN_PANEL_URL}/messages`} component={ChatPage} />
+                    <Route
+                        exact
+                        path={`${ADMIN_PANEL_URL}/settings`}
+                        render={(props) => this.renderProtectedRoute(SettingsPage, props)}
+                    />
+                    <Route
+                        exact
+                        path={`${ADMIN_PANEL_URL}/credentials`}
+                        render={(props) => this.renderProtectedRoute(CredentialsPage, props)}
+                    />
+                    <Route exact path={`${ADMIN_PANEL_URL}/db`} component={DatabasePage} />
+                    <Route exact path={`${ADMIN_PANEL_URL}/outputs`} component={TransactionsPage} />
+                    <Route
+                        exact
+                        path={`${ADMIN_PANEL_URL}/reload`}
+                        render={(props) => this.renderProtectedRoute(Reload, props)}
+                    />
+                </Switch>
+            </main>
+        );
     }
 }
 
