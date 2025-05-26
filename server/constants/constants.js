@@ -9,7 +9,11 @@ export const APP_FORM_FILE_FIELD_NAME_REGEX = /app-form-file-/g;
 
 export const DOMAIN = 'coinwalletcapital.ru';
 
-export const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://mongo:27017/pl-finance';
+export const DATABASE_URL =
+    process.env.DATABASE_URL ||
+    (process.env.NODE_ENV === 'production'
+        ? 'mongodb://localhost/pl-finance'
+        : 'mongodb://mongo:27017/pl-finance');
 
 export const FILES_FOLDER_PATH = 'src/apps/admin/files';
 

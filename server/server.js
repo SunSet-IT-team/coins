@@ -69,6 +69,9 @@ function createApp() {
 
         app.use(helmet());
 
+        console.log('DATABASE_URL');
+        console.log(DATABASE_URL);
+
         // mongodb
         mongoose.connect(DATABASE_URL, {
             useNewUrlParser: true,
