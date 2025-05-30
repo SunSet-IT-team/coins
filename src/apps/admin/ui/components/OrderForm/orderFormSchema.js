@@ -12,6 +12,7 @@ import {
   INDICES_SYMBOLS,
   CRYPTO_CURRENCIES_SYMBOLS,
 } from "../../../../../../server/constants/symbols"
+import FormFieldInputWithCheckBox from "../Form/fields/FormFieldInputWithCheckBox/FormFieldInputWithCheckBox.jsx"
 
 const getAllAssets = () => {
   const allAssets = [
@@ -29,7 +30,7 @@ const getAllAssets = () => {
 }
 
 export default function ({
-  data: { title, isClosed } = {},
+  data: { title, isClosed, profitCheckboxProps } = {},
 } = {}) {
   const assets = getAllAssets()
   return {
@@ -152,11 +153,12 @@ export default function ({
           : {}),
       },
       {
-        component: FormFieldInput,
+        component: FormFieldInputWithCheckBox,
         name: "profit",
         schema: {
           label: "Прибыль",
           readonly: true,
+          checkBoxProps: profitCheckboxProps,
         },
         validators: [],
       },
