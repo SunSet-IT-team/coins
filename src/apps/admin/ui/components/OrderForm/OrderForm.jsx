@@ -60,30 +60,6 @@ const materialStyles = (theme) => ({
   },
 })
 
-function calcOrderAssets(order) {
-  const asset = CHART_SYMBOL_INFO_MAP[order.assetName]
-  const livePrice = assetPriceWebsocketController.prices[order.assetName]
-
-  if (order.amount && order.openingPrice && livePrice && order.type && asset) {
-    const realPrice =
-      order.type === "buy"
-        ? calculateBuyingPrice(asset.name, livePrice)
-        : livePrice
-
-    const profit = getProfit(
-      Number(order.amount),
-      Number(order.openingPrice),
-      realPrice,
-      order.type,
-      asset
-    )
-
-    return profit
-  } else {
-    return ""
-  }
-}
-
 const mapDispatchToProps = (dispatch) => ({
   editOrder: (payload) => dispatch(editOrder(payload)),
   saveOrder: (payload) => dispatch(saveOrder(payload)),
@@ -136,7 +112,9 @@ class OrderForm extends Component {
     this.state = {
       errorText: "",
       userFormData: {},
+      profitFreeze: false,
     }
+    this.handleToggleProfitFreeze = this.handleToggleProfitFreeze.bind(this)
   }
 
   getOrderPayload = ({
@@ -237,13 +215,10 @@ class OrderForm extends Component {
         break
     }
 
-    const profit = calcOrderAssets(updatedFormData)
-
-    updatedFormData.profit = formatNumberToString(profit)
-
     this.setState({
       userFormData: updatedFormData,
     })
+    this.updateOrderAssets(updatedFormData)
   }
 
   handleInputChange = (e) => {
@@ -261,22 +236,59 @@ class OrderForm extends Component {
     this.handleHideFailMessage()
   }
 
+  updateOrderAssets(order) {
+    if (this.state.profitFreeze) return
+    const formData = order || {
+      ...this.initialValues,
+      ...this.state.userFormData,
+    }
+
+    let updatedProfit = ""
+
+    const asset = CHART_SYMBOL_INFO_MAP[formData.assetName]
+    const livePrice = assetPriceWebsocketController.prices[formData.assetName]
+
+    if (
+      formData.amount &&
+      formData.openingPrice &&
+      livePrice &&
+      formData.type &&
+      asset
+    ) {
+      const realPrice =
+        formData.type === "buy"
+          ? calculateBuyingPrice(asset.name, livePrice)
+          : livePrice
+
+      const profit = getProfit(
+        Number(formData.amount),
+        Number(formData.openingPrice),
+        realPrice,
+        formData.type,
+        asset
+      )
+
+      updatedProfit = profit
+    }
+
+    this.setState((prevState) => ({
+      userFormData: {
+        ...prevState.userFormData,
+        profit: formatNumberToString(updatedProfit),
+      },
+    }))
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.orders !== this.props.orders) {
-      const formData = {
-        ...this.initialValues,
-        ...this.state.userFormData,
-      }
-
-      const updatedProfit = calcOrderAssets(formData)
-
-      this.setState((prevState) => ({
-        userFormData: {
-          ...prevState.userFormData,
-          profit: formatNumberToString(updatedProfit),
-        },
-      }))
+      this.updateOrderAssets()
     }
+  }
+
+  handleToggleProfitFreeze() {
+    this.setState((prevState) => ({
+      profitFreeze: !prevState.profitFreeze,
+    }))
   }
 
   render() {
@@ -298,6 +310,11 @@ class OrderForm extends Component {
               title: this.id ? "Редактирование ордера" : "Добавление ордера",
               dirName: this.dirName,
               isClosed: this.isClosed,
+              profitCheckboxProps: {
+                value: this.state.profitFreeze,
+                title: "Заморозить",
+                onChange: this.handleToggleProfitFreeze,
+              },
             },
           })}
           onChange={this.handleChange}
