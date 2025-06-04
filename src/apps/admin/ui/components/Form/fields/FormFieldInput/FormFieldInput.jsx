@@ -29,15 +29,19 @@ const FormFieldInput = ({
       <InputLabel>{schema.label}</InputLabel>
       <Input
         type={schema.type || "text"}
-        value={String(value || "")}
+        value={
+          value !== undefined && value !== null && !Number.isNaN(value)
+            ? String(value)
+            : ""
+        }
         defaultValue={schema.defaultValue}
         onChange={handleChange}
         name={schema.name}
-        readOnly={schema.readonly}
+        readOnly={schema.readOnly}
       />
-      {validationMessage && (
+      {/* {validationMessage && (
         <FormHelperText>{validationMessage}</FormHelperText>
-      )}
+      )} */}
     </FormControl>
   )
 }
@@ -48,6 +52,7 @@ FormFieldInput.propTypes = {
     label: PropTypes.string,
     name: PropTypes.string,
     type: PropTypes.string,
+    readOnly: PropTypes.bool,
   }),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   validationMessage: PropTypes.string,

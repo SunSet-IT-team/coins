@@ -38,10 +38,14 @@ const FormFieldInputWithCheckBox = ({
       <InputLabel>{schema.label}</InputLabel>
       <Input
         type={schema.type || "text"}
-        value={String(value || "")}
+        value={
+          value !== undefined && value !== null && !Number.isNaN(value)
+            ? String(value)
+            : ""
+        }
         onChange={handleChange}
         name={schema.name}
-        readOnly={schema.readonly}
+        readOnly={schema.readOnly}
         endAdornment={
           <InputAdornment position="end">
             <FormControlLabel
@@ -71,7 +75,7 @@ FormFieldInputWithCheckBox.propTypes = {
     label: PropTypes.string,
     name: PropTypes.string,
     type: PropTypes.string,
-    readonly: PropTypes.bool,
+    readOnly: PropTypes.bool,
     checkboxValue: PropTypes.bool,
     onCheckboxChange: PropTypes.func,
   }),
