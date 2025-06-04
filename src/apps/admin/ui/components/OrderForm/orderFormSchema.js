@@ -135,32 +135,28 @@ export default function ({
           : {}),
       },
       {
-        component: FormFieldInput,
-        name: "closedPrice",
-        schema: {
-          label: "Цена закрытия",
-        },
-        hidden: !isClosed,
-        ...(isClosed
-          ? {
-              validators: [
-                {
-                  name: "required",
-                  options: { text: "Заполните цену закрытия" },
-                },
-              ],
-            }
-          : {}),
-      },
-      {
         component: FormFieldInputWithCheckBox,
         name: "profit",
         schema: {
           label: "Прибыль",
-          readonly: true,
           checkBoxProps: profitCheckboxProps,
+          readOnly: !profitCheckboxProps.value, //При заморозке поля оно становится изменяемым
         },
         validators: [],
+      },
+      {
+        component: FormFieldInput,
+        name: "closedPrice",
+        schema: {
+          label: "Цена закрытия",
+          readOnly: !profitCheckboxProps.value, //При заморозке поля оно становится изменяемым
+        },
+        validators: [
+          {
+            name: "required",
+            options: { text: "Заполните цену закрытия" },
+          },
+        ],
       },
       {
         component: FormFieldInput,

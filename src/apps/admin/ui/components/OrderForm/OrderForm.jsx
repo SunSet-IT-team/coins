@@ -14,6 +14,9 @@ import {
   getPledge,
   getOpeningSlotPrice,
   getProfit,
+  getClosingPrice,
+  getProfitByClosingPrice,
+  getMaxProfit,
 } from "../../../../client/utils/getAssetValues"
 import { CHART_SYMBOL_INFO_MAP } from "../../../../../../server/constants/symbols"
 import SnackbarContent from "@material-ui/core/SnackbarContent"
@@ -98,16 +101,37 @@ class OrderForm extends Component {
       amount: order.amount || "",
       pledge: order.pledge || "",
       profit: formatNumberToString(order.profit),
+      closedPrice: order.closedPrice || "",
       type:
         order.type && ["buy", "sell"].includes(order.type) ? order.type : "buy",
       ...(order.closedAt
         ? { closedAt: format(order.closedAt, "yyyy-MM-dd'T'HH:mm") }
         : {}),
-      ...(order.closedPrice ? { closedPrice: order.closedPrice } : {}),
       ...pick(ORDERS_VALUES, order),
       takeProfit: order.takeProfit || "",
       stopLoss: order.stopLoss || "",
     }
+
+    const asset = CHART_SYMBOL_INFO_MAP[this.initialValues.assetName]
+
+    if (
+      asset &&
+      this.initialValues.profit &&
+      this.initialValues.amount &&
+      this.initialValues.openingPrice &&
+      this.initialValues.type
+    ) {
+      const calculatedClosedPrice = getClosingPrice(
+        Number(this.initialValues.openingPrice),
+        Number(this.initialValues.profit),
+        Number(this.initialValues.amount),
+        this.initialValues.type,
+        asset
+      )
+
+      this.initialValues.closedPrice = calculatedClosedPrice
+    }
+
     this.id = prop("id", order)
     this.state = {
       errorText: "",
@@ -207,6 +231,41 @@ class OrderForm extends Component {
         }
         break
 
+      case "profit":
+        if (
+          asset &&
+          updatedFormData.openingPrice &&
+          updatedFormData.amount &&
+          updatedFormData.type
+        ) {
+          const maxProfit = getMaxProfit(
+            updatedFormData.openingPrice,
+            updatedFormData.amount,
+            updatedFormData.type,
+            asset
+          )
+          if (changeValue > maxProfit) updatedFormData.profit = maxProfit
+        }
+        break
+
+      case "closedPrice":
+        if (
+          asset &&
+          updatedFormData.openingPrice &&
+          updatedFormData.amount &&
+          updatedFormData.type
+        ) {
+          const profit = getProfitByClosingPrice(
+            updatedFormData.openingPrice,
+            Number(changeValue),
+            updatedFormData.amount,
+            updatedFormData.type,
+            asset
+          )
+          updatedFormData.profit = profit
+        }
+        break
+
       case "type":
         const validTypes = ["buy", "sell"]
         updatedFormData.type = validTypes.includes(changeValue)
@@ -215,10 +274,26 @@ class OrderForm extends Component {
         break
     }
 
+    if (
+      asset &&
+      updatedFormData.openingPrice &&
+      updatedFormData.amount &&
+      updatedFormData.type &&
+      ["openingPrice", "profit", "amount", "type"].includes(changeKey)
+    ) {
+      const closedPrice = getClosingPrice(
+        updatedFormData.openingPrice,
+        updatedFormData.profit,
+        updatedFormData.amount,
+        updatedFormData.type,
+        asset
+      )
+      updatedFormData.closedPrice = closedPrice
+    }
+
     this.setState({
       userFormData: updatedFormData,
     })
-    this.updateOrderAssets(updatedFormData)
   }
 
   handleInputChange = (e) => {
@@ -271,10 +346,21 @@ class OrderForm extends Component {
       updatedProfit = profit
     }
 
+    const closedPrice = getClosingPrice(
+      formData.openingPrice,
+      formData.profit,
+      formData.amount,
+      formData.type,
+      asset
+    )
+
     this.setState((prevState) => ({
       userFormData: {
         ...prevState.userFormData,
         profit: formatNumberToString(updatedProfit),
+        ...(typeof closedPrice === "number" && !Number.isNaN(closedPrice)
+          ? { closedPrice }
+          : {}),
       },
     }))
   }
