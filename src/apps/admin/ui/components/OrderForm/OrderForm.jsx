@@ -16,7 +16,7 @@ import {
   getProfit,
   getClosingPrice,
   getProfitByClosingPrice,
-  getMaxProfit,
+  getLimitProfit,
 } from "../../../../client/utils/getAssetValues"
 import { CHART_SYMBOL_INFO_MAP } from "../../../../../../server/constants/symbols"
 import SnackbarContent from "@material-ui/core/SnackbarContent"
@@ -30,7 +30,7 @@ import calculateBuyingPrice from "../../../../client/utils/calculateBuyPrice"
 
 function clampProfitToMax(formData, asset) {
   if (formData.openingPrice && formData.amount && formData.type) {
-    const maxProfit = getMaxProfit(
+    const maxProfit = getLimitProfit(
       formData.openingPrice,
       formData.amount,
       formData.type,
