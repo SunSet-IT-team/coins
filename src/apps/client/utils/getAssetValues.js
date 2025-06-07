@@ -6,7 +6,7 @@ export const getProfit = (amount, openingPrice, price, type, asset) =>
 /**
  * Получение цены прибыли, при которой цена закрытия = 0
  */
-export const getMaxProfit = (openingPrice, amount, type, asset) => {
+export const getLimitProfit = (openingPrice, amount, type, asset) => {
   return getProfitByClosingPrice(openingPrice, 0, amount, type, asset)
 }
 export const getClosingPrice = (
