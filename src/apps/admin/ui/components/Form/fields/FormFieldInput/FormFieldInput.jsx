@@ -17,6 +17,7 @@ const FormFieldInput = ({
   classes,
   schema,
   value,
+  name,
   validationMessage,
   onChange,
 }) => {
@@ -34,9 +35,9 @@ const FormFieldInput = ({
             ? String(value)
             : ""
         }
+        name={name}
         defaultValue={schema.defaultValue}
         onChange={handleChange}
-        name={schema.name}
         readOnly={schema.readOnly}
       />
       {/* {validationMessage && (
@@ -50,11 +51,11 @@ FormFieldInput.propTypes = {
   classes: PropTypes.object.isRequired,
   schema: PropTypes.shape({
     label: PropTypes.string,
-    name: PropTypes.string,
     type: PropTypes.string,
     readOnly: PropTypes.bool,
   }),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.string,
   validationMessage: PropTypes.string,
   onChange: PropTypes.func.isRequired,
 }

@@ -30,7 +30,7 @@ const getAllAssets = () => {
 }
 
 export default function ({
-  data: { title, isClosed, profitCheckboxProps } = {},
+  data: { title, isClosed, profitCheckboxProps, profitFreeze } = {},
 } = {}) {
   const assets = getAllAssets()
   return {
@@ -55,6 +55,7 @@ export default function ({
         name: "assetName",
         schema: {
           label: "Название актива",
+          searchFieldName: "search",
           options: assets,
           isSearchable: true,
         },
@@ -139,8 +140,13 @@ export default function ({
         name: "profit",
         schema: {
           label: "Прибыль",
-          checkBoxProps: profitCheckboxProps,
-          readOnly: !profitCheckboxProps.value, //При заморозке поля оно становится изменяемым
+          checkBoxProps: {
+            ...profitCheckboxProps,
+            ...(!profitFreeze.checkbox && profitFreeze.userInput
+              ? { color: "default" }
+              : {}),
+          },
+          readOnly: profitFreeze.checkbox, //При заморозке поля оно становится изменяемым
         },
         validators: [],
       },
@@ -149,7 +155,7 @@ export default function ({
         name: "closedPrice",
         schema: {
           label: "Цена закрытия",
-          readOnly: !profitCheckboxProps.value, //При заморозке поля оно становится изменяемым
+          // readOnly: !profitFreeze.checkbox, //При заморозке поля оно становится изменяемым
         },
         validators: [
           {
