@@ -20,6 +20,7 @@ const FormFieldInputWithCheckBox = ({
   classes,
   schema,
   value,
+  name,
   validationMessage,
   onChange,
 }) => {
@@ -29,7 +30,7 @@ const FormFieldInputWithCheckBox = ({
 
   const handleCheckboxChange = (e) => {
     if (typeof schema.checkBoxProps.onChange === "function") {
-      schema.checkBoxProps.onChange(e.target.checked)
+      schema.checkBoxProps.onChange(e)
     }
   }
 
@@ -43,17 +44,18 @@ const FormFieldInputWithCheckBox = ({
             ? String(value)
             : ""
         }
+        name={name}
         onChange={handleChange}
-        name={schema.name}
         readOnly={schema.readOnly}
         endAdornment={
           <InputAdornment position="end">
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={!!schema.checkBoxProps.value}
+                  checked={schema.checkBoxProps.value}
                   onChange={handleCheckboxChange}
-                  color="primary"
+                  name={schema.checkBoxProps.name}
+                  color={schema.checkBoxProps.color || "primary"}
                 />
               }
               label={schema.checkBoxProps.title}
@@ -73,13 +75,18 @@ FormFieldInputWithCheckBox.propTypes = {
   classes: PropTypes.object.isRequired,
   schema: PropTypes.shape({
     label: PropTypes.string,
-    name: PropTypes.string,
     type: PropTypes.string,
     readOnly: PropTypes.bool,
-    checkboxValue: PropTypes.bool,
-    onCheckboxChange: PropTypes.func,
+    checkBoxProps: PropTypes.shape({
+      value: PropTypes.bool,
+      title: PropTypes.string,
+      name: PropTypes.string,
+      onChange: PropTypes.func,
+      color: PropTypes.string,
+    }),
   }),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.string,
   validationMessage: PropTypes.string,
   onChange: PropTypes.func.isRequired,
 }

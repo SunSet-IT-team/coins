@@ -28,6 +28,23 @@ import formatNumberToString from "../../../../client/utils/formatNumberToString"
 import assetPriceWebsocketController from "../../../../client/services/client/assetPriceWebsocket"
 import calculateBuyingPrice from "../../../../client/utils/calculateBuyPrice"
 
+function clampProfitToMax(formData, asset) {
+  if (formData.openingPrice && formData.amount && formData.type) {
+    const maxProfit = getMaxProfit(
+      formData.openingPrice,
+      formData.amount,
+      formData.type,
+      asset
+    )
+
+    if (
+      (formData.type === "buy" && formData.profit < maxProfit) ||
+      (formData.type === "sell" && formData.profit > maxProfit)
+    )
+      formData.profit = maxProfit
+  }
+}
+
 const ORDERS_VALUES = ["userId", "id"]
 
 const materialStyles = (theme) => ({
@@ -136,9 +153,11 @@ class OrderForm extends Component {
     this.state = {
       errorText: "",
       userFormData: {},
-      profitFreeze: false,
+      profitFreeze: {
+        checkbox: false,
+        userInput: false,
+      },
     }
-    this.handleToggleProfitFreeze = this.handleToggleProfitFreeze.bind(this)
   }
 
   getOrderPayload = ({
@@ -190,6 +209,15 @@ class OrderForm extends Component {
     })
   }
 
+  setProfitFreeze(value) {
+    this.setState((prevState) => ({
+      profitFreeze: {
+        ...prevState.profitFreeze,
+        ...value,
+      },
+    }))
+  }
+
   handleChange = (values, changes) => {
     const changeKey = Object.keys(changes)[0]
     const changeValue = changes[changeKey]
@@ -238,17 +266,33 @@ class OrderForm extends Component {
           updatedFormData.amount &&
           updatedFormData.type
         ) {
-          const maxProfit = getMaxProfit(
-            updatedFormData.openingPrice,
-            updatedFormData.amount,
-            updatedFormData.type,
-            asset
-          )
-          if (changeValue > maxProfit) updatedFormData.profit = maxProfit
+          this.setProfitFreeze({
+            userInput: true,
+            // userInput: Number(changeValue) !== 0, // Если надо, чтобы после удалении пользователем значении, возможно было обновление поля
+          })
+        }
+        break
+
+      case "profitFreeze":
+        if (this.state.profitFreeze.userInput) {
+          this.setProfitFreeze({
+            userInput: false,
+            checkbox: false,
+          })
+        } else {
+          this.setProfitFreeze({
+            checkbox: !this.state.profitFreeze.checkbox,
+          })
         }
         break
 
       case "closedPrice":
+        this.setProfitFreeze({
+          userInput: true,
+          // userInput: Number(changeValue) !== 0, // Если надо, чтобы после удалении пользователем значении, возможно было обновление поля
+        })
+
+        // Пересчет поля "прибыль"
         if (
           asset &&
           updatedFormData.openingPrice &&
@@ -257,12 +301,13 @@ class OrderForm extends Component {
         ) {
           const profit = getProfitByClosingPrice(
             updatedFormData.openingPrice,
-            Number(changeValue),
+            changeValue,
             updatedFormData.amount,
             updatedFormData.type,
             asset
           )
           updatedFormData.profit = profit
+          clampProfitToMax(updatedFormData, asset)
         }
         break
 
@@ -274,31 +319,33 @@ class OrderForm extends Component {
         break
     }
 
-    if (
-      asset &&
-      updatedFormData.openingPrice &&
-      updatedFormData.amount &&
-      updatedFormData.type &&
-      ["openingPrice", "profit", "amount", "type"].includes(changeKey)
-    ) {
-      const closedPrice = getClosingPrice(
-        updatedFormData.openingPrice,
-        updatedFormData.profit,
-        updatedFormData.amount,
-        updatedFormData.type,
-        asset
-      )
-      updatedFormData.closedPrice = closedPrice
-    }
-
     this.setState({
       userFormData: updatedFormData,
     })
+
+    // Пересчет поля "прибыль" и "цена закрытия"
+    if (["openingPrice", "profit", "amount", "type"].includes(changeKey)) {
+      const doNotUpdateProfit = ["profit", "type"].includes(changeKey)
+      this.updateOrderAssets(updatedFormData, true, doNotUpdateProfit)
+    }
   }
 
   handleInputChange = (e) => {
     const { name, value } = e.target
     this.handleChange({ [name]: value }, { [name]: value })
+  }
+
+  handleKeyDown = (e) => {
+    if (
+      e.key === "Enter" &&
+      (e.target.name === "profit" || e.target.name === "closedPrice")
+    ) {
+      e.preventDefault()
+      if (e.target.value === "" || e.target.value === "0") {
+        this.setProfitFreeze({ userInput: false })
+        this.updateOrderAssets(undefined, true)
+      }
+    }
   }
 
   handleHideFailMessage = () => {
@@ -311,70 +358,64 @@ class OrderForm extends Component {
     this.handleHideFailMessage()
   }
 
-  updateOrderAssets(order) {
-    if (this.state.profitFreeze) return
-    const formData = order || {
+  updateOrderAssets(formData, isForce = false, doNotUpdateProfit = false) {
+    const isFreeze =
+      (this.state.profitFreeze.checkbox || this.state.profitFreeze.userInput) &&
+      !isForce
+    if (isFreeze) return
+
+    const updatedFormData = formData || {
       ...this.initialValues,
       ...this.state.userFormData,
     }
 
-    let updatedProfit = ""
-
-    const asset = CHART_SYMBOL_INFO_MAP[formData.assetName]
-    const livePrice = assetPriceWebsocketController.prices[formData.assetName]
+    const asset = CHART_SYMBOL_INFO_MAP[updatedFormData.assetName]
+    const livePrice =
+      assetPriceWebsocketController.prices[updatedFormData.assetName]
 
     if (
-      formData.amount &&
-      formData.openingPrice &&
+      updatedFormData.amount &&
+      updatedFormData.openingPrice &&
       livePrice &&
-      formData.type &&
-      asset
+      updatedFormData.type &&
+      asset &&
+      !doNotUpdateProfit
     ) {
       const realPrice =
-        formData.type === "buy"
+        updatedFormData.type === "buy"
           ? calculateBuyingPrice(asset.name, livePrice)
           : livePrice
 
       const profit = getProfit(
-        Number(formData.amount),
-        Number(formData.openingPrice),
+        Number(updatedFormData.amount),
+        Number(updatedFormData.openingPrice),
         realPrice,
-        formData.type,
+        updatedFormData.type,
         asset
       )
 
-      updatedProfit = profit
+      updatedFormData.profit = profit
     }
+    clampProfitToMax(updatedFormData, asset)
 
     const closedPrice = getClosingPrice(
-      formData.openingPrice,
-      formData.profit,
-      formData.amount,
-      formData.type,
+      updatedFormData.openingPrice,
+      updatedFormData.profit,
+      updatedFormData.amount,
+      updatedFormData.type,
       asset
     )
+    updatedFormData.closedPrice = closedPrice
 
-    this.setState((prevState) => ({
-      userFormData: {
-        ...prevState.userFormData,
-        profit: formatNumberToString(updatedProfit),
-        ...(typeof closedPrice === "number" && !Number.isNaN(closedPrice)
-          ? { closedPrice }
-          : {}),
-      },
-    }))
+    this.setState({
+      userFormData: updatedFormData,
+    })
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.orders !== this.props.orders) {
       this.updateOrderAssets()
     }
-  }
-
-  handleToggleProfitFreeze() {
-    this.setState((prevState) => ({
-      profitFreeze: !prevState.profitFreeze,
-    }))
   }
 
   render() {
@@ -397,14 +438,19 @@ class OrderForm extends Component {
               dirName: this.dirName,
               isClosed: this.isClosed,
               profitCheckboxProps: {
-                value: this.state.profitFreeze,
+                value:
+                  this.state.profitFreeze.checkbox ||
+                  this.state.profitFreeze.userInput,
                 title: "Заморозить",
-                onChange: this.handleToggleProfitFreeze,
+                name: "profitFreeze",
+                onChange: this.handleInputChange,
               },
+              profitFreeze: this.state.profitFreeze,
             },
           })}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
+          onKeyDown={this.handleKeyDown}
         />
 
         <Snackbar

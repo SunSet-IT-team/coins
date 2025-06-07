@@ -3,6 +3,9 @@ export const getOpeningSlotPrice = (asset, openingPrice) =>
 export const getPledge = (amount, openingSlotPrice) => amount * openingSlotPrice
 export const getProfit = (amount, openingPrice, price, type, asset) =>
   (type === "buy" ? price - openingPrice : openingPrice - price) * amount
+/**
+ * Получение цены прибыли, при которой цена закрытия = 0
+ */
 export const getMaxProfit = (openingPrice, amount, type, asset) => {
   return getProfitByClosingPrice(openingPrice, 0, amount, type, asset)
 }
