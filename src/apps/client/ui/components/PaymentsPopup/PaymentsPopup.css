@@ -245,13 +245,13 @@
         margin-bottom: 40px;
         padding-bottom: 16px;
     }
-}   
+}
 
 .hiddenInfo {
     display: flex;
     flex-direction: column;
     align-self: flex-start;
-    max-width: 448px;
+    max-width: 710px;
     margin-bottom: 24px;
     margin-left: auto;
     margin-right: auto;
@@ -269,7 +269,8 @@
 }
 
 .hiddenInfoOpen {
-    max-height: 274px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .titleTop {
