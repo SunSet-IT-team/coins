@@ -261,86 +261,88 @@ class WithdrawPopup extends Component {
   render() {
     const { langMap } = this.props
     const { error } = this.state
-    const text = propOr("accountInfo", {}, langMap).transaction
+    const text = propOr("accountInfo", {}, langMap).transaction    
 
     return (
       <div className={styles.transactionPopupContainer}>
         <div className={styles.footer}>
           <div className={styles.rightContainer}>
             <form className={styles.form} onSubmit={this.handleSubmit}>
-              <div className={styles.inputWrapper}>
-                <div className={styles.amountContainerField}>
-                  <div className={styles.summ}>{text.cardNumberTitle}</div>
-                  <FormInput
-                    texts={{
-                      numberCard: text.inputPlaceholderCard,
-                    }}
-                    name="numberCard"
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    handleChange={this.handleChange}
-                    value={this.state.numberCard.value}
-                    focus={this.state.numberCard.value}
-                    type="number"
-                  />
-                </div>
-                <div className={styles.amountContainerField}>
-                  <div className={styles.summ}>{text.cardHolderName}</div>
-                  <FormInput
-                    texts={{
-                      cardHolderName: text.inputPlaceholderName,
-                    }}
-                    name="cardHolderName"
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    handleChange={this.handleChange}
-                    value={this.state.cardHolderName.value}
-                    focus={this.state.cardHolderName.value}
-                    type="text"
-                  />
-                </div>
-                <div className={styles.amountContainerField}>
-                  <div className={styles.summ}>{text.summ}, $</div>
-                  <FormInput
-                    texts={{ amount: text.inputPlaceholder }}
-                    name="amount"
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    handleChange={this.handleChange}
-                    value={this.state.amount.value}
-                    focus={this.state.amount.value}
-                    type="number"
-                  />
-                </div>
-                <div className={styles.amountContainerField}>
-                  <div className={styles.summ}>{text.cardExpiryTitle}</div>
-                  <FormInput
-                    texts={{
-                      cardExpiry: text.inputPlaceholderExpiry,
-                    }}
-                    name="cardExpiry"
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    handleChange={this.handleChange}
-                    value={this.state.cardExpiry.value}
-                    focus={this.state.cardExpiry.value}
-                    type="text"
-                  />
-                </div>
-                <div className={styles.amountContainerField}>
-                  <div className={styles.summ}>{text.cvvTitle}</div>
-                  <FormInput
-                    texts={{
-                      cardCVV: text.inputPlaceholderCVV,
-                    }}
-                    name="cardCVV"
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
-                    handleChange={this.handleChange}
-                    value={this.state.cardCVV.value}
-                    focus={this.state.cardCVV.value}
-                    type="password"
-                  />
+              <div className={styles.inputsBlock}>
+                <div className={styles.inputWrapper}>
+                  <div className={styles.amountContainerField}>
+                    <div className={styles.summ}>{text.cardNumberTitle}</div>
+                    <FormInput
+                      texts={{
+                        numberCard: text.inputPlaceholderCard,
+                      }}
+                      name="numberCard"
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      handleChange={this.handleChange}
+                      value={this.state.numberCard.value}
+                      focus={this.state.numberCard.value}
+                      type="number"
+                    />
+                  </div>
+                  <div className={styles.amountContainerField}>
+                    <div className={styles.summ}>{text.cardHolderName}</div>
+                    <FormInput
+                      texts={{
+                        cardHolderName: text.inputPlaceholderName,
+                      }}
+                      name="cardHolderName"
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      handleChange={this.handleChange}
+                      value={this.state.cardHolderName.value}
+                      focus={this.state.cardHolderName.value}
+                      type="text"
+                    />
+                  </div>
+                  <div className={styles.amountContainerField}>
+                    <div className={styles.summ}>{text.summ}, $</div>
+                    <FormInput
+                      texts={{ amount: text.inputPlaceholder }}
+                      name="amount"
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      handleChange={this.handleChange}
+                      value={this.state.amount.value}
+                      focus={this.state.amount.value}
+                      type="number"
+                    />
+                  </div>
+                  <div className={styles.amountContainerField}>
+                    <div className={styles.summ}>{text.cardExpiryTitle}</div>
+                    <FormInput
+                      texts={{
+                        cardExpiry: text.inputPlaceholderExpiry,
+                      }}
+                      name="cardExpiry"
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      handleChange={this.handleChange}
+                      value={this.state.cardExpiry.value}
+                      focus={this.state.cardExpiry.value}
+                      type="text"
+                    />
+                  </div>
+                  <div className={styles.amountContainerField}>
+                    <div className={styles.summ}>{text.cvvTitle}</div>
+                    <FormInput
+                      texts={{
+                        cardCVV: text.inputPlaceholderCVV,
+                      }}
+                      name="cardCVV"
+                      onFocus={this.onFocus}
+                      onBlur={this.onBlur}
+                      handleChange={this.handleChange}
+                      value={this.state.cardCVV.value}
+                      focus={this.state.cardCVV.value}
+                      type="password"
+                    />
+                  </div>
                 </div>
               </div>
               <button

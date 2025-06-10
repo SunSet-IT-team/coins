@@ -153,8 +153,6 @@ class PaymentsPopup extends Component {
 
   render() {
     const { langMap, isVisible, payments, user } = this.props
-    console.log(payments)
-
     const { activePayment, focusField, fieldError } = this.state
     const text = propOr("payments", {}, langMap)
 
