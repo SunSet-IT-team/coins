@@ -183,6 +183,7 @@ export default {
       statusWithdraw: "Статус",
       moneyWithdrawal: "Вывести",
       inputPlaceholder: "Вывод от $ 5.00",
+      inputPlaceholderDeposit: "Пополнение от $5.00",
       inputPlaceholderCard: "Номер карты",
       inputPlaceholderName: "Имя держателя",
       inputPlaceholderWallet: "Номер кошелька",
@@ -325,6 +326,12 @@ export default {
   },
   withdrawSuccess: {
     topTitle: "Ваш запрос на вывод $ ",
+    success: "успешно",
+    sended: "отправлен",
+    bottomTitle: "Средства поступят на счет в течении 3-х дней",
+  },
+  depositSuccess: {
+    topTitle: "Ваш запрос на пополнение $ ",
     success: "успешно",
     sended: "отправлен",
     bottomTitle: "Средства поступят на счет в течении 3-х дней",

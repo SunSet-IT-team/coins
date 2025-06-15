@@ -15,7 +15,7 @@ import getPayments from "../../../services/client/getPayments"
 import outsideClick from "../../hocs/outsideClick.jsx"
 
 import copy from "copy-to-clipboard"
-import WithdrawPopup from "./SwiftForm/WithdrawPopup.jsx"
+import SwiftForm from "./SwiftForm/SwiftForm.jsx"
 
 const PAYMENTS_SYSTEM = [
   {
@@ -279,7 +279,7 @@ class PaymentsPopup extends Component {
                       )}
                       {this.state.activePayment === "swift" &&
                         (user.isSwiftDepositAvailable ? (
-                          <WithdrawPopup />
+                          <SwiftForm />
                         ) : (
                           <div className={styles.bitcoinAdressContainer}>
                             <div className={styles.bitcoinAdress}>

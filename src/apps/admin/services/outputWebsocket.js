@@ -1,38 +1,43 @@
-import io from 'socket.io-client';
+import io from "socket.io-client"
 
-import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
-import EventEmitter from 'eventemitter3';
+import { TOKEN_LOCAL_STORAGE_NAME } from "../constants/constants"
+import EventEmitter from "eventemitter3"
 
-const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? 'wss://coinwalletcapital.ru:6060' : 'ws://localhost:6060';
+const WEBSOCKET_URL =
+  process.env.NODE_ENV === "production"
+    ? "wss://coinwalletcapital.ru:6060"
+    : "ws://localhost:6060"
 
 class OutputWebsocketController {
-    events = new EventEmitter();
+  events = new EventEmitter()
 
-    connect () {
-        const socket = io(WEBSOCKET_URL, { transports: ['websocket'] });
+  connect() {
+    const socket = io(WEBSOCKET_URL, { transports: ["websocket"] })
 
-        this.socket = socket;
+    this.socket = socket
 
-        socket.on('connect', () => {
-            const token = localStorage.getItem(TOKEN_LOCAL_STORAGE_NAME);
+    socket.on("connect", () => {
+      const token = localStorage.getItem(TOKEN_LOCAL_STORAGE_NAME)
 
-            socket.emit('token', {
-                type: 'admin',
-                token
-            });
-        });
+      socket.emit("token", {
+        type: "admin",
+        token,
+      })
+    })
 
-        socket.on('output', data => {
-            this.events.emit('output', data);
-        });
-    }
+    socket.on("output", (data) => {
+      console.log(1)
 
-    disconnect () {
-        this.socket && this.socket.disconnect();
-        this.socket = null;
-    }
+      this.events.emit("output", data)
+    })
+  }
+
+  disconnect() {
+    this.socket && this.socket.disconnect()
+    this.socket = null
+  }
 }
 
-const outputWebsocketController = new OutputWebsocketController();
+const outputWebsocketController = new OutputWebsocketController()
 
-export default outputWebsocketController;
+export default outputWebsocketController
