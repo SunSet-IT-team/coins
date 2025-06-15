@@ -220,6 +220,7 @@ export default {
       statusWithdraw: "Status",
       moneyWithdrawal: "Withdraw",
       inputPlaceholder: "Withdrawal from $5.00",
+      inputPlaceholderDeposit: "Deposit from $5.00",
       inputPlaceholderCard: "Card number",
       inputPlaceholderName: "Card holder",
       inputPlaceholderWallet: "Wallet number",
@@ -366,6 +367,12 @@ export default {
   },
   withdrawSuccess: {
     topTitle: "Your withdrawal request $ ",
+    success: "successfully",
+    sended: "sent",
+    bottomTitle: "Funds will be credited to your account within 3 days",
+  },
+  depositSuccess: {
+    topTitle: "Your deposit request $ ",
     success: "successfully",
     sended: "sent",
     bottomTitle: "Funds will be credited to your account within 3 days",

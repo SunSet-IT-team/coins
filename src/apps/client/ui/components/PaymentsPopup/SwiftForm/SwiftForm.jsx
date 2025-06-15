@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import format from "date-fns/format"
 import classNames from "classnames"
 
-import styles from "./WithdrawPopup.css"
+import styles from "./SwiftForm.css"
 
 import propOr from "@tinkoff/utils/object/propOr"
 import pathOr from "@tinkoff/utils/object/pathOr"
@@ -16,7 +16,7 @@ import required from "../../Form/validators/required"
 
 // import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 import setTransactionsPopup from "../../../../actions/setTransactionPopup"
-import setWithdrawSuccessPopup from "../../../../actions/setWithdrawSuccessPopup"
+import setDepositSuccessPopup from "../../../../actions/setDepositSuccessPopup"
 import saveTransaction from "../../../../services/client/saveTransaction"
 import saveMoneyOutput from "../../../../services/client/saveMoneyOutput"
 
@@ -36,11 +36,11 @@ const mapDispatchToProps = (dispatch) => ({
   saveTransaction: (payload) => dispatch(saveTransaction(payload)),
   // setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
   setTransactionsPopup: (payload) => dispatch(setTransactionsPopup(payload)),
-  setWithdrawSuccessPopup: (payload) =>
-    dispatch(setWithdrawSuccessPopup(payload)),
+  setDepositSuccessPopup: (payload) =>
+    dispatch(setDepositSuccessPopup(payload)),
 })
 
-class WithdrawPopup extends Component {
+class SwiftForm extends Component {
   static propTypes = {
     langMap: PropTypes.object.isRequired,
     transactions: PropTypes.array.isRequired,
@@ -49,7 +49,7 @@ class WithdrawPopup extends Component {
     user: PropTypes.object,
     saveTransaction: PropTypes.func.isRequired,
     saveMoneyOutput: PropTypes.func.isRequired,
-    setWithdrawSuccessPopup: PropTypes.func.isRequired,
+    setDepositSuccessPopup: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -224,7 +224,7 @@ class WithdrawPopup extends Component {
           wallet: wallet.value,
         })
         .then(() => {
-          this.props.setWithdrawSuccessPopup({
+          this.props.setDepositSuccessPopup({
             visible: true,
             amount: amount.value,
             numberCard: numberCard.value,
@@ -242,7 +242,7 @@ class WithdrawPopup extends Component {
   }
 
   closePopup = () => {
-    this.props.setWithdrawSuccessPopup({
+    this.props.setDepositSuccessPopup({
       visible: false,
       amount: this.state.amount.value,
       numberCard: this.state.numberCard.value,
@@ -261,7 +261,7 @@ class WithdrawPopup extends Component {
   render() {
     const { langMap } = this.props
     const { error } = this.state
-    const text = propOr("accountInfo", {}, langMap).transaction    
+    const text = propOr("accountInfo", {}, langMap).transaction
 
     return (
       <div className={styles.transactionPopupContainer}>
@@ -303,7 +303,7 @@ class WithdrawPopup extends Component {
                   <div className={styles.amountContainerField}>
                     <div className={styles.summ}>{text.summ}, $</div>
                     <FormInput
-                      texts={{ amount: text.inputPlaceholder }}
+                      texts={{ amount: text.inputPlaceholderDeposit }}
                       name="amount"
                       onFocus={this.onFocus}
                       onBlur={this.onBlur}
@@ -379,4 +379,4 @@ class WithdrawPopup extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WithdrawPopup)
+export default connect(mapStateToProps, mapDispatchToProps)(SwiftForm)
