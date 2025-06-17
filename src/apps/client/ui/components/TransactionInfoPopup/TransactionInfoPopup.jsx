@@ -1,27 +1,27 @@
-import React, { Component } from "react"
-import PropTypes from "prop-types"
-import { connect } from "react-redux"
-import format from "date-fns/format"
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import format from "date-fns/format";
 // import classNames from 'classnames';
 
-import styles from "./TransactionInfoPopup.css"
+import styles from "./TransactionInfoPopup.css";
 
-import propOr from "@tinkoff/utils/object/propOr"
-import pathOr from "@tinkoff/utils/object/pathOr"
-import isUndefined from "@tinkoff/utils/is/undefined"
-import isObject from "@tinkoff/utils/is/object"
-import isArray from "@tinkoff/utils/is/array"
+import propOr from "@tinkoff/utils/object/propOr";
+import pathOr from "@tinkoff/utils/object/pathOr";
+import isUndefined from "@tinkoff/utils/is/undefined";
+import isObject from "@tinkoff/utils/is/object";
+import isArray from "@tinkoff/utils/is/array";
 
-import required from "../Form/validators/required"
+import required from "../Form/validators/required";
 
-import setAccountInfoPopup from "../../../actions/setAccountInfoPopup"
-import setWithdrawSuccessPopup from "../../../actions/setWithdrawSuccessPopup"
-import saveMoneyOutput from "../../../services/client/saveMoneyOutput"
-import getClientMoneyOutput from "../../../services/client/getClientMoneyOutput"
-import outputWebsocketController from "../../../../admin/services/outputWebsocket"
+import setAccountInfoPopup from "../../../actions/setAccountInfoPopup";
+import setWithdrawSuccessPopup from "../../../actions/setWithdrawSuccessPopup";
+import saveMoneyOutput from "../../../services/client/saveMoneyOutput";
+import getClientMoneyOutput from "../../../services/client/getClientMoneyOutput";
+import outputWebsocketController from "../../../../admin/services/outputWebsocket";
 
 // import FormInput from '../FormInput/FormInput';
-import checkBalance from "../../../../../../server/api/admin/transaction/utils/checkBalance"
+import checkBalance from "../../../../../../server/api/admin/transaction/utils/checkBalance";
 
 const mapStateToProps = ({ application, data }) => {
   return {
@@ -29,8 +29,8 @@ const mapStateToProps = ({ application, data }) => {
     transactions: data.transactions,
     user: data.user,
     moneyOutput: data.moneyOutput,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   saveMoneyOutput: (payload) => dispatch(saveMoneyOutput(payload)),
@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch) => ({
   setWithdrawSuccessPopup: (payload) =>
     dispatch(setWithdrawSuccessPopup(payload)),
   getClientMoneyOutput: (payload) => dispatch(getClientMoneyOutput(payload)),
-})
+});
 
 class TransactionInfoPopup extends Component {
   static propTypes = {
@@ -50,40 +50,40 @@ class TransactionInfoPopup extends Component {
     setWithdrawSuccessPopup: PropTypes.func.isRequired,
     getClientMoneyOutput: PropTypes.func.isRequired,
     moneyOutput: PropTypes.array.isRequired,
-  }
+  };
 
   static defaultProps = {
     transactions: [],
-  }
+  };
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       ...this.defaultState(),
       error: "",
-    }
+    };
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.user && prevProps.user === null) this.getData()
+    if (this.props.user && prevProps.user === null) this.getData();
   }
 
   defaultState() {
     return {
       amount: { value: "", focus: false, isValid: true },
       outputByUsers: [],
-    }
+    };
   }
 
   getData = () => {
-    const { user } = this.props
-    if (user === null) return
+    const { user } = this.props;
+    if (user === null) return;
     return this.props
       .getClientMoneyOutput()
       .then(() => {
         const userOutputs = this.props.moneyOutput.filter(
           (item) => item.userId === user.id
-        )
+        );
 
         this.setState({
           outputByUsers: userOutputs.map((item) => ({
@@ -98,21 +98,24 @@ class TransactionInfoPopup extends Component {
             visited: item.visited,
             userId: user.id,
           })),
-        })
+        });
       })
       .catch((error) => {
-        console.error("Error fetching data:", error)
-      })
-  }
+        console.error("Error fetching data:", error);
+      });
+  };
 
   componentDidMount() {
-    // outputWebsocketController.connect()
-    outputWebsocketController.events.on("output", this.qwerty)
-    this.getData()
+    ////////////////////////////////////////////////////////////
+    outputWebsocketController.connect();
+    ////////////////////////////////////////////////////////////
+
+    outputWebsocketController.events.on("output", this.qwerty);
+    this.getData();
   }
 
   componentWillUnmount() {
-    outputWebsocketController.events.removeListener("output", this.qwerty)
+    outputWebsocketController.events.removeListener("output", this.qwerty);
   }
 
   qwerty = (output) => {
@@ -121,17 +124,17 @@ class TransactionInfoPopup extends Component {
       output.userId,
       this.props.user.id,
       output.userId === this.props.user.id
-    )
+    );
     if (output.userId === this.props.user.id) {
-      this.getData()
+      this.getData();
     }
-  }
+  };
 
   handleChange = (name, value) => (e) => {
-    e.stopPropagation()
-    const actualValue = isUndefined(value) ? e.target.value : value
+    e.stopPropagation();
+    const actualValue = isUndefined(value) ? e.target.value : value;
 
-    if (actualValue.length > this.state.maxLength) return
+    if (actualValue.length > this.state.maxLength) return;
 
     this.setState({
       [name]: {
@@ -141,18 +144,18 @@ class TransactionInfoPopup extends Component {
         isValid: true,
       },
       error: "",
-    })
-  }
+    });
+  };
 
   onFocus = (name) => (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     this.setState({
       [name]: { ...this.state[name], focus: !this.state[name].focus },
-    })
-  }
+    });
+  };
 
   onBlur = (name) => {
-    const currentState = this.handleCheckErrors([name])
+    const currentState = this.handleCheckErrors([name]);
 
     this.setState({
       [name]: {
@@ -160,62 +163,62 @@ class TransactionInfoPopup extends Component {
         focus: false,
         isValid: currentState[name].isValid,
       },
-    })
-  }
+    });
+  };
 
   handleCheckErrors = (names = []) => {
-    const thisState = {}
+    const thisState = {};
     this.setState({
       error: "",
-    })
+    });
 
     names.forEach((name) => {
-      const property = this.state[name]
+      const property = this.state[name];
 
       if (isObject(property) && !isArray(property)) {
-        let isValid = true
-        let error
+        let isValid = true;
+        let error;
 
         if (
           (this.state[name].value < 5 && !!this.state[name].value) ||
           !this.state[name].value
         ) {
-          error = "MinValue"
+          error = "MinValue";
         } else if (
           !checkBalance(this.props.user.balance - this.state[name].value) &&
           !!this.state[name].value
         ) {
-          error = "Balance"
+          error = "Balance";
         }
 
         if (error) {
-          isValid = false
+          isValid = false;
         }
 
-        const newValue = { ...property, isValid }
-        thisState[name] = newValue
+        const newValue = { ...property, isValid };
+        thisState[name] = newValue;
 
         this.setState({
           [name]: newValue,
           error,
-        })
+        });
       }
-    })
+    });
 
-    return thisState
-  }
+    return thisState;
+  };
 
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const { amount } = this.state
+    const { amount } = this.state;
 
-    const thisState = this.handleCheckErrors(Object.keys(this.state))
-    let isValid = required(amount.value, { text: false }) === undefined
+    const thisState = this.handleCheckErrors(Object.keys(this.state));
+    let isValid = required(amount.value, { text: false }) === undefined;
 
     for (let key in thisState) {
       if (!pathOr(["isValid"], true, thisState[key])) {
-        isValid = false
+        isValid = false;
       }
     }
 
@@ -229,35 +232,35 @@ class TransactionInfoPopup extends Component {
           this.props.setWithdrawSuccessPopup({
             visible: true,
             amount: amount.value,
-          })
-          setTimeout(() => this.closePopup(), 2000)
+          });
+          setTimeout(() => this.closePopup(), 2000);
         })
         .catch((e) => {
-          this.setState({ error: e.message })
-        })
+          this.setState({ error: e.message });
+        });
     }
-  }
+  };
 
   closePopup = () => {
     this.props.setWithdrawSuccessPopup({
       visible: false,
       amount: this.state.amount.value,
-    })
-    this.props.setAccountInfoPopup()
-  }
+    });
+    this.props.setAccountInfoPopup();
+  };
 
   getDate = (currentDate) => {
-    const date = new Date(currentDate)
-    return format(date, "dd.MM.yyyy HH:mm")
-  }
+    const date = new Date(currentDate);
+    return format(date, "dd.MM.yyyy HH:mm");
+  };
 
   render() {
-    const { langMap, transactions } = this.props
-    const { outputByUsers } = this.state
+    const { langMap, transactions } = this.props;
+    const { outputByUsers } = this.state;
 
-    const transactionList = [...outputByUsers, ...transactions]
+    const transactionList = [...outputByUsers, ...transactions];
 
-    const text = propOr("accountInfo", {}, langMap).transaction
+    const text = propOr("accountInfo", {}, langMap).transaction;
 
     return (
       <div className={styles.transactionPopupContainer}>
@@ -396,11 +399,11 @@ class TransactionInfoPopup extends Component {
         {/*  </div> */}
         {/*    </div> */}
       </div>
-    )
+    );
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TransactionInfoPopup)
+)(TransactionInfoPopup);
