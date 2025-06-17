@@ -19,7 +19,7 @@ services:
       - "${BACKEND_PORT_MAIN:-3003}:3003"
       - "${BACKEND_PORT_WS1:-8443}:8443"
       - "${BACKEND_PORT_WS2:-2053}:2053"
-      - "6060:6060"
+      - "${BACKEND_PORT_WS3:-6060}:6060"
     environment:
       - NODE_ENV=${NODE_ENV}
       - BROWSER=${BROWSER}
