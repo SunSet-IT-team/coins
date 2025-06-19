@@ -262,6 +262,8 @@ class SwiftForm extends Component {
     const { langMap } = this.props
     const { error } = this.state
     const text = propOr("accountInfo", {}, langMap).transaction
+    console.log(text);
+    
 
     return (
       <div className={styles.transactionPopupContainer}>
@@ -301,7 +303,7 @@ class SwiftForm extends Component {
                     />
                   </div>
                   <div className={styles.amountContainerField}>
-                    <div className={styles.summ}>{text.summ}, $</div>
+                    <div className={styles.summ}>{text.depositSumm}, $</div>
                     <FormInput
                       texts={{ amount: text.inputPlaceholderDeposit }}
                       name="amount"
@@ -352,7 +354,7 @@ class SwiftForm extends Component {
                     !this.state["amount"].isValid || error,
                 })}
               >
-                {text.deposit}
+                {text.moneyDeposit}
                 <div
                   className={classNames(styles.failedPopup, {
                     [styles.isFailedPopup]:

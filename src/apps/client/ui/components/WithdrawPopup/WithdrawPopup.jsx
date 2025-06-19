@@ -356,9 +356,13 @@ class WithdrawPopup extends Component {
                               />
                             </div>
                             <div className={styles.amountContainerField}>
-                              <div className={styles.summ}>{text.summ}, $</div>
+                              <div className={styles.summ}>
+                                {text.withdrawSumm}, $
+                              </div>
                               <FormInput
-                                texts={{ amount: text.inputPlaceholder }}
+                                texts={{
+                                  amount: text.inputPlaceholderWithdraw,
+                                }}
                                 name="amount"
                                 onFocus={this.onFocus}
                                 onBlur={this.onBlur}
