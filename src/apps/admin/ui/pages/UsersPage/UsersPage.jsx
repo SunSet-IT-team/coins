@@ -77,6 +77,7 @@ import Snackbar from "@material-ui/core/Snackbar"
 import clone from "@tinkoff/utils/clone"
 import ErrorIcon from "@material-ui/icons/Error"
 import assetPriceWebsocketController from "../../../../client/services/client/assetPriceWebsocket.js"
+import calculateBuyingPrice from "../../../../client/utils/calculateBuyPrice.js"
 
 const ORDERS_TYPE_TEXT = [
   { id: 1, type: "buy", text: "Покупка" },
@@ -558,7 +559,7 @@ class UsersPage extends Component {
       ) {
         const realPrice =
           order.type === "buy"
-            ? calculateBuyPrice(asset.name, livePrice)
+            ? calculateBuyingPrice(asset.name, livePrice)
             : livePrice
 
         const profit = getProfit(

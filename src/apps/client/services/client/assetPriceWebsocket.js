@@ -108,7 +108,7 @@ class AssetPriceWebsocketController {
         currentPrice: currentPriceReal,
         commission: updatedOrder.commission,
         diffPrice,
-        profit: updatedOrder.profit,
+        profit: order.profit || updatedOrder.profit,
       }
     })
 

@@ -169,6 +169,7 @@ class OrderForm extends Component {
     type,
     closedAt,
     closedPrice,
+    profit,
     takeProfit,
     stopLoss,
   }) => {
@@ -185,6 +186,7 @@ class OrderForm extends Component {
       dirName: this.dirName,
       userId: activeUser.id,
       isClosed: this.isClosed || false,
+      profit: Number(profit),
       takeProfit: takeProfit ? Number(takeProfit) : 0,
       stopLoss: stopLoss ? Number(stopLoss) : 0,
     }
