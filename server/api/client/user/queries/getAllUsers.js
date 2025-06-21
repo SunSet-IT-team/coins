@@ -1,5 +1,5 @@
 import User from '../model';
 
-export default function getAllManagers () {
+export default function getAllManagers() {
     return User.find({});
 }

@@ -11,7 +11,7 @@
     overflow-y: auto;
     opacity: 0;
     pointer-events: none;
-    transition: all .5s ease;
+    transition: all 0.5s ease;
     overflow-x: hidden;
 }
 
@@ -49,7 +49,7 @@
         padding: 24px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         padding: 16px;
     }
 }
@@ -82,7 +82,7 @@
     position: absolute;
     top: -16px;
     right: -16px;
-    background: #161A2A;;
+    background: #161a2a;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
     border-radius: 50%;
     display: flex;
@@ -101,14 +101,14 @@
     opacity: 1;
 
     .content {
-        pointer-events: auto; 
+        pointer-events: auto;
     }
 }
 
 .navbar {
     display: flex;
     width: 100%;
-    background: #1B2033;
+    background: #1b2033;
     height: 66px;
     border-bottom: 1px solid #333543;
 
@@ -117,23 +117,26 @@
         height: 0;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         overflow: auto;
     }
 }
 
-.privateData, .documents, .transaction, .tradeHistory {
+.privateData,
+.documents,
+.transaction,
+.tradeHistory {
     font-family: FuturaPT-Medium;
     font-size: 16px;
     line-height: 21px;
     letter-spacing: 0.01em;
-    color: #A6B1DC;
+    color: #a6b1dc;
     width: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     position: relative;
 
     &::after {
@@ -145,30 +148,30 @@
         left: 0;
         opacity: 0;
         z-index: 1;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
         background: lightBlueDingy;
         box-shadow: 0 0 5px 1px lightBlueDingy;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         min-width: 178.5px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         min-width: 139px;
         text-align: center;
     }
 }
 
 .tradeHistory {
-    @media(max-width: 600px) {
-        flex-direction: column
+    @media (max-width: 600px) {
+        flex-direction: column;
     }
 }
 
 .activeButton {
-    background: #161A2A;
-    color: #F8F8F8;
+    background: #161a2a;
+    color: #f8f8f8;
 
     &::after {
         opacity: 1;
@@ -182,16 +185,16 @@
 .formsContainer {
     width: 999999px;
     display: flex;
-    transition: all .5s ease;
+    transition: all 0.5s ease;
 
     .authPopupContainer {
         font-family: FuturaPT-Medium;
         font-size: 16px;
         line-height: 21px;
         letter-spacing: 0.01em;
-        color: #A6B1DC;
+        color: #a6b1dc;
         max-width: 860px;
-        background: #1B2033;
+        background: #1b2033;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -203,8 +206,9 @@
         height: 324px;
     }
 
-    @media(max-width: 768px) {
-        .authPopupContainer, .registrationPopupContainer  {
+    @media (max-width: 768px) {
+        .authPopupContainer,
+        .registrationPopupContainer {
             width: calc(100vw - 48px);
         }
 
@@ -219,8 +223,9 @@
         }
     }
 
-    @media(max-width: 600px) {
-        .authPopupContainer, .registrationPopupContainer  {
+    @media (max-width: 600px) {
+        .authPopupContainer,
+        .registrationPopupContainer {
             width: calc(100vw - 32px);
         }
 
@@ -232,12 +237,12 @@
 
 .tradeIcon {
     opacity: 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     position: relative;
     margin-left: 12px;
     margin-top: 2px;
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         opacity: 1;
     }
 }

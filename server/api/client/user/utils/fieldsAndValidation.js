@@ -1,4 +1,4 @@
-import { emailValidator, requiredValidator } from './validators';
+import {emailValidator, requiredValidator} from './validators';
 
 export const userFieldsValidatorsMap = {
     name: [requiredValidator],
@@ -13,5 +13,5 @@ export const userFieldsValidatorsMap = {
     country: [requiredValidator],
     accountNumber: [requiredValidator],
     accountStatus: [requiredValidator],
-    id: [requiredValidator]
+    id: [requiredValidator],
 };

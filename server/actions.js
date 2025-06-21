@@ -3,9 +3,4 @@ import getLangFromRoute from '../src/apps/client/services/server/getLangFromRout
 import getDomain from '../src/apps/client/services/server/getDomain';
 import getCookiesAgreement from '../src/apps/client/services/server/getCookiesAgreement';
 
-export default [
-    getMobileDetect,
-    getLangFromRoute,
-    getDomain,
-    getCookiesAgreement
-];
+export default [getMobileDetect, getLangFromRoute, getDomain, getCookiesAgreement];

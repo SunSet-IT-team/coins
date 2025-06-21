@@ -1,4 +1,4 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 import tar from 'tar';
 import path from 'path';
 
@@ -10,7 +10,7 @@ const uploader = multipart();
 const FILES_FOLDER = path.join(__dirname, '../src/apps/admin/files');
 const ADMIN_FOLDER = path.join(__dirname, '../src/apps/admin');
 
-export default function uploadFiles (req, res) {
+export default function uploadFiles(req, res) {
     try {
         uploader(req, res, (err) => {
             if (err || !req.files[0]) {
@@ -20,10 +20,8 @@ export default function uploadFiles (req, res) {
             const file = req.files[0];
             const tarPath = `${FILES_FOLDER}/${file.filename}`;
 
-            tar.extract(
-                { file: tarPath, C: ADMIN_FOLDER }
-            )
-                .then(err => {
+            tar.extract({file: tarPath, C: ADMIN_FOLDER})
+                .then((err) => {
                     if (err) {
                         return res.status(SERVER_ERROR_STATUS_CODE).end();
                     }

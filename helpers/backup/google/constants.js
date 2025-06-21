@@ -3,13 +3,13 @@ import path from 'path';
 const baseShema = {
     tokenPath: '',
     credentialsPath: '',
-    scopes: []
+    scopes: [],
 };
 
 const serviceData = {
     drive: {
-        ...baseShema
-    }
+        ...baseShema,
+    },
 };
 
 serviceData.drive.tokenPath = path.resolve(__dirname, '..', 'keys', 'token.json');

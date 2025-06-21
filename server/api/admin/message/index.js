@@ -9,13 +9,10 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/history')
-    .get(getHistory);
+router.route('/history').get(getHistory);
 
-router.route('/unvisited')
-    .get(getUnvisitedHistory);
+router.route('/unvisited').get(getUnvisitedHistory);
 
-router.route('/visit')
-    .put(editHistory);
+router.route('/visit').put(editHistory);
 
 export default router;

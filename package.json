@@ -22,7 +22,12 @@
     "start:pm2:server": "pm2 start server/compiled/server.js --name app",
     "stop:pm2:server": "pm2 stop app",
     "deploy": "npm run stop:pm2:server & npm run build:static:prod && npm run build:server:prod && cross-env PORT=80 npm run start:pm2:server",
-    "deploy:server": "npm run stop:pm2:server && cross-env PORT=80 npm run start:pm2:server"
+    "deploy:server": "npm run stop:pm2:server && cross-env PORT=80 npm run start:pm2:server",
+    "prepare": "husky",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --write"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": "prettier --write"
   },
   "repository": {
     "type": "git",
@@ -82,7 +87,9 @@
     "file-loader": "^1.1.11",
     "find-package": "^1.0.0",
     "forever": "0.15.3",
+    "husky": "^9.1.7",
     "json-loader": "^0.5.7",
+    "lint-staged": "^16.1.2",
     "node-pre-gyp": "^0.17.0",
     "optimize-js-plugin": "0.0.4",
     "postcss-at-rules-variables": "^0.1.6",
@@ -98,6 +105,7 @@
     "postcss-modules-values-replace-node6": "^3.0.3",
     "postcss-nested": "^4.1.0",
     "postcss-use": "^3.0.0",
+    "prettier": "^3.5.3",
     "progress-bar-webpack-plugin": "^1.11.0",
     "prun": "^1.0.1",
     "raw-loader": "^3.1.0",

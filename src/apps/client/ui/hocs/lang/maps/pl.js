@@ -3,7 +3,7 @@
 export default {
     content: {
         title: 'Zawartość',
-        langs: 'Wybór języka'
+        langs: 'Wybór języka',
     },
     footer: {
         operations: 'Operacje',
@@ -16,17 +16,17 @@ export default {
         marginLevel: 'Poziom marginesu:',
         facilities: 'Kapitał własny:',
         pledge: 'Margines:',
-        free: 'Wolne środki:'
+        free: 'Wolne środki:',
     },
     header: {
         timeFormat: 'UTC',
         buy: 'Kupić',
         sell: 'Sprzedać',
-        deposit: 'Depozyt'
+        deposit: 'Depozyt',
     },
     authorizationPanel: {
         signIn: 'Wejść',
-        signUp: 'Rejestracja'
+        signUp: 'Rejestracja',
     },
     confirmPopup: {
         confirm: 'Potwierdzić ',
@@ -45,7 +45,7 @@ export default {
         failedDay: 'Ten rynek jest zamknięty w weekendy',
         takeProfit: 'Take profit',
         stopLoss: 'Stop loss',
-        inputsName: 'Take profit & Stop loss'
+        inputsName: 'Take profit & Stop loss',
     },
     menu: {
         actives: {
@@ -53,7 +53,7 @@ export default {
             currencies: 'Waluty',
             products: 'Produkty',
             shares: 'Akcje',
-            indices: 'Indeksy'
+            indices: 'Indeksy',
         },
         menuTitleOpen: 'Menu',
         menuTitleClose: 'Zamknąć',
@@ -69,103 +69,112 @@ export default {
         assetsSearch: 'Wyszukiwanie zasobów',
         assetsTitle: 'Aktywa',
         onMainPage: 'Do głównych',
-        timingScaleValue: [{
-            id: 1,
-            label: '1',
-            value: '1'
-        }, {
-            id: 2,
-            label: '5',
-            value: '5'
-        }, {
-            id: 3,
-            label: '15',
-            value: '15'
-        }, {
-            id: 4,
-            label: '30',
-            value: '30'
-        }, {
-            id: 5,
-            label: '1h',
-            value: '60'
-        }, {
-            id: 6,
-            label: '1d',
-            value: 'D'
-        }, {
-            id: 7,
-            label: '1w',
-            value: 'W'
-        }, {
-            id: 8,
-            label: '1m',
-            value: 'M'
-        }],
-        language: 'Język'
+        timingScaleValue: [
+            {
+                id: 1,
+                label: '1',
+                value: '1',
+            },
+            {
+                id: 2,
+                label: '5',
+                value: '5',
+            },
+            {
+                id: 3,
+                label: '15',
+                value: '15',
+            },
+            {
+                id: 4,
+                label: '30',
+                value: '30',
+            },
+            {
+                id: 5,
+                label: '1h',
+                value: '60',
+            },
+            {
+                id: 6,
+                label: '1d',
+                value: 'D',
+            },
+            {
+                id: 7,
+                label: '1w',
+                value: 'W',
+            },
+            {
+                id: 8,
+                label: '1m',
+                value: 'M',
+            },
+        ],
+        language: 'Język',
     },
     cookiesAgreement: {
         text: 'Nasza strona korzysta z plików cookie',
-        agree: 'Ок'
+        agree: 'Ок',
     },
     auth: {
         inputs: {
             email: {
                 placeholder: 'Poczta',
-                validator: 'Wprowadź swój email'
+                validator: 'Wprowadź swój email',
             },
             password: {
                 placeholder: 'Hasło',
-                validator: 'Minimum 8 znaków'
+                validator: 'Minimum 8 znaków',
             },
             name: {
                 placeholder: 'Imię',
-                validator: 'Wpisz swoje imię'
+                validator: 'Wpisz swoje imię',
             },
             surname: {
                 placeholder: 'Nazwisko',
-                validator: 'Wpisz swoje nazwisko'
+                validator: 'Wpisz swoje nazwisko',
             },
             promoGroup: {
                 placeholder: 'kod promocyjny',
-                validator: 'Wpisz kod promocyjny'
+                validator: 'Wpisz kod promocyjny',
             },
             phone: {
                 placeholder: 'Numer telefonu',
-                validator: 'Wprowadź swój numer telefonu'
+                validator: 'Wprowadź swój numer telefonu',
             },
             date: {
                 placeholder: 'Data urodzenia',
-                validator: 'Podaj swoją datę urodzenia'
+                validator: 'Podaj swoją datę urodzenia',
             },
             city: {
                 placeholder: 'Miasto',
-                validator: 'Wpisz swoje miasto'
+                validator: 'Wpisz swoje miasto',
             },
             address: {
                 placeholder: 'Adres',
-                validator: 'Wpisz swój adres'
+                validator: 'Wpisz swój adres',
             },
             gender: {
                 placeholder: 'Płeć',
-                validator: 'Wybierz płeć'
+                validator: 'Wybierz płeć',
             },
             country: {
                 placeholder: 'Kraj',
-                validator: 'Wybierz kraj'
+                validator: 'Wybierz kraj',
             },
             accountNumber: {
                 placeholder: 'Numer konta',
-                validator: 'Wpisz numer konta'
+                validator: 'Wpisz numer konta',
             },
             newPassword: {
                 placeholder: 'Nowe hasło',
-                validator: 'Minimum 8 znaków'
+                validator: 'Minimum 8 znaków',
             },
             confirmPassword: {
                 placeholder: 'Potwierdź hasło',
-                validator: 'Hasło się nie zgadza'
-            }
+                validator: 'Hasło się nie zgadza',
+            },
         },
         errorPromo: 'Nieprawidłowy kod promocyjny',
         errorWrongPassOrLogin: 'Zła nazwa użytkownika lub hasło',
@@ -184,14 +193,14 @@ export default {
         clear: 'Jasny',
         save: 'Zapisać',
         titleReset: 'Twoja prośba o odzyskanie hasła została pomyślnie zakończona',
-        disabled: 'Funkcja zmiany danych jest tymczasowo wyłączona'
+        disabled: 'Funkcja zmiany danych jest tymczasowo wyłączona',
     },
     accountInfo: {
         navbar: {
             privateData: 'Dane osobiste',
             documents: 'Dokumenty',
             transaction: 'Transakcje',
-            tradeHistory: 'Historia handlowania'
+            tradeHistory: 'Historia handlowania',
         },
         documents: {
             personality: 'weryfikacja tożsamości',
@@ -200,7 +209,7 @@ export default {
             creditFrontSide: 'Karta kredytowa (przód)',
             creditBackSide: 'Karta kredytowa (rewers)',
             anotherDocuments: 'Inne dokumenty',
-            loadButton: 'Pobierać'
+            loadButton: 'Pobierać',
         },
         transaction: {
             loadingData: 'Ładowanie danych...',
@@ -228,12 +237,13 @@ export default {
             cardNumberTitle: 'Numer karty płatniczej',
             cardHolderName: 'Nazwa posiadacza karty',
             wallet: 'Portfel',
-            bankTransferText: 'Aby dokonać wypłaty za pomocą przelewu bankowego, skontaktuj się z czatem pomocy technicznej.',
+            bankTransferText:
+                'Aby dokonać wypłaty za pomocą przelewu bankowego, skontaktuj się z czatem pomocy technicznej.',
             error: {
                 failedBalance: 'Niewystarczające środki',
                 failedMinValue: 'Nieprawidłowe dane',
-                failedMinValueNumber: 'Nieprawidłowe numer'
-            }
+                failedMinValueNumber: 'Nieprawidłowe numer',
+            },
         },
         tradeHistory: {
             dateTitle: 'Data utworzenia',
@@ -247,13 +257,13 @@ export default {
             commissionTitle: 'zamawiać',
             takeProfit: 'Take profit',
             stopLoss: 'Stop loss',
-            closingDate: 'Czas zamknięcia'
+            closingDate: 'Czas zamknięcia',
         },
         dataInfo: {
             gender: {
                 male: 'Męski',
-                female: 'Płeć żeńska'
-            }
+                female: 'Płeć żeńska',
+            },
         },
         countryInfo: {
             ru: 'Russia (Россия)',
@@ -317,26 +327,26 @@ export default {
             GB: 'United Kingdom',
             US: 'United States',
             VN: 'Vietnam',
-            by: 'Belarus (Беларусь)'
-        }
+            by: 'Belarus (Беларусь)',
+        },
     },
     payments: {
         qiwi: {
-            title: 'PayPal'
+            title: 'PayPal',
         },
         bitcoin: {
-            title: 'Bitcoin'
+            title: 'Bitcoin',
         },
         usdt: {
-            title: 'USDT TRC-20'
+            title: 'USDT TRC-20',
         },
         swift: {
             title: 'SWIFT',
-            text: 'Aby doładować środki przelewem bankowym, skontaktuj się z czatem pomocy technicznej.'
+            text: 'Aby doładować środki przelewem bankowym, skontaktuj się z czatem pomocy technicznej.',
         },
         visa: {
             title: 'USDT',
-            subtitle: 'Visa/Mastercard'
+            subtitle: 'Visa/Mastercard',
         },
         replenishment: 'Wybierz metodę wpłaty',
         info: {
@@ -346,14 +356,14 @@ export default {
             adressBottomTitle: 'Po transakcji skontaktuj się z naszym menedżerem',
             copied: 'Skopiowane',
             qiwiTopTitle: 'Nasz adres PayP',
-            failedIncorrect: 'Nieprawidłowe dane'
-        }
+            failedIncorrect: 'Nieprawidłowe dane',
+        },
     },
     withdrawSuccess: {
         topTitle: 'Twoje żądanie wypłaty $',
         success: 'z powodzeniem',
         sended: 'wysłano',
-        bottomTitle: 'Środki zostaną przelane na Twoje konto w ciągu 3 dni'
+        bottomTitle: 'Środki zostaną przelane na Twoje konto w ciągu 3 dni',
     },
     openedOrders: {
         createData: 'Data otwarcia',
@@ -367,17 +377,17 @@ export default {
         takeProfit: 'Take profit',
         stopLoss: 'Stop loss',
         closingDate: 'Data zamknięcia',
-        closingTime: 'Czas zamknięcia'
+        closingTime: 'Czas zamknięcia',
     },
     openOrder: {
         accept: 'Zamknąć pozycje',
         some: 'Coś',
-        closeOrder: 'Zamknięcie transakcji'
+        closeOrder: 'Zamknięcie transakcji',
     },
     chat: {
         title: 'Czat',
         inputPlaceholder: 'Wpisz wiadomość',
         say: 'Ty',
-        admin: 'Administrator'
-    }
+        admin: 'Administrator',
+    },
 };

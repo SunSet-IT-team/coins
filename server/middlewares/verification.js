@@ -1,9 +1,9 @@
-import { FORBIDDEN_STATUS_CODE } from '../constants/constants';
+import {FORBIDDEN_STATUS_CODE} from '../constants/constants';
 
 import verifyTokenAdmin from '../helpers/verifyTokenAdmin';
 
-export default function verification (req, res, next) {
-    const { token } = req.query;
+export default function verification(req, res, next) {
+    const {token} = req.query;
 
     if (token) {
         verifyTokenAdmin(token)

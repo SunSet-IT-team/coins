@@ -11,16 +11,12 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/all')
-    .get(getTransactions);
+router.route('/all').get(getTransactions);
 
-router.route('/save')
-    .post(saveTransaction);
+router.route('/save').post(saveTransaction);
 
-router.route('/edit')
-    .put(editTransaction);
+router.route('/edit').put(editTransaction);
 
-router.route('/delete-few')
-    .delete(deleteByIds);
+router.route('/delete-few').delete(deleteByIds);
 
 export default router;

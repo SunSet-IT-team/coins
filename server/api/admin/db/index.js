@@ -11,16 +11,12 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/download')
-    .get(download);
+router.route('/download').get(download);
 
-router.route('/download/files')
-    .get(downloadFiles);
+router.route('/download/files').get(downloadFiles);
 
-router.route('/upload')
-    .post(upload);
+router.route('/upload').post(upload);
 
-router.route('/upload/files')
-    .post(uploadFiles);
+router.route('/upload/files').post(uploadFiles);
 
 export default router;

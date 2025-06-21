@@ -1,5 +1,5 @@
 import Order from '../model';
 
-export default function getAllOrders () {
+export default function getAllOrders() {
     return Order.find({});
 }

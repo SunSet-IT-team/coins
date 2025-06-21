@@ -1,8 +1,8 @@
-import { SET_WITHDRAW_POPUP } from '../types/types';
+import {SET_WITHDRAW_POPUP} from '../types/types';
 
-const setWithdrawSuccessPopup = payload => ({
+const setWithdrawSuccessPopup = (payload) => ({
     type: SET_WITHDRAW_POPUP,
-    payload
+    payload,
 });
 
 export default setWithdrawSuccessPopup;

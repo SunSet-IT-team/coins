@@ -1,8 +1,8 @@
-import { SET_AUTHENTICATION_POPUP } from '../types/types';
+import {SET_AUTHENTICATION_POPUP} from '../types/types';
 
-const setAuthenticationPopup = payload => ({
+const setAuthenticationPopup = (payload) => ({
     type: SET_AUTHENTICATION_POPUP,
-    payload
+    payload,
 });
 
 export default setAuthenticationPopup;

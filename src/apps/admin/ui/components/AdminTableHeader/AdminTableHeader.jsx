@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -19,54 +19,53 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import { withStyles } from '@material-ui/core/styles';
-import { lighten } from '@material-ui/core/styles/colorManipulator';
+import {withStyles} from '@material-ui/core/styles';
+import {lighten} from '@material-ui/core/styles/colorManipulator';
 
 import noop from '@tinkoff/utils/function/noop';
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     highlight:
         theme.palette.type === 'light'
             ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-            }
+                  color: theme.palette.secondary.main,
+                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+              }
             : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark
-            },
+                  color: theme.palette.text.primary,
+                  backgroundColor: theme.palette.secondary.dark,
+              },
     spacer: {
-        flex: '1 1 100%'
+        flex: '1 1 100%',
     },
     actions: {
-        color: theme.palette.text.secondary
+        color: theme.palette.text.secondary,
     },
     title: {
         flex: '0 0 auto',
-        '@media (max-width:780px)': {
-        }
+        '@media (max-width:780px)': {},
     },
     itemsNumber: {
         display: 'flex',
         alignItems: 'center',
         width: '130px',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     valuesActions: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     closeIcon: {
-        cursor: 'pointer'
+        cursor: 'pointer',
     },
     toolbar: {
         width: '100%',
-        marginTop: theme.spacing.unit * 3
+        marginTop: theme.spacing.unit * 3,
     },
     warningContent: {
-        paddingBottom: '0'
-    }
+        paddingBottom: '0',
+    },
 });
 
 class AdminTableHeader extends Component {
@@ -80,7 +79,7 @@ class AdminTableHeader extends Component {
         onFiltersOpen: PropTypes.func,
         onSelectedCloseClick: PropTypes.func,
         filters: PropTypes.bool,
-        isAddButton: PropTypes.bool
+        isAddButton: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -92,11 +91,11 @@ class AdminTableHeader extends Component {
         onFiltersOpen: noop,
         onSelectedCloseClick: noop,
         filters: true,
-        isAddButton: true
+        isAddButton: true,
     };
 
     state = {
-        warningShowed: false
+        warningShowed: false,
     };
 
     handleSelectedCloseClick = () => {
@@ -105,101 +104,111 @@ class AdminTableHeader extends Component {
 
     handleWarningDisagree = () => {
         this.setState({
-            warningShowed: false
+            warningShowed: false,
         });
     };
 
     handleWarningAgree = () => {
-        const ids = this.props.selected.map(category => category.id);
+        const ids = this.props.selected.map((category) => category.id);
 
-        this.props.onDelete(ids)
-            .then(() => {
-                this.setState({
-                    warningShowed: false
-                });
+        this.props.onDelete(ids).then(() => {
+            this.setState({
+                warningShowed: false,
             });
+        });
     };
 
     handleDelete = () => {
         this.setState({
-            warningShowed: true
+            warningShowed: true,
         });
     };
 
-    render () {
-        const { classes, selected, headerText, deleteValuesWarningTitle, filters, isAddButton } = this.props;
-        const { warningShowed } = this.state;
+    render() {
+        const {classes, selected, headerText, deleteValuesWarningTitle, filters, isAddButton} =
+            this.props;
+        const {warningShowed} = this.state;
 
-        return <div>
-            <Toolbar
-                className={classNames(classes.toolbar, {
-                    [classes.highlight]: selected.length > 0
-                })}
-            >
-                <div className={classes.title}>
-                    {selected.length > 0 ? (
-                        <div className={classes.itemsNumber}>
-                            <CloseIcon className={classes.closeIcon} onClick={this.handleSelectedCloseClick}/>
-                            <Typography color='inherit' variant='subtitle1'>
-                                {selected.length} выбрано
-                            </Typography>
-                        </div>
-                    ) : (
-                        <Typography variant='h6' id='tableTitle'>
-                            {headerText}
-                        </Typography>
-                    )}
-                </div>
-                <div className={classes.spacer} />
-                <div className={classes.actions}>
-                    {selected.length > 0 ? (
-                        <Tooltip title='Delete'>
-                            <IconButton aria-label='Delete' onClick={this.handleDelete}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    ) : (
-                        <div className={classes.valuesActions}>
-                            { filters && <Tooltip title='Фильтрация'>
-                                <IconButton aria-label='Filters' onClick={this.props.onFiltersOpen}>
-                                    <FilterListIcon />
-                                </IconButton>
-                            </Tooltip> }
-                            {isAddButton && <Tooltip title='Добавление'>
-                                <IconButton aria-label='Add' onClick={this.props.onFormOpen()}>
-                                    <AddIcon />
-                                </IconButton>
-                            </Tooltip>}
-                        </div>
-                    )}
-                </div>
-            </Toolbar>
-            <Dialog
-                open={warningShowed}
-                onClose={this.handleWarningDisagree}
-            >
-                <DialogTitle>{deleteValuesWarningTitle}</DialogTitle>
-                <DialogContent className={classes.warningContent}>
-                    <List>
-                        {
-                            selected.map((category, i) => <ListItem key={i}>
-                                <ListItemText
-                                    primary={category.name}
+        return (
+            <div>
+                <Toolbar
+                    className={classNames(classes.toolbar, {
+                        [classes.highlight]: selected.length > 0,
+                    })}
+                >
+                    <div className={classes.title}>
+                        {selected.length > 0 ? (
+                            <div className={classes.itemsNumber}>
+                                <CloseIcon
+                                    className={classes.closeIcon}
+                                    onClick={this.handleSelectedCloseClick}
                                 />
-                            </ListItem>)
-                        }
-                    </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleWarningDisagree} color='primary'>
-                        Нет
-                    </Button>
-                    <Button onClick={this.handleWarningAgree} color='primary' autoFocus>
-                        Да
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>;
+                                <Typography color="inherit" variant="subtitle1">
+                                    {selected.length} выбрано
+                                </Typography>
+                            </div>
+                        ) : (
+                            <Typography variant="h6" id="tableTitle">
+                                {headerText}
+                            </Typography>
+                        )}
+                    </div>
+                    <div className={classes.spacer} />
+                    <div className={classes.actions}>
+                        {selected.length > 0 ? (
+                            <Tooltip title="Delete">
+                                <IconButton aria-label="Delete" onClick={this.handleDelete}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        ) : (
+                            <div className={classes.valuesActions}>
+                                {filters && (
+                                    <Tooltip title="Фильтрация">
+                                        <IconButton
+                                            aria-label="Filters"
+                                            onClick={this.props.onFiltersOpen}
+                                        >
+                                            <FilterListIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
+                                {isAddButton && (
+                                    <Tooltip title="Добавление">
+                                        <IconButton
+                                            aria-label="Add"
+                                            onClick={this.props.onFormOpen()}
+                                        >
+                                            <AddIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </Toolbar>
+                <Dialog open={warningShowed} onClose={this.handleWarningDisagree}>
+                    <DialogTitle>{deleteValuesWarningTitle}</DialogTitle>
+                    <DialogContent className={classes.warningContent}>
+                        <List>
+                            {selected.map((category, i) => (
+                                <ListItem key={i}>
+                                    <ListItemText primary={category.name} />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleWarningDisagree} color="primary">
+                            Нет
+                        </Button>
+                        <Button onClick={this.handleWarningAgree} color="primary" autoFocus>
+                            Да
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
     }
 }
 

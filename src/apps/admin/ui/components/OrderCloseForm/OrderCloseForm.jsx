@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import getSchema from './orderCloseFormSchema';
 import closeOrder from '../../../services/closeOrder';
@@ -16,7 +16,7 @@ import format from 'date-fns/format';
 const ORDERS_VALUES = ['userId', 'id'];
 
 const mapDispatchToProps = (dispatch) => ({
-    closeOrder: payload => dispatch(closeOrder(payload))
+    closeOrder: (payload) => dispatch(closeOrder(payload)),
 });
 
 class OrderCloseForm extends Component {
@@ -25,82 +25,80 @@ class OrderCloseForm extends Component {
         onDone: PropTypes.func,
         order: PropTypes.object,
         users: PropTypes.array,
-        activeUser: PropTypes.object
+        activeUser: PropTypes.object,
     };
 
     static defaultProps = {
         onDone: noop,
         order: {},
         users: [],
-        activeUser: {}
+        activeUser: {},
     };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
 
-        const { order, activeUser } = this.props;
+        const {order, activeUser} = this.props;
         this.dirName = order.dirName || uniqid();
 
         this.initialValues = {
-            closedAt: order.closedAt ? format(order.closedAt, "yyyy-MM-dd'T'HH:mm") : format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+            closedAt: order.closedAt
+                ? format(order.closedAt, "yyyy-MM-dd'T'HH:mm")
+                : format(new Date(), "yyyy-MM-dd'T'HH:mm"),
             closedPrice: order.closedPrice || '',
-            ...pick(ORDERS_VALUES, order)
+            ...pick(ORDERS_VALUES, order),
         };
         this.id = prop('id', order);
         this.state = {
-            activeUser: activeUser
+            activeUser: activeUser,
         };
     }
 
-    getOrderPayload = (
-        {
-            closedAt,
-            closedPrice
-
-        }) => {
-        const { activeUser } = this.props;
+    getOrderPayload = ({closedAt, closedPrice}) => {
+        const {activeUser} = this.props;
         return {
             closedAt: +new Date(closedAt),
             closedPrice,
             dirName: this.dirName,
-            userId: activeUser.id
+            userId: activeUser.id,
         };
     };
 
-    handleSubmit = values => {
+    handleSubmit = (values) => {
         const orderPayload = this.getOrderPayload(values);
-        const { closeOrder, onDone } = this.props;
+        const {closeOrder, onDone} = this.props;
         console.log(orderPayload);
 
-        closeOrder({ ...orderPayload, id: this.id, isClosed: true })
-            .then(() => {
-                onDone();
-            });
+        closeOrder({...orderPayload, id: this.id, isClosed: true}).then(() => {
+            onDone();
+        });
     };
 
     handleChange = (values, changes) => {
         switch (Object.keys(changes)[0]) {
-        case 'userId':
-            const activeUser = this.props.users.find(user => user.id === changes.userId);
-            const { lang } = this.state;
+            case 'userId':
+                const activeUser = this.props.users.find((user) => user.id === changes.userId);
+                const {lang} = this.state;
 
-            values.orderId = activeUser.texts[lang].order[0].id;
-            break;
+                values.orderId = activeUser.texts[lang].order[0].id;
+                break;
         }
     };
 
-    render () {
-        return <Form
-            initialValues={this.initialValues}
-            schema={getSchema({
-                data: {
-                    title: 'Закрыть ордер',
-                    dirName: this.dirName
-                }
-            })}
-            onChange={this.handleChange}
-            onSubmit={this.handleSubmit}
-        />;
+    render() {
+        return (
+            <Form
+                initialValues={this.initialValues}
+                schema={getSchema({
+                    data: {
+                        title: 'Закрыть ордер',
+                        dirName: this.dirName,
+                    },
+                })}
+                onChange={this.handleChange}
+                onSubmit={this.handleSubmit}
+            />
+        );
     }
 }
 

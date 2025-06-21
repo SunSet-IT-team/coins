@@ -4,7 +4,7 @@
 
 .form {
     margin-top: 55px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     display: flex;
     flex-wrap: wrap;
     padding: 0 66px;
@@ -21,21 +21,21 @@
         color: rgba(166, 177, 220, 0.25);
         opacity: 0;
         pointer-events: none;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
     }
 
     .bottomLabelActive {
         opacity: 1;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         flex-direction: column;
         padding: 0;
     }
 }
 
 .button {
-    background-color: #27AE60;
+    background-color: #27ae60;
     position: relative;
     color: whiteBasic;
     padding: 7.5px 83px;
@@ -51,14 +51,14 @@
     overflow: hidden;
     box-sizing: border-box;
     outline: none;
-    transition: .5s ease;
+    transition: 0.5s ease;
     border: none;
     width: 242px;
     height: 36px;
-    transition: all .2s ease;
-    box-shadow: 0 0 5px 1px #27AE60;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 5px 1px #27ae60;
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         width: 100%;
     }
 }
@@ -71,16 +71,22 @@
     }
 }
 
-.emailContainerField, .phoneContainerField, .passwordContainerField, .dateContainerField, .addressContainerField {
+.emailContainerField,
+.phoneContainerField,
+.passwordContainerField,
+.dateContainerField,
+.addressContainerField {
     position: relative;
 }
 
-.emailContainerField, .cityContainerField {
+.emailContainerField,
+.cityContainerField {
     height: 38px;
     margin-bottom: 54px;
 }
 
-.passwordContainerField, .dateContainerField{
+.passwordContainerField,
+.dateContainerField {
     img {
         position: absolute;
         top: 10px;
@@ -91,12 +97,12 @@
 }
 
 .dateContainerField {
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         width: 50%;
         max-width: 245px;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         width: 100%;
         max-width: initial;
         margin-bottom: 52px;
@@ -116,7 +122,7 @@
         line-height: 15px !important;
         top: -20px !important;
         left: 0px !important;
-        opacity: .7;
+        opacity: 0.7;
     }
 }
 
@@ -139,7 +145,7 @@
     margin-bottom: 36px;
     position: relative;
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         margin-top: 10px;
     }
 }
@@ -170,7 +176,7 @@
 
         .fillCheck {
             opacity: 0;
-            transition: all .3s ease;
+            transition: all 0.3s ease;
             left: 0;
             position: absolute;
             top: 1px;
@@ -182,7 +188,7 @@
         }
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         margin-top: -11px;
     }
 }
@@ -225,12 +231,12 @@
     line-height: 18px;
     color: rgba(166, 177, 220, 0.5);
     left: 62px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 }
 
 .focusPhoneField {
     .callingCode {
-        color: #A6B1DC !important;
+        color: #a6b1dc !important;
     }
 }
 
@@ -238,7 +244,7 @@
     opacity: 0;
     color: rgba(235, 87, 87, 0.75);
     pointer-events: none;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 }
 
 .checkboxErrorActive {
@@ -265,17 +271,17 @@
         line-height: 18px;
         letter-spacing: 0.012em;
         color: rgba(166, 177, 220, 0.5);
-        background: #161A2A;
+        background: #161a2a;
         padding-left: 16px;
         cursor: pointer;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
     }
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         display: none;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         input {
             width: 100% !important;
         }
@@ -290,7 +296,7 @@
 
 .errorLabel {
     opacity: 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 }
 
 .dateFormFieldContainer {
@@ -311,7 +317,7 @@
     font-size: 14px;
     line-height: 18px;
     opacity: 1;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     position: absolute;
     z-index: 6;
     color: rgba(166, 177, 220, 0.5);
@@ -323,7 +329,7 @@
     line-height: 15px;
     top: -20px;
     left: 0px;
-    opacity: .7;
+    opacity: 0.7;
 }
 
 .dateErrorTitle {
@@ -331,7 +337,7 @@
 }
 
 .dateErrorField {
-    outline: .5px solid rgba(235, 87, 87, 0.75) !important;
+    outline: 0.5px solid rgba(235, 87, 87, 0.75) !important;
     opacity: 1;
 }
 
@@ -348,7 +354,7 @@
     font-family: FuturaPT-Medium;
     letter-spacing: 0.01em;
     pointer-events: none;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     opacity: 0;
 }
 
@@ -368,23 +374,23 @@
     z-index: 1;
     padding: 9px 16px;
     font-family: FuturaPT-Medium;
-    transition: all .3s;
+    transition: all 0.3s;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         display: block;
         position: absolute;
         top: 0;
         width: 100%;
-        background: #161A2A;
+        background: #161a2a;
         opacity: 1;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         position: relative;
     }
 }
 
 .mobileMaskDateActive {
-    outline: .5px solid lightBlue;
+    outline: 0.5px solid lightBlue;
     color: lightBlue !important;
 }

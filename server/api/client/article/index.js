@@ -5,10 +5,8 @@ import availableArticlesSearch from './services/availableArticlesSearch';
 
 const router = express.Router();
 
-router.route('/')
-    .get(getAvailableArticles);
+router.route('/').get(getAvailableArticles);
 
-router.route('/search')
-    .get(availableArticlesSearch);
+router.route('/search').get(availableArticlesSearch);
 
 export default router;

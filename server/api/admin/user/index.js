@@ -13,22 +13,16 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/all')
-    .get(getUsers);
+router.route('/all').get(getUsers);
 
-router.route('/save')
-    .post(saveUser);
+router.route('/save').post(saveUser);
 
-router.route('/edit')
-    .put(editUser);
+router.route('/edit').put(editUser);
 
-router.route('/assign')
-    .put(assignUser);
+router.route('/assign').put(assignUser);
 
-router.route('/detach')
-    .put(detachUser);
+router.route('/detach').put(detachUser);
 
-router.route('/delete-few')
-    .delete(deleteByIds);
+router.route('/delete-few').delete(deleteByIds);
 
 export default router;

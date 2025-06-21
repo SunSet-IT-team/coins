@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
@@ -10,13 +10,13 @@ export default class FormFieldCheckbox extends Component {
     static propTypes = {
         value: PropTypes.bool,
         schema: PropTypes.object,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
     };
 
     static defaultProps = {
         value: false,
         schema: {},
-        onChange: noop
+        onChange: noop,
     };
 
     handleChange = (event, checked) => {
@@ -25,19 +25,21 @@ export default class FormFieldCheckbox extends Component {
         this.props.onChange(checked);
     };
 
-    render () {
-        const { value, schema } = this.props;
+    render() {
+        const {value, schema} = this.props;
 
-        return <FormControlLabel
-            control={
-                <Checkbox
-                    checked={value}
-                    onChange={this.handleChange}
-                    color='primary'
-                    disabled={schema.disabled}
-                />
-            }
-            label={schema.label}
-        />;
+        return (
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={value}
+                        onChange={this.handleChange}
+                        color="primary"
+                        disabled={schema.disabled}
+                    />
+                }
+                label={schema.label}
+            />
+        );
     }
 }

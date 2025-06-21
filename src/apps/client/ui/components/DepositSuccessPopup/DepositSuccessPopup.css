@@ -14,7 +14,7 @@
     overflow-y: auto;
     opacity: 0;
     pointer-events: none;
-    transition: all .5s ease;
+    transition: all 0.5s ease;
 }
 
 .cover {
@@ -50,7 +50,7 @@
         padding: 24px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         padding: 16px;
     }
 }
@@ -80,7 +80,7 @@
     opacity: 1;
 
     .content {
-        pointer-events: auto; 
+        pointer-events: auto;
     }
 }
 

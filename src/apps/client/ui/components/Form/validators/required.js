@@ -6,12 +6,12 @@ import isString from '@tinkoff/utils/is/string';
 import isNumber from '@tinkoff/utils/is/number';
 
 const isEmptyValue = cond([
-    [isString, value => !trim(value)],
-    [isNumber, value => isNaN(value)],
-    [T, value => !value]
+    [isString, (value) => !trim(value)],
+    [isNumber, (value) => isNaN(value)],
+    [T, (value) => !value],
 ]);
 
-export default function required (value, options = {}) {
+export default function required(value, options = {}) {
     const isValid = !isEmptyValue(value);
 
     if (!isValid) {

@@ -3,12 +3,12 @@
 export default {
     content: {
         title: 'Контент',
-        langs: 'Вибір мови'
+        langs: 'Вибір мови',
     },
     footer: {
-        title: 'Футер'
+        title: 'Футер',
     },
     header: {
-        title: 'Хедер'
-    }
+        title: 'Хедер',
+    },
 };

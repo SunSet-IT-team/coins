@@ -1,8 +1,8 @@
-import { SET_LANG_MAP } from '../types/types';
+import {SET_LANG_MAP} from '../types/types';
 
-const setLangMap = payload => ({
+const setLangMap = (payload) => ({
     type: SET_LANG_MAP,
-    payload
+    payload,
 });
 
 export default setLangMap;

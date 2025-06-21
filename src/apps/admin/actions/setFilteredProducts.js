@@ -1,8 +1,8 @@
-import { SET_FILTERED_PRODUCTS } from '../types/types';
+import {SET_FILTERED_PRODUCTS} from '../types/types';
 
-const setFilteredProducts = payload => ({
+const setFilteredProducts = (payload) => ({
     type: SET_FILTERED_PRODUCTS,
-    payload
+    payload,
 });
 
 export default setFilteredProducts;

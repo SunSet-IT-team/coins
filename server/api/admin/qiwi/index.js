@@ -9,10 +9,8 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/token')
-    .get(getToken);
+router.route('/token').get(getToken);
 
-router.route('/token-save')
-    .get(saveToken);
+router.route('/token-save').get(saveToken);
 
 export default router;

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 
 const ReloadingStatus = {
     Default: 'default',
     Processing: 'processing',
-    Reloaded: 'reloaded'
+    Reloaded: 'reloaded',
 };
 
 const Reload = () => {
@@ -17,7 +17,7 @@ const Reload = () => {
         setMessage('Перезагрузка с пересборкой... Примерно через минуту обновите страницу.');
         setReloadingStatus(ReloadingStatus.Processing);
         await fetch('/api/redeploy', {
-            method: 'POST'
+            method: 'POST',
         });
         setReloadingStatus(ReloadingStatus.Reloaded);
         window.location.reload();
@@ -28,7 +28,7 @@ const Reload = () => {
         setMessage('Быстрая перезагрузка, примерно 10 секунд...');
         setReloadingStatus(ReloadingStatus.Processing);
         await fetch('/api/reload', {
-            method: 'POST'
+            method: 'POST',
         });
         setReloadingStatus(ReloadingStatus.Reloaded);
         window.location.reload();
@@ -37,37 +37,38 @@ const Reload = () => {
     return (
         <React.Fragment>
             <Toolbar z-index={0}>
-                {reloadingStatus === ReloadingStatus.Default
-                    ? <Button
+                {reloadingStatus === ReloadingStatus.Default ? (
+                    <Button
                         onClick={handleRedeploy}
-                        variant='contained'
-                        color='secondary'
-                        margin='normal'
+                        variant="contained"
+                        color="secondary"
+                        margin="normal"
                         fullWidth
                     >
-                    Пересобрать и перезагрузить
+                        Пересобрать и перезагрузить
                     </Button>
-                    : <React.Fragment>
+                ) : (
+                    <React.Fragment>
                         <center>
                             <p>{message}</p>
                         </center>
                     </React.Fragment>
-                }
+                )}
             </Toolbar>
             <Toolbar z-index={0}>
-                {reloadingStatus === ReloadingStatus.Default
-                    ? <Button
+                {reloadingStatus === ReloadingStatus.Default ? (
+                    <Button
                         onClick={handleReload}
-                        variant='contained'
-                        color='primary'
-                        margin='normal'
+                        variant="contained"
+                        color="primary"
+                        margin="normal"
                         fullWidth
                     >
-                    Быстрая перезагрузка
+                        Быстрая перезагрузка
                     </Button>
-                    : <React.Fragment>
-                    </React.Fragment>
-                }
+                ) : (
+                    <React.Fragment></React.Fragment>
+                )}
             </Toolbar>
         </React.Fragment>
     );

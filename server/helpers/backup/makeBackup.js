@@ -10,8 +10,6 @@ try {
         uri: DATABASE_URL,
         root: BACKUPS_FOLDER,
         parser: 'json',
-        tar: `dump-${format(new Date(), 'yyyy-MM-dd')}.tar`
+        tar: `dump-${format(new Date(), 'yyyy-MM-dd')}.tar`,
     });
-} catch (e) {
-
-}
+} catch (e) {}

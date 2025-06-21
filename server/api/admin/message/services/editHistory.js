@@ -1,8 +1,8 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 
 import editMessagesByIdQuery from '../queries/editMessagesById';
 
-export default function editHistory (req, res) {
+export default function editHistory(req, res) {
     try {
         const id = req.body.id;
 

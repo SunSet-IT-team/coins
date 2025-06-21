@@ -1,8 +1,8 @@
-import { SET_MEDIA_INFO } from '../types/types';
+import {SET_MEDIA_INFO} from '../types/types';
 
-const setMediaInfo = payload => ({
+const setMediaInfo = (payload) => ({
     type: SET_MEDIA_INFO,
-    payload
+    payload,
 });
 
 export default setMediaInfo;

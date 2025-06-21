@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import noop from '@tinkoff/utils/function/noop';
 
@@ -28,7 +28,7 @@ import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
 import UserForm from '../../components/UserForm/UserForm';
@@ -46,15 +46,16 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import ErrorIcon from '@material-ui/icons/Error';
 
-const ItemSortable = ({ onUserDelete, name, value, classes }) => (
+const ItemSortable = ({onUserDelete, name, value, classes}) => (
     <ListItem button className={classes.row}>
         <ListItemIcon>
-            <AccountCircleRoundedIcon {
-            ...(value.isActive === 'true'
-                ? { style: { color: green[300] } }
-                : value.isActive === 'false'
-                    ? { style: { color: red[300] } }
-                    : {})} fontSize="large"
+            <AccountCircleRoundedIcon
+                {...(value.isActive === 'true'
+                    ? {style: {color: green[300]}}
+                    : value.isActive === 'false'
+                      ? {style: {color: red[300]}}
+                      : {})}
+                fontSize="large"
             />
         </ListItemIcon>
         <ListItemText
@@ -68,11 +69,7 @@ const ItemSortable = ({ onUserDelete, name, value, classes }) => (
         {value.hidden && <div className={classes.hiddenMark}>Hidden</div>}
         <div className={classes.valueActions}>
             <ListItemSecondaryAction className={classes.userOptions}>
-                <IconButton
-                    onClick={() => onUserDelete(value)}
-                    edge="end"
-                    aria-label="delete"
-                >
+                <IconButton onClick={() => onUserDelete(value)} edge="end" aria-label="delete">
                     <DeleteIcon />
                 </IconButton>
             </ListItemSecondaryAction>
@@ -84,43 +81,45 @@ ItemSortable.propTypes = {
     onUserDelete: PropTypes.func,
     name: PropTypes.string,
     value: PropTypes.object,
-    classes: PropTypes.object
+    classes: PropTypes.object,
 };
 
-const SortableWrapper = ({ managers, ...rest }) => (
+const SortableWrapper = ({managers, ...rest}) => (
     <List>
         {managers.map((value, i) => {
             const name = [value.name, value.surname].filter(Boolean).join(' ');
-            return <ItemSortable
-                key={i}
-                name={name}
-                value={value}
-                onUserDelete={rest.onUserDelete}
-                {...rest}
-            />;
+            return (
+                <ItemSortable
+                    key={i}
+                    name={name}
+                    value={value}
+                    onUserDelete={rest.onUserDelete}
+                    {...rest}
+                />
+            );
         })}
     </List>
 );
 
 SortableWrapper.propTypes = {
-    managers: PropTypes.array
+    managers: PropTypes.array,
 };
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     root: {
         display: 'grid',
         gridTemplateColumns: '60% 40%',
         '@media (max-width:1200px)': {
             display: 'grid',
             gridTemplateColumns: '60% 40%',
-            flexDirection: 'column-reverse'
-        }
+            flexDirection: 'column-reverse',
+        },
     },
     addForm: {
         display: 'flex',
         flexDirection: 'column',
         padding: '16px',
-        gap: '8px'
+        gap: '8px',
     },
     addInput: {
         width: '100%',
@@ -132,8 +131,8 @@ const materialStyles = theme => ({
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
         fontSize: '14px',
         '&:focus': {
-            borderColor: theme.palette.grey[500]
-        }
+            borderColor: theme.palette.grey[500],
+        },
     },
     addButton: {
         background: 'linear-gradient(to right, #3f51b5 0%,rgb(82, 97, 185) 100%)',
@@ -145,8 +144,8 @@ const materialStyles = theme => ({
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
         fontSize: '14px',
         '&:hover': {
-            backgroundColor: blue[700]
-        }
+            backgroundColor: blue[700],
+        },
     },
     drawer: {
         display: 'grid',
@@ -156,16 +155,17 @@ const materialStyles = theme => ({
             width: 'calc(100% - 60px)',
             maxWidth: 'unset',
             margin: '30px 30px 0 30px',
-            boxShadow: '0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12)'
+            boxShadow:
+                '0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12)',
         },
         '@media (max-width:600px)': {
             width: 'calc(100% - 30px)',
-            margin: '15px 15px 0 15px'
+            margin: '15px 15px 0 15px',
         },
         '@media (max-width:400px)': {
             width: '100%',
-            margin: '15px 0 0 0'
-        }
+            margin: '15px 0 0 0',
+        },
     },
     drawerPaper: {
         display: 'grid',
@@ -182,20 +182,19 @@ const materialStyles = theme => ({
             zIndex: '0',
             minHeight: 'unset',
             width: '100%',
-            maxWidth: 'unset'
-        }
+            maxWidth: 'unset',
+        },
     },
     content: {
-
         '@media (max-width:1200px)': {
-            width: '100%'
+            width: '100%',
         },
         '@media (max-width:600px)': {
-            padding: '15px'
+            padding: '15px',
         },
         '@media (max-width:400px)': {
-            padding: '15px 0'
-        }
+            padding: '15px 0',
+        },
     },
     hiddenMark: {
         width: '64px',
@@ -206,10 +205,10 @@ const materialStyles = theme => ({
         textAlign: 'center',
         padding: '5px 0px 0px 0px',
         background: '#3f51b5',
-        color: 'white'
+        color: 'white',
     },
     toolbar: {
-        height: '0px'
+        height: '0px',
     },
     toolbarNav: {
         display: 'flex',
@@ -218,42 +217,42 @@ const materialStyles = theme => ({
         height: '58px',
         padding: '5px 30px 5px 30px',
         '@media (max-width:460px)': {
-            padding: '5px 16px 5px 16px'
-        }
+            padding: '5px 16px 5px 16px',
+        },
     },
     userTitle: {
         height: '30px',
-        padding: '0 16px'
+        padding: '0 16px',
     },
     buttonSortable: {
         position: 'relative',
         marginRight: '12px',
-        cursor: 'pointer'
+        cursor: 'pointer',
     },
     modal: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     row: {
         backgroundColor: 'white',
         zIndex: 1201,
         '&:hover $valueActions': {
-            visibility: 'visible'
+            visibility: 'visible',
         },
         '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.07)'
-        }
+            backgroundColor: 'rgba(0, 0, 0, 0.07)',
+        },
     },
     valueActions: {
         display: 'flex',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
     },
     userOptions: {
         display: 'flex',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
     },
     listItemText: {
         cursor: 'default',
@@ -261,12 +260,12 @@ const materialStyles = theme => ({
         '& .MuiListItemText-primary': {
             '& .emailText': {
                 color: 'rgba(0, 0, 0, 0.54)',
-                marginLeft: '8px'
+                marginLeft: '8px',
             },
             '& .nameText': {
-                color: 'rgba(0, 0, 0, 0.87)'
-            }
-        }
+                color: 'rgba(0, 0, 0, 0.87)',
+            },
+        },
     },
     modalContent: {
         position: 'absolute',
@@ -278,88 +277,88 @@ const materialStyles = theme => ({
         overflowY: 'auto',
         maxHeight: '100vh',
         '@media (max-width:1300px)': {
-            width: '90%'
-        }
+            width: '90%',
+        },
     },
     loader: {
         height: 'calc(100vh - 64px)',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     tabsBlock: {
         backgroundColor: blue[50],
         borderRadius: '3px',
-        padding: '20px'
+        padding: '20px',
     },
     columns: {
         width: '100%',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     userColWrapper: {
         width: '100%',
         flex: 1,
-        minWidth: 0
+        minWidth: 0,
     },
 
     search: {
         display: 'flex',
-        padding: '8px 16px'
+        padding: '8px 16px',
     },
     searchIcon: {
-        marginRight: '10px'
+        marginRight: '10px',
     },
     searchInput: {
         width: '100%',
         border: 'none',
         outline: 'none',
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-        fontSize: '14px'
+        fontSize: '14px',
     },
     success: {
-        backgroundColor: theme.palette.success.main
+        backgroundColor: theme.palette.success.main,
     },
     error: {
-        backgroundColor: theme.palette.error.dark
+        backgroundColor: theme.palette.error.dark,
     },
     icon: {
-        fontSize: 20
+        fontSize: 20,
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing.unit,
     },
     message: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     margin: {
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
     nameText: {
-        color: 'rgba(0, 0, 0, 0.87)'
+        color: 'rgba(0, 0, 0, 0.87)',
     },
     emailText: {
-        color: 'rgba(0, 0, 0, 0.54)'
-    }
+        color: 'rgba(0, 0, 0, 0.54)',
+    },
 });
 
-const mapStateToProps = ({ data }) => {
+const mapStateToProps = ({data}) => {
     return {
-        managers: data.managers
+        managers: data.managers,
     };
 };
 
-const mapDispatchToProps = dispatch => ({
-    getManagers: payload => dispatch(getManagers(payload)),
-    deleteManager: payload => dispatch(deleteManager(payload)),
-    createManager: payload => dispatch(createManager(payload))
+const mapDispatchToProps = (dispatch) => ({
+    getManagers: (payload) => dispatch(getManagers(payload)),
+    deleteManager: (payload) => dispatch(deleteManager(payload)),
+    createManager: (payload) => dispatch(createManager(payload)),
 });
 
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const DEFAULT_LANG = 'ru';
-const DEFAULT_ACTIVE_SERVICE = { name: '', id: '' };
+const DEFAULT_ACTIVE_SERVICE = {name: '', id: ''};
 
 class SettingsPage extends Component {
     static propTypes = {
@@ -367,14 +366,14 @@ class SettingsPage extends Component {
         managers: PropTypes.array.isRequired,
         getManagers: PropTypes.func.isRequired,
         deleteManager: PropTypes.func.isRequired,
-        createManager: PropTypes.func.isRequired
+        createManager: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
         managers: [],
         getManagers: noop,
         deleteManager: noop,
-        createManager: noop
+        createManager: noop,
     };
 
     state = {
@@ -394,40 +393,38 @@ class SettingsPage extends Component {
             name: '',
             surname: '',
             email: '',
-            password: ''
-        }
+            password: '',
+        },
     };
 
-    componentDidUpdate (prevProps) {
+    componentDidUpdate(prevProps) {
         if (prevProps.managers !== this.props.managers) {
-            this.setState({ managers: this.props.managers });
+            this.setState({managers: this.props.managers});
         }
     }
 
-    componentDidMount () {
-        Promise.all([
-            this.props.getManagers()
-        ])
-            .then(() => {
-                this.setState({
-                    loading: false,
-                    managers: this.props.managers,
-                    activeManager: this.props.managers[0] || DEFAULT_ACTIVE_SERVICE
-                });
+    componentDidMount() {
+        Promise.all([this.props.getManagers()]).then(() => {
+            this.setState({
+                loading: false,
+                managers: this.props.managers,
+                activeManager: this.props.managers[0] || DEFAULT_ACTIVE_SERVICE,
             });
+        });
     }
 
     newManagerValidators = [
-        ({ password }) => password.length >= 8 ? null : 'Длина пароля должна быть не меньше восьми',
-        ({ password }) => /[а-яА-Я]/g.test(password) ? 'Пароль не должен содержать кириллицу' : null,
-        ({ password }) => / /g.test(password) ? 'Пароль не должен содержать пробелов' : null,
-        ({ password }) => /[0-9]/g.test(password) ? null : 'В пароле должны использоваться цифры',
-        ({ email }) => EMAIL_PATTERN.test(email) ? null : 'Введите валидный email'
+        ({password}) => (password.length >= 8 ? null : 'Длина пароля должна быть не меньше восьми'),
+        ({password}) =>
+            /[а-яА-Я]/g.test(password) ? 'Пароль не должен содержать кириллицу' : null,
+        ({password}) => (/ /g.test(password) ? 'Пароль не должен содержать пробелов' : null),
+        ({password}) => (/[0-9]/g.test(password) ? null : 'В пароле должны использоваться цифры'),
+        ({email}) => (EMAIL_PATTERN.test(email) ? null : 'Введите валидный email'),
     ];
 
     validateManager = (manager) => {
         const errors = [];
-        this.newManagerValidators.forEach(validator => {
+        this.newManagerValidators.forEach((validator) => {
             const error = validator(manager);
             if (error) errors.push(error);
         });
@@ -435,60 +432,61 @@ class SettingsPage extends Component {
     };
 
     handleAddManager = () => {
-        const { newManager } = this.state;
+        const {newManager} = this.state;
 
         const errors = this.validateManager(newManager);
         if (errors.length > 0) {
-            this.setState({ errorText: errors[0] });
+            this.setState({errorText: errors[0]});
             return;
         }
 
-        this.props.createManager(newManager)
+        this.props
+            .createManager(newManager)
             .then(() => {
                 this.setState({
                     newManager: {
                         name: '',
                         surname: '',
                         email: '',
-                        password: ''
+                        password: '',
                     },
-                    showSuccess: true
+                    showSuccess: true,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.setState({
-                    errorText: error.message || 'Ошибка при создании менеджера'
+                    errorText: error.message || 'Ошибка при создании менеджера',
                 });
             });
     };
 
     handleManagerDelete = (manager) => {
         this.setState({
-            valueForDelete: manager
+            valueForDelete: manager,
         });
     };
 
     handleWarningDisagree = () => {
         this.setState({
-            valueForDelete: null
+            valueForDelete: null,
         });
     };
 
     handleWarningAgree = () => {
-        const { valueForDelete, activeManager, managers } = this.state;
+        const {valueForDelete, activeManager, managers} = this.state;
 
-        this.props.deleteManager(valueForDelete.email)
-            .then(() => {
-                this.setState({
-                    managers: this.props.managers,
-                    activeManager: activeManager === valueForDelete && managers[0] || DEFAULT_ACTIVE_SERVICE,
-                    valueForDelete: null
-                });
+        this.props.deleteManager(valueForDelete.email).then(() => {
+            this.setState({
+                managers: this.props.managers,
+                activeManager:
+                    (activeManager === valueForDelete && managers[0]) || DEFAULT_ACTIVE_SERVICE,
+                valueForDelete: null,
             });
+        });
     };
 
-    onDragEnd = ({ oldIndex, newIndex }) => {
-        const { managers } = this.state;
+    onDragEnd = ({oldIndex, newIndex}) => {
+        const {managers} = this.state;
         const newValues = arrayMove(managers, oldIndex, newIndex);
 
         newValues.forEach((newManager, i) => {
@@ -498,46 +496,49 @@ class SettingsPage extends Component {
         });
 
         this.setState({
-            managers: newValues
+            managers: newValues,
         });
     };
 
-    handleTableChange = event => () => {
+    handleTableChange = (event) => () => {
         this.setState({
-            tabsValue: event
+            tabsValue: event,
         });
     };
 
     handleSearch = (e) => {
         const searchValue = e.target.value.toLowerCase();
-        const { managers } = this.props;
+        const {managers} = this.props;
 
-        const filteredManagers = searchValue ? managers.filter(manager =>
-            (manager.name || '').toLowerCase().includes(searchValue) ||
-            (manager.surname || '').toLowerCase().includes(searchValue) ||
-            (manager.email || '').toLowerCase().includes(searchValue)
-        ) : managers;
+        const filteredManagers = searchValue
+            ? managers.filter(
+                  (manager) =>
+                      (manager.name || '').toLowerCase().includes(searchValue) ||
+                      (manager.surname || '').toLowerCase().includes(searchValue) ||
+                      (manager.email || '').toLowerCase().includes(searchValue)
+              )
+            : managers;
 
         this.setState({
             inputValue: e.target.value,
-            managers: filteredManagers
+            managers: filteredManagers,
         });
     };
 
     handleSuccesslMessage = () => {
         this.setState({
-            showSuccess: false
+            showSuccess: false,
         });
     };
 
     handleHideFailMessage = () => {
         this.setState({
-            errorText: ''
+            errorText: '',
         });
     };
 
-    render () {
-        const { classes } = this.props;
+    render() {
+        const {classes} = this.props;
         const {
             editableManager,
             valueForDelete,
@@ -547,170 +548,201 @@ class SettingsPage extends Component {
             loading,
             inputValue,
             showSuccess,
-            errorText
+            errorText,
         } = this.state;
 
         if (loading) {
-            return <div className={classes.loader}>
-                <CircularProgress />
-            </div>;
+            return (
+                <div className={classes.loader}>
+                    <CircularProgress />
+                </div>
+            );
         }
 
-        return <main className={classes.root}>
-            <div className={classes.boom}>{/* Место для будущих настроек */}</div>
-            <Drawer
-                className={classes.drawer}
-                variant="permanent"
-                anchor="right"
-                classes={{
-                    paper: classes.drawerPaper
-                }}
-            >
-                <div className={classes.toolbarNav}>
-                    <Typography variant='h6' className={classes.userTitle}>Менеджеры</Typography>
-                </div>
-                <Divider />
-                <div className={classes.userTypes}>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
+        return (
+            <main className={classes.root}>
+                <div className={classes.boom}>{/* Место для будущих настроек */}</div>
+                <Drawer
+                    className={classes.drawer}
+                    variant="permanent"
+                    anchor="right"
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                >
+                    <div className={classes.toolbarNav}>
+                        <Typography variant="h6" className={classes.userTitle}>
+                            Менеджеры
+                        </Typography>
+                    </div>
+                    <Divider />
+                    <div className={classes.userTypes}>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <input
+                                placeholder="Поиск…"
+                                className={classes.searchInput}
+                                value={inputValue}
+                                onChange={this.handleSearch}
+                            />
                         </div>
-                        <input placeholder="Поиск…" className={classes.searchInput} value={inputValue} onChange={this.handleSearch} />
                     </div>
-                </div>
-                <Divider />
-                <div className={classes.toolbar} />
-                <div className={classes.columns}>
-                    <div className={classes.userColWrapper} >
-                        <SortableWrapper
-                            axis='xy'
-                            onUserDelete={this.handleManagerDelete}
-                            managers={managers}
-                            lang={lang}
-                            classes={classes}
-                        />
+                    <Divider />
+                    <div className={classes.toolbar} />
+                    <div className={classes.columns}>
+                        <div className={classes.userColWrapper}>
+                            <SortableWrapper
+                                axis="xy"
+                                onUserDelete={this.handleManagerDelete}
+                                managers={managers}
+                                lang={lang}
+                                classes={classes}
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className={classes.userTypes}>
-                    <div className={classes.addForm}>
-                        <input
-                            placeholder="Имя"
-                            className={classes.addInput}
-                            value={this.state.newManager.name}
-                            onChange={(e) => this.setState({
-                                newManager: {
-                                    ...this.state.newManager,
-                                    name: e.target.value
+                    <div className={classes.userTypes}>
+                        <div className={classes.addForm}>
+                            <input
+                                placeholder="Имя"
+                                className={classes.addInput}
+                                value={this.state.newManager.name}
+                                onChange={(e) =>
+                                    this.setState({
+                                        newManager: {
+                                            ...this.state.newManager,
+                                            name: e.target.value,
+                                        },
+                                    })
                                 }
-                            })}
-                        />
-                        <input
-                            placeholder="Фамилия"
-                            className={classes.addInput}
-                            value={this.state.newManager.surname}
-                            onChange={(e) => this.setState({
-                                newManager: {
-                                    ...this.state.newManager,
-                                    surname: e.target.value
+                            />
+                            <input
+                                placeholder="Фамилия"
+                                className={classes.addInput}
+                                value={this.state.newManager.surname}
+                                onChange={(e) =>
+                                    this.setState({
+                                        newManager: {
+                                            ...this.state.newManager,
+                                            surname: e.target.value,
+                                        },
+                                    })
                                 }
-                            })}
-                        />
-                        <input
-                            placeholder="Email"
-                            className={classes.addInput}
-                            value={this.state.newManager.email}
-                            onChange={(e) => this.setState({
-                                newManager: {
-                                    ...this.state.newManager,
-                                    email: e.target.value
+                            />
+                            <input
+                                placeholder="Email"
+                                className={classes.addInput}
+                                value={this.state.newManager.email}
+                                onChange={(e) =>
+                                    this.setState({
+                                        newManager: {
+                                            ...this.state.newManager,
+                                            email: e.target.value,
+                                        },
+                                    })
                                 }
-                            })}
-                        />
-                        <input
-                            type="password"
-                            placeholder="Пароль"
-                            className={classes.addInput}
-                            value={this.state.newManager.password}
-                            onChange={(e) => this.setState({
-                                newManager: {
-                                    ...this.state.newManager,
-                                    password: e.target.value
+                            />
+                            <input
+                                type="password"
+                                placeholder="Пароль"
+                                className={classes.addInput}
+                                value={this.state.newManager.password}
+                                onChange={(e) =>
+                                    this.setState({
+                                        newManager: {
+                                            ...this.state.newManager,
+                                            password: e.target.value,
+                                        },
+                                    })
                                 }
-                            })}
-                        />
-                        <button
-                            className={classes.addButton}
-                            onClick={this.handleAddManager}
-                        >
-                            Добавить
-                        </button>
+                            />
+                            <button className={classes.addButton} onClick={this.handleAddManager}>
+                                Добавить
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </Drawer>
-            <Modal open={userFormShowed} onClose={this.handleCloseUserForm} className={classes.modal} disableEnforceFocus>
-                <Paper className={classes.modalContent}>
-                    <UserForm users={managers} user={editableManager} onDone={this.handleUserFormDone} />
-                </Paper>
-            </Modal>
-            <Dialog
-                open={!!valueForDelete}
-                onClose={this.handleWarningDisagree}
-            >
-                <DialogTitle>Вы точно хотите удалить менеджера?</DialogTitle>
-                <DialogContent className={classes.warningContent}>
-                    <DialogContentText>{valueForDelete && valueForDelete.title}</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleWarningDisagree} color='primary'>
-                        Нет
-                    </Button>
-                    <Button onClick={this.handleWarningAgree} color='primary' autoFocus>
-                        Да
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                </Drawer>
+                <Modal
+                    open={userFormShowed}
+                    onClose={this.handleCloseUserForm}
+                    className={classes.modal}
+                    disableEnforceFocus
+                >
+                    <Paper className={classes.modalContent}>
+                        <UserForm
+                            users={managers}
+                            user={editableManager}
+                            onDone={this.handleUserFormDone}
+                        />
+                    </Paper>
+                </Modal>
+                <Dialog open={!!valueForDelete} onClose={this.handleWarningDisagree}>
+                    <DialogTitle>Вы точно хотите удалить менеджера?</DialogTitle>
+                    <DialogContent className={classes.warningContent}>
+                        <DialogContentText>
+                            {valueForDelete && valueForDelete.title}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleWarningDisagree} color="primary">
+                            Нет
+                        </Button>
+                        <Button onClick={this.handleWarningAgree} color="primary" autoFocus>
+                            Да
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                onClose={this.handleSuccesslMessage}
-                open={showSuccess}
-                autoHideDuration={3000}
-            >
-                <SnackbarContent
-                    className={classNames(classes.success, classes.margin)}
-                    message={
-                        <span id='client-snackbar' className={classes.message}>
-                            <CheckCircleIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            Операция успешно сохранена
-                        </span>
-                    }
-                />
-            </Snackbar>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={this.handleSuccesslMessage}
+                    open={showSuccess}
+                    autoHideDuration={3000}
+                >
+                    <SnackbarContent
+                        className={classNames(classes.success, classes.margin)}
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <CheckCircleIcon
+                                    className={classNames(classes.icon, classes.iconVariant)}
+                                />
+                                Операция успешно сохранена
+                            </span>
+                        }
+                    />
+                </Snackbar>
 
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                onClose={this.handleHideFailMessage}
-                open={!!errorText}
-                autoHideDuration={2000}
-            >
-                <SnackbarContent
-                    className={classNames(classes.error, classes.margin)}
-                    message={
-                        <span id='client-snackbar' className={classes.message}>
-                            <ErrorIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            { errorText }
-                        </span>
-                    }
-                />
-            </Snackbar>
-        </main>;
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={this.handleHideFailMessage}
+                    open={!!errorText}
+                    autoHideDuration={2000}
+                >
+                    <SnackbarContent
+                        className={classNames(classes.error, classes.margin)}
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon
+                                    className={classNames(classes.icon, classes.iconVariant)}
+                                />
+                                {errorText}
+                            </span>
+                        }
+                    />
+                </Snackbar>
+            </main>
+        );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(materialStyles)(SettingsPage));
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withStyles(materialStyles)(SettingsPage));

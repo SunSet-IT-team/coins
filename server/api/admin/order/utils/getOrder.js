@@ -1,4 +1,4 @@
-export default function getOrder (body) {
+export default function getOrder(body) {
     const {
         id,
         userId,
@@ -11,7 +11,7 @@ export default function getOrder (body) {
         closedAt,
         closedPrice,
         type,
-        isClosed
+        isClosed,
     } = body;
 
     return {
@@ -26,6 +26,6 @@ export default function getOrder (body) {
         closedAt,
         closedPrice,
         type,
-        isClosed
+        isClosed,
     };
 }

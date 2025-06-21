@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
-import { FILES_FOLDER_PATH } from '../../../../constants/constants';
+import {FILES_FOLDER_PATH} from '../../../../constants/constants';
 
-export default function removeFilesDir (dirName) {
+export default function removeFilesDir(dirName) {
     try {
         if (!fs.existsSync(FILES_FOLDER_PATH)) {
             fs.mkdirSync(FILES_FOLDER_PATH);

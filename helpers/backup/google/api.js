@@ -1,16 +1,16 @@
 import fs from 'fs';
-import { google } from 'googleapis';
+import {google} from 'googleapis';
 import readline from 'readline';
 
 import serviceData from './constants';
 
 export class Google {
-    constructor (service) {
+    constructor(service) {
         this.serviceData = serviceData[service];
     }
 
-    async init () {
-        return new Promise(resolve => {
+    async init() {
+        return new Promise((resolve) => {
             // Load client secrets from a local file.
             fs.readFile(this.serviceData.credentialsPath, (err, content) => {
                 if (err) return console.log('Error loading client secret file:', err);
@@ -27,8 +27,8 @@ export class Google {
         });
     }
 
-    authorize (credentials, callback) {
-        const { client_secret, client_id, redirect_uris } = credentials.installed;
+    authorize(credentials, callback) {
+        const {client_secret, client_id, redirect_uris} = credentials.installed;
         const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
         // Check if we have previously stored a token.
@@ -41,15 +41,15 @@ export class Google {
         });
     }
 
-    getAccessToken (oAuth2Client, callback) {
+    getAccessToken(oAuth2Client, callback) {
         const authUrl = oAuth2Client.generateAuthUrl({
             access_type: 'offline',
-            scope: this.serviceData.scopes
+            scope: this.serviceData.scopes,
         });
         console.log('Authorize this app by visiting this url:', authUrl);
         const rl = readline.createInterface({
             input: process.stdin,
-            output: process.stdout
+            output: process.stdout,
         });
         rl.question('Enter the code from that page here: ', (code) => {
             rl.close();

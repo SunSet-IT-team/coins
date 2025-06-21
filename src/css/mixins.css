@@ -10,9 +10,9 @@
     padding: 0;
 
     &:focus {
-         outline: none;
-         box-shadow: none;
-     }
+        outline: none;
+        box-shadow: none;
+    }
 }
 
 @define-mixin removeDefaultInput {
@@ -27,8 +27,8 @@
     padding: 0;
 
     &:focus {
-         outline: none;
-         box-shadow: none;
-         border: none;
-     }
+        outline: none;
+        box-shadow: none;
+        border: none;
+    }
 }

@@ -2,17 +2,17 @@ import 'log-timestamp-moment';
 import request from 'superagent';
 import base from '../../src/apps/admin/services/base';
 
-import { token } from '../constants';
+import {token} from '../constants';
 
 export class OrderCheckRequests {
-    constructor () {
+    constructor() {
         this.prefix = 'http://localhost:4000';
 
         this.createOrdersList();
         // this.closeOrdersByList();
     }
 
-    closeOrdersByList () {
+    closeOrdersByList() {
         this.getOredrs().then((orders) => {
             console.log('after get orders', orders);
 
@@ -24,43 +24,38 @@ export class OrderCheckRequests {
         });
     }
 
-    createOrdersList (count = 500) {
+    createOrdersList(count = 500) {
         for (let i = 0; i < count; i++) {
             this.openOrder({
-                'assetName': 'BINANCE:BTCUSDT',
-                'amount': 0.01,
-                'type': 'buy',
-                'takeProfit': '499.00',
-                'stopLoss': '469.00',
-                autoClose: true }).then(() => {
+                assetName: 'BINANCE:BTCUSDT',
+                amount: 0.01,
+                type: 'buy',
+                takeProfit: '499.00',
+                stopLoss: '469.00',
+                autoClose: true,
+            }).then(() => {
                 console.log(`req ${i}`);
             });
         }
     }
 
-    openOrder (order) {
+    openOrder(order) {
         console.log('openOrder');
-        return base(request
-            .post(`${this.prefix}/api/client/order/new`)
-            .send(order)
-            .query({ token })).catch(e => console.log(e));
-    }
-
-    closeOrder (id) {
-        console.log('closeOrder');
         return base(
-            request
-                .get(`${this.prefix}/api/client/order/close/${id}`)
-                .query({ token })
-        );
+            request.post(`${this.prefix}/api/client/order/new`).send(order).query({token})
+        ).catch((e) => console.log(e));
     }
 
-    getOredrs () {
+    closeOrder(id) {
+        console.log('closeOrder');
+        return base(request.get(`${this.prefix}/api/client/order/close/${id}`).query({token}));
+    }
+
+    getOredrs() {
         console.log('before get orders');
         return base(
-            request
-                .get(`${this.prefix}/api/client/order/all-open`)
-                // .query({ token })
+            request.get(`${this.prefix}/api/client/order/all-open`)
+            // .query({ token })
         );
     }
 }

@@ -1,10 +1,10 @@
-import { SET_CHART_SYMBOL } from '../types/types';
+import {SET_CHART_SYMBOL} from '../types/types';
 
-const setChartSymbol = payload => {
-    return ({
+const setChartSymbol = (payload) => {
+    return {
         type: SET_CHART_SYMBOL,
-        payload
-    });
+        payload,
+    };
 };
 
 export default setChartSymbol;

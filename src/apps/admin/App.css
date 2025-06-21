@@ -4,5 +4,7 @@
     justify-content: center;
     align-items: center;
 }
-.stop {display: grid;
-grid-template-rows: 70px 1fr;}
+.stop {
+    display: grid;
+    grid-template-rows: 70px 1fr;
+}

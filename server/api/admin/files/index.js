@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/upload')
-    .post(upload);
+router.route('/upload').post(upload);
 
 export default router;

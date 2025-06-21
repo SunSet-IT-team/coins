@@ -4,7 +4,6 @@ import getPayments from './services/getPayments';
 
 const router = express.Router();
 
-router.route('/')
-    .get(getPayments);
+router.route('/').get(getPayments);
 
 export default router;

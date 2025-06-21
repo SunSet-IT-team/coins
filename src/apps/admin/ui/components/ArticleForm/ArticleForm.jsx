@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import classNames from 'classnames';
 
@@ -12,7 +12,7 @@ import pathOr from '@tinkoff/utils/object/pathOr';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import ErrorIcon from '@material-ui/icons/Error';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import Form from '../Form/Form';
 import getSchema from './ArticleFormSchema';
@@ -24,28 +24,28 @@ import uniqid from 'uniqid';
 const NEWS_VALUES = ['name', 'hidden'];
 
 const mapDispatchToProps = (dispatch) => ({
-    saveArticle: payload => dispatch(saveArticle(payload)),
-    editArticle: payload => dispatch(editArticle(payload))
+    saveArticle: (payload) => dispatch(saveArticle(payload)),
+    editArticle: (payload) => dispatch(editArticle(payload)),
 });
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     error: {
-        backgroundColor: theme.palette.error.dark
+        backgroundColor: theme.palette.error.dark,
     },
     icon: {
-        fontSize: 20
+        fontSize: 20,
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing.unit,
     },
     message: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     margin: {
-        margin: theme.spacing.unit
-    }
+        margin: theme.spacing.unit,
+    },
 });
 
 class ArticleForm extends Component {
@@ -54,25 +54,27 @@ class ArticleForm extends Component {
         editArticle: PropTypes.func.isRequired,
         classes: PropTypes.object.isRequired,
         onDone: PropTypes.func,
-        article: PropTypes.object
+        article: PropTypes.object,
     };
 
     static defaultProps = {
         onDone: noop,
-        article: {}
+        article: {},
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { article } = this.props;
+        const {article} = this.props;
         const ru = pathOr(['texts', 'ru'], '', article);
         const ua = pathOr(['texts', 'ua'], '', article);
 
         this.dirName = article.dirName || uniqid();
 
         this.initialValues = {
-            date: article.date ? format(article.date, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
+            date: article.date
+                ? format(article.date, 'yyyy-MM-dd')
+                : format(new Date(), 'yyyy-MM-dd'),
             ru_name: ru.name || '',
             ua_name: ua.name || '',
             ru_preview: ru.preview || '',
@@ -83,43 +85,52 @@ class ArticleForm extends Component {
             ua_seoTitle: ua.seoTitle || '',
             ru_seoDescription: ru.seoDescription || '',
             ua_seoDescription: ua.seoDescription || '',
-            ru_seoKeywords: { words: ru.seoKeywords && ru.seoKeywords.split(', ') || [], input: '' },
-            ua_seoKeywords: { words: ua.seoKeywords && ua.seoKeywords.split(', ') || [], input: '' },
+            ru_seoKeywords: {
+                words: (ru.seoKeywords && ru.seoKeywords.split(', ')) || [],
+                input: '',
+            },
+            ua_seoKeywords: {
+                words: (ua.seoKeywords && ua.seoKeywords.split(', ')) || [],
+                input: '',
+            },
             hidden: article.hidden || false,
             alias: article.alias,
-            photo: (article.photo ? [{
-                path: article.photo,
-                id: uniqid()
-            }] : []),
-            ...pick(NEWS_VALUES, article)
+            photo: article.photo
+                ? [
+                      {
+                          path: article.photo,
+                          id: uniqid(),
+                      },
+                  ]
+                : [],
+            ...pick(NEWS_VALUES, article),
         };
 
         this.id = prop('id', article);
         this.state = {
-            errorText: ''
+            errorText: '',
         };
     }
 
-    getArticlePayload = (
-        {
-            ru_name: ruName,
-            ua_name: uaName,
-            ru_preview: ruPreview,
-            ua_preview: uaPreview,
-            ru_content: ruContent,
-            ua_content: uaContent,
-            ua_seoTitle: uaSeoTitle,
-            ru_seoTitle: ruSeoTitle,
-            ua_seoDescription: uaSeoDescription,
-            ru_seoDescription: ruSeoDescription,
-            ua_seoKeywords: uaSeoKeywords,
-            ru_seoKeywords: ruSeoKeywords,
-            photo,
-            date,
-            hidden,
-            id,
-            alias
-        }) => {
+    getArticlePayload = ({
+        ru_name: ruName,
+        ua_name: uaName,
+        ru_preview: ruPreview,
+        ua_preview: uaPreview,
+        ru_content: ruContent,
+        ua_content: uaContent,
+        ua_seoTitle: uaSeoTitle,
+        ru_seoTitle: ruSeoTitle,
+        ua_seoDescription: uaSeoDescription,
+        ru_seoDescription: ruSeoDescription,
+        ua_seoKeywords: uaSeoKeywords,
+        ru_seoKeywords: ruSeoKeywords,
+        photo,
+        date,
+        hidden,
+        id,
+        alias,
+    }) => {
         return {
             texts: {
                 ru: {
@@ -128,7 +139,7 @@ class ArticleForm extends Component {
                     content: ruContent,
                     seoTitle: ruSeoTitle,
                     seoDescription: ruSeoDescription,
-                    seoKeywords: ruSeoKeywords.words.join(', ')
+                    seoKeywords: ruSeoKeywords.words.join(', '),
                 },
                 ua: {
                     name: uaName,
@@ -136,34 +147,34 @@ class ArticleForm extends Component {
                     content: uaContent,
                     seoTitle: uaSeoTitle,
                     seoDescription: uaSeoDescription,
-                    seoKeywords: uaSeoKeywords.words.join(', ')
-                }
+                    seoKeywords: uaSeoKeywords.words.join(', '),
+                },
             },
             date: +new Date(date),
             dirName: this.dirName,
             photo: photo[0].path,
             hidden,
             id,
-            alias
+            alias,
         };
     };
 
-    handleSubmit = values => {
+    handleSubmit = (values) => {
         const articlePayload = this.getArticlePayload(values);
-        const { editArticle, saveArticle, onDone } = this.props;
+        const {editArticle, saveArticle, onDone} = this.props;
 
-        (this.id ? editArticle({ ...articlePayload, id: this.id }) : saveArticle(articlePayload))
+        (this.id ? editArticle({...articlePayload, id: this.id}) : saveArticle(articlePayload))
             .then(() => {
                 onDone();
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.code === 'duplication') {
                     this.setState({
-                        errorText: 'Введите уникальные алиас для статьи'
+                        errorText: 'Введите уникальные алиас для статьи',
                     });
                 } else {
                     this.setState({
-                        errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова'
+                        errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова',
                     });
                 }
             });
@@ -171,46 +182,50 @@ class ArticleForm extends Component {
 
     handleHideFailMessage = () => {
         this.setState({
-            errorText: ''
+            errorText: '',
         });
     };
 
-    render () {
-        const { classes } = this.props;
-        const { errorText } = this.state;
+    render() {
+        const {classes} = this.props;
+        const {errorText} = this.state;
 
-        return <div>
-            <Form
-                initialValues={this.initialValues}
-                langs={['ru', 'ua']}
-                schema={getSchema({
-                    data: {
-                        title: this.id ? 'Редактирование статьи' : 'Добавление статьи',
-                        dirName: this.dirName
-                    }
-                })}
-                onSubmit={this.handleSubmit}
-            />
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                onClose={this.handleHideFailMessage}
-                open={!!errorText}
-                autoHideDuration={2000}
-            >
-                <SnackbarContent
-                    className={classNames(classes.error, classes.margin)}
-                    message={
-                        <span id='client-snackbar' className={classes.message}>
-                            <ErrorIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            { errorText }
-                        </span>
-                    }
+        return (
+            <div>
+                <Form
+                    initialValues={this.initialValues}
+                    langs={['ru', 'ua']}
+                    schema={getSchema({
+                        data: {
+                            title: this.id ? 'Редактирование статьи' : 'Добавление статьи',
+                            dirName: this.dirName,
+                        },
+                    })}
+                    onSubmit={this.handleSubmit}
                 />
-            </Snackbar>
-        </div>;
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={this.handleHideFailMessage}
+                    open={!!errorText}
+                    autoHideDuration={2000}
+                >
+                    <SnackbarContent
+                        className={classNames(classes.error, classes.margin)}
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon
+                                    className={classNames(classes.icon, classes.iconVariant)}
+                                />
+                                {errorText}
+                            </span>
+                        }
+                    />
+                </Snackbar>
+            </div>
+        );
     }
 }
 

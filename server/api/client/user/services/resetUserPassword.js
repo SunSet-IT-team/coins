@@ -11,37 +11,43 @@ import templateEmail from './templateEmail/templateEmail';
 import {
     OKEY_STATUS_CODE,
     SERVER_ERROR_STATUS_CODE,
-    UNAUTHORIZED_STATUS_CODE
+    UNAUTHORIZED_STATUS_CODE,
 } from '../../../../constants/constants';
 
 import sendEmail from '../../../../helpers/sendEmail';
 
-const privateKey = fs.readFileSync(path.resolve('./server/privateKeys/adminPrivateKey.ppk'), 'utf8');
+const privateKey = fs.readFileSync(
+    path.resolve('./server/privateKeys/adminPrivateKey.ppk'),
+    'utf8'
+);
 
 const SUBJECT = 'Ваш новый пароль на платформе pro100-capital';
 
-export default function resetUserPassword (req, res) {
+export default function resetUserPassword(req, res) {
     try {
-        const { email } = req.body;
+        const {email} = req.body;
 
-        getUserByEmail(email)
-            .then((user) => {
-                if (!user) {
-                    return res.status(UNAUTHORIZED_STATUS_CODE).send({ error: 'Пользователь не найден' });
-                }
+        getUserByEmail(email).then((user) => {
+            if (!user) {
+                return res.status(UNAUTHORIZED_STATUS_CODE).send({error: 'Пользователь не найден'});
+            }
 
-                const password = Math.random().toString(36).slice(2);
+            const password = Math.random().toString(36).slice(2);
 
-                user.password = md5(password);
+            user.password = md5(password);
 
-                return editUserQuery(user)
-                    .then(() => {
-                        res.status(OKEY_STATUS_CODE).end();
+            return editUserQuery(user)
+                .then(() => {
+                    res.status(OKEY_STATUS_CODE).end();
 
-                        jsonwebtoken.sign({ id: user.id }, privateKey, {
+                    jsonwebtoken.sign(
+                        {id: user.id},
+                        privateKey,
+                        {
                             algorithm: 'RS256',
-                            expiresIn: '99999y'
-                        }, (err, token) => {
+                            expiresIn: '99999y',
+                        },
+                        (err, token) => {
                             if (err || !token) {
                                 return;
                             }
@@ -50,16 +56,20 @@ export default function resetUserPassword (req, res) {
                                 content: templateEmail(
                                     user.name,
                                     user.surname,
-                                    { header: 'Ваш пароль успешно обновлен', body: `Ваш новый пароль - ${password}` },
+                                    {
+                                        header: 'Ваш пароль успешно обновлен',
+                                        body: `Ваш новый пароль - ${password}`,
+                                    },
                                     token
-                                )
+                                ),
                             });
-                        });
-                    })
-                    .catch(() => {
-                        res.status(SERVER_ERROR_STATUS_CODE).end();
-                    });
-            });
+                        }
+                    );
+                })
+                .catch(() => {
+                    res.status(SERVER_ERROR_STATUS_CODE).end();
+                });
+        });
     } catch (e) {
         res.status(SERVER_ERROR_STATUS_CODE).end();
     }

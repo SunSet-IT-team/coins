@@ -1,11 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import uniqid from 'uniqid';
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE, FILES_FOLDER_PATH } from '../../../../constants/constants';
+import {
+    OKEY_STATUS_CODE,
+    SERVER_ERROR_STATUS_CODE,
+    FILES_FOLDER_PATH,
+} from '../../../../constants/constants';
 
-export default function updateAvatar (req, res) {
+export default function updateAvatar(req, res) {
     try {
-        const { dirName, name, data } = req.body;
+        const {dirName, name, data} = req.body;
         const fileNameParse = path.parse(name);
         const file = data.split(';base64,').pop();
 
@@ -22,7 +26,7 @@ export default function updateAvatar (req, res) {
 
         const resultFileName = `${fileNameParse.name}-${uniqid()}${fileNameParse.ext}`;
 
-        fs.writeFileSync(path.resolve(dir, resultFileName), file, { encoding: 'base64' });
+        fs.writeFileSync(path.resolve(dir, resultFileName), file, {encoding: 'base64'});
 
         res.status(OKEY_STATUS_CODE).send(`/${FILES_FOLDER_PATH}/${dirName}/${resultFileName}`);
     } catch (e) {

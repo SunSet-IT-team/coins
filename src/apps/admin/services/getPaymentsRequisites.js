@@ -1,15 +1,11 @@
 import request from 'superagent';
 import base from '../../client/services/base';
 
-import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
+import {TOKEN_LOCAL_STORAGE_NAME} from '../constants/constants';
 
-export default function getPaymentsRequisites () {
+export default function getPaymentsRequisites() {
     const token = localStorage.getItem(TOKEN_LOCAL_STORAGE_NAME);
     return () => {
-        return base(
-            request
-                .get(`/api/admin/payments`)
-                .query({ token })
-        );
+        return base(request.get(`/api/admin/payments`).query({token}));
     };
 }

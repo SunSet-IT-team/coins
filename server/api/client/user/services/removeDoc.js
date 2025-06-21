@@ -5,16 +5,16 @@ import {
     BAD_REQUEST_STATUS_CODE,
     OKEY_STATUS_CODE,
     SERVER_ERROR_STATUS_CODE,
-    DOC_NAMES
+    DOC_NAMES,
 } from '../../../../constants/constants';
 import editUserQuery from '../queries/editUser';
 
 import includes from '@tinkoff/utils/array/includes';
 
-export default function removeDoc (req, res) {
+export default function removeDoc(req, res) {
     try {
-        const { docName } = req.body;
-        const { id } = res.locals.user;
+        const {docName} = req.body;
+        const {id} = res.locals.user;
 
         if (!includes(docName, DOC_NAMES)) {
             return res.status(BAD_REQUEST_STATUS_CODE).end();
@@ -30,16 +30,16 @@ export default function removeDoc (req, res) {
             id,
             docs: {
                 ...res.locals.user.docs,
-                [docName]: null
+                [docName]: null,
             },
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
         })
-            .then(user => {
+            .then((user) => {
                 const oldDocPathFs = path.join(__dirname, '..', oldDoc.path);
 
                 fs.unlinkSync(oldDocPathFs);
                 return res.status(OKEY_STATUS_CODE).send({
-                    user
+                    user,
                 });
             })
             .catch(() => {

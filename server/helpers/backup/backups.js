@@ -5,7 +5,7 @@ import fs from 'fs';
 import format from 'date-fns/format';
 import rimraf from 'rimraf';
 
-import { DATABASE_URL } from '../../constants/constants';
+import {DATABASE_URL} from '../../constants/constants';
 
 const BACKUPS_FOLDER = path.join(__dirname, '..', 'backups');
 const FILE_NAME_REGEX = /dump-/;
@@ -13,7 +13,7 @@ const FILE_NAME_REGEX = /dump-/;
 let lastDumpName = null;
 let preLastDumpName = null;
 
-export default function backups () {
+export default function backups() {
     if (process.env.NODE_ENV !== 'production') {
         return;
     }
@@ -23,7 +23,7 @@ export default function backups () {
     }
 
     fs.readdirSync(BACKUPS_FOLDER)
-        .map(fileName => {
+        .map((fileName) => {
             if (!FILE_NAME_REGEX.test(fileName)) {
                 return null;
             }
@@ -33,10 +33,10 @@ export default function backups () {
 
             return {
                 name: fileName,
-                date: +(new Date(+year, +month, +day))
+                date: +new Date(+year, +month, +day),
             };
         })
-        .filter(file => !!file)
+        .filter((file) => !!file)
         .sort((prevItem, nextItem) => nextItem.date - prevItem.date)
         .forEach((file, i) => {
             if (i === 0) {
@@ -48,7 +48,7 @@ export default function backups () {
             }
         });
 
-    schedule.scheduleJob({ hour: 1 }, (time) => {
+    schedule.scheduleJob({hour: 1}, (time) => {
         const dumpName = `dump-${format(time, 'yyyy-MM-dd')}.tar`;
 
         if (preLastDumpName) {
@@ -65,7 +65,7 @@ export default function backups () {
             uri: DATABASE_URL,
             root: BACKUPS_FOLDER,
             parser: 'json',
-            tar: dumpName
+            tar: dumpName,
         });
     });
 }

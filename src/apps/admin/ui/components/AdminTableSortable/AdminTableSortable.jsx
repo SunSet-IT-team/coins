@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -26,45 +26,55 @@ import AdminTableHeader from '../AdminTableHeader/AdminTableHeader.jsx';
 
 import arrayMove from '../../../utils/arrayMove';
 
-import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import {SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
 
 import difference from '@tinkoff/utils/array/difference';
 import noop from '@tinkoff/utils/function/noop';
 import any from '@tinkoff/utils/array/any';
 
-const ButtonSortable = SortableHandle(({ imageClassName }) => (
+const ButtonSortable = SortableHandle(({imageClassName}) => (
     <ReorderIcon className={imageClassName}> reorder </ReorderIcon>
 ));
 
-const ItemSortable = SortableElement(({ index, isSelectedItem, onFormOpen, handleDelete, tableCells, value, classes }) => (
-    <TableRow
-        hover
-        role='checkbox'
-        aria-checked={isSelectedItem}
-        tabIndex={-1}
-        key={index}
-        selected={isSelectedItem}
-        className={classes.row}
-    >
-        <TableCell className={classes.tabButtonSortable} padding='checkbox'>
-            <ButtonSortable imageClassName={classes.buttonSortable}/>
-        </TableCell>
-        {tableCells.map((tableCell, i) => <TableCell className={classes.tableCell} key={i}>{tableCell.prop(value)}</TableCell>)}
-        <TableCell padding='checkbox' align='right' className={classNames(classes.tableCell, classes.tableCellActions)}>
-            <div className={classes.valueActions}>
-                <IconButton onClick={onFormOpen(value)}>
-                    <EditIcon/>
-                </IconButton>
-                <IconButton onClick={handleDelete(value)}>
-                    <DeleteIcon/>
-                </IconButton>
-            </div>
-        </TableCell>
-    </TableRow>
-));
+const ItemSortable = SortableElement(
+    ({index, isSelectedItem, onFormOpen, handleDelete, tableCells, value, classes}) => (
+        <TableRow
+            hover
+            role="checkbox"
+            aria-checked={isSelectedItem}
+            tabIndex={-1}
+            key={index}
+            selected={isSelectedItem}
+            className={classes.row}
+        >
+            <TableCell className={classes.tabButtonSortable} padding="checkbox">
+                <ButtonSortable imageClassName={classes.buttonSortable} />
+            </TableCell>
+            {tableCells.map((tableCell, i) => (
+                <TableCell className={classes.tableCell} key={i}>
+                    {tableCell.prop(value)}
+                </TableCell>
+            ))}
+            <TableCell
+                padding="checkbox"
+                align="right"
+                className={classNames(classes.tableCell, classes.tableCellActions)}
+            >
+                <div className={classes.valueActions}>
+                    <IconButton onClick={onFormOpen(value)}>
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={handleDelete(value)}>
+                        <DeleteIcon />
+                    </IconButton>
+                </div>
+            </TableCell>
+        </TableRow>
+    )
+);
 
-const SortableWrapp = SortableContainer((
-    {
+const SortableWrapp = SortableContainer(
+    ({
         values,
         page,
         rowsPerPage,
@@ -75,11 +85,9 @@ const SortableWrapp = SortableContainer((
         tableCells,
         classes,
         ...rest
-    }) =>
-    <TableBody>
-        {values
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((value, i) => {
+    }) => (
+        <TableBody>
+            {values.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((value, i) => {
                 const isSelectedItem = isSelected(value.id);
 
                 return (
@@ -96,38 +104,39 @@ const SortableWrapp = SortableContainer((
                     />
                 );
             })}
-        {emptyRows > 0 && (
-            <TableRow style={{ height: 49 * emptyRows }}>
-                <TableCell colSpan={6} className={classes.tableCell}/>
-            </TableRow>
-        )}
-    </TableBody>
+            {emptyRows > 0 && (
+                <TableRow style={{height: 49 * emptyRows}}>
+                    <TableCell colSpan={6} className={classes.tableCell} />
+                </TableRow>
+            )}
+        </TableBody>
+    )
 );
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     paper: {
-        paddingRight: theme.spacing.unit
+        paddingRight: theme.spacing.unit,
     },
     table: {
-        width: '100%'
+        width: '100%',
     },
     tableWrapper: {
-        overflowX: 'auto'
+        overflowX: 'auto',
     },
     row: {
         backgroundColor: '#fff',
         width: '1912px',
         '&:hover $valueActions': {
-            visibility: 'visible'
-        }
+            visibility: 'visible',
+        },
     },
     tabButtonSortable: {
         display: 'table-cell',
         textAlign: 'left',
         width: '239px',
         '@media (max-width:1200px)': {
-            width: 'auto'
-        }
+            width: 'auto',
+        },
     },
     tableCell: {
         color: 'rgba(0, 0, 0, 0.87)',
@@ -139,34 +148,34 @@ const materialStyles = theme => ({
         width: '438px',
         '@media (max-width:780px)': {
             width: 'auto',
-            padding: '4px 12px'
-        }
+            padding: '4px 12px',
+        },
     },
     tableCellActions: {
-        textAlign: 'right'
+        textAlign: 'right',
     },
     buttonSortable: {
         position: 'relative',
         top: '4px',
         marginRight: '12px',
-        cursor: 'pointer'
+        cursor: 'pointer',
     },
     valueActions: {
         visibility: 'hidden',
         '@media (max-width:780px)': {
-            visibility: 'visible'
-        }
+            visibility: 'visible',
+        },
     },
     tableCellHead: {
         '@media (max-width:780px)': {
             width: 'auto',
-            padding: '4px 24px'
+            padding: '4px 24px',
         },
         '@media (max-width:500px)': {
             width: 'auto',
-            padding: '4px 12px'
-        }
-    }
+            padding: '4px 12px',
+        },
+    },
 });
 
 const ROWS_PER_PAGE = 10;
@@ -184,7 +193,7 @@ class AdminTableSortable extends React.Component {
         onFormOpen: PropTypes.func,
         onChange: PropTypes.func,
         onFiltersOpen: PropTypes.func,
-        filters: PropTypes.bool
+        filters: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -198,29 +207,32 @@ class AdminTableSortable extends React.Component {
         onFormOpen: noop,
         onChange: noop,
         onFiltersOpen: noop,
-        filters: false
+        filters: false,
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { values } = this.props;
+        const {values} = this.props;
 
         this.state = {
             selected: [],
             values,
             page: 0,
             rowsPerPage: values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : values.length,
-            checkboxIndeterminate: false
+            checkboxIndeterminate: false,
         };
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.values !== this.props.values) {
             this.setState({
-                rowsPerPage: nextProps.values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : nextProps.values.length,
+                rowsPerPage:
+                    nextProps.values.length > ROWS_PER_PAGE
+                        ? ROWS_PER_PAGE
+                        : nextProps.values.length,
                 selected: [],
-                values: nextProps.values
+                values: nextProps.values,
             });
         }
     }
@@ -228,79 +240,83 @@ class AdminTableSortable extends React.Component {
     handleSelectedCloseClick = () => {
         this.setState({
             selected: [],
-            checkboxIndeterminate: false
+            checkboxIndeterminate: false,
         });
     };
 
     handleChangePage = (event, page) => {
-        const checkboxIndeterminate = this.checkCheckboxIndeterminate({ page });
+        const checkboxIndeterminate = this.checkCheckboxIndeterminate({page});
 
-        this.setState({ page, checkboxIndeterminate });
+        this.setState({page, checkboxIndeterminate});
     };
 
-    handleChangeRowsPerPage = ({ target: { value } }) => {
-        const { values } = this.state;
+    handleChangeRowsPerPage = ({target: {value}}) => {
+        const {values} = this.state;
         const rowsPerPage = values.length > value ? value : values.length;
-        const checkboxIndeterminate = this.checkCheckboxIndeterminate({ rowsPerPage });
+        const checkboxIndeterminate = this.checkCheckboxIndeterminate({rowsPerPage});
 
-        this.setState({ rowsPerPage, checkboxIndeterminate });
+        this.setState({rowsPerPage, checkboxIndeterminate});
     };
 
-    handleDelete = value => () => {
+    handleDelete = (value) => () => {
         this.setState({
-            valueForDelete: value
+            valueForDelete: value,
         });
     };
 
     handleWarningDisagree = () => {
         this.setState({
-            valueForDelete: null
+            valueForDelete: null,
         });
     };
 
     handleWarningAgree = () => {
-        const { valueForDelete } = this.state;
+        const {valueForDelete} = this.state;
 
-        this.props.onDelete([valueForDelete.id])
-            .then(() => {
-                this.setState({
-                    valueForDelete: null
-                });
+        this.props.onDelete([valueForDelete.id]).then(() => {
+            this.setState({
+                valueForDelete: null,
             });
+        });
     };
 
-    checkCheckboxIndeterminate = (
-        {
-            rowsPerPage = this.state.rowsPerPage,
-            page = this.state.page,
-            selected = this.state.selected
-        } = {}
-    ) => {
-        const { values } = this.state;
-        const visibleValues = values
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    checkCheckboxIndeterminate = ({
+        rowsPerPage = this.state.rowsPerPage,
+        page = this.state.page,
+        selected = this.state.selected,
+    } = {}) => {
+        const {values} = this.state;
+        const visibleValues = values.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
         return !difference(visibleValues, selected).length;
     };
 
-    isSelected = id => any(value => value.id === id, this.state.selected);
+    isSelected = (id) => any((value) => value.id === id, this.state.selected);
 
-    onDragEnd = ({ oldIndex, newIndex }) => {
-        const { values } = this.state;
+    onDragEnd = ({oldIndex, newIndex}) => {
+        const {values} = this.state;
         const newValues = arrayMove(values, oldIndex, newIndex).map((value, i) => {
-            return { ...value, positionIndex: i };
+            return {...value, positionIndex: i};
         });
 
         this.setState({
-            values: newValues
+            values: newValues,
         });
 
-        this.props.onChange(newValues.map(({ id }) => id));
+        this.props.onChange(newValues.map(({id}) => id));
     };
 
-    render () {
-        const { classes, headerRows, tableCells, headerText, deleteValueWarningTitle, deleteValuesWarningTitle, filters } = this.props;
-        const { selected, rowsPerPage, page, values, valueForDelete } = this.state;
+    render() {
+        const {
+            classes,
+            headerRows,
+            tableCells,
+            headerText,
+            deleteValueWarningTitle,
+            deleteValuesWarningTitle,
+            filters,
+        } = this.props;
+        const {selected, rowsPerPage, page, values, valueForDelete} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, values.length - page * rowsPerPage);
 
         return (
@@ -316,23 +332,20 @@ class AdminTableSortable extends React.Component {
                     filters={filters}
                 />
                 <div className={classes.tableWrapper}>
-                    <Table className={classes.table} aria-labelledby='tableTitle'>
+                    <Table className={classes.table} aria-labelledby="tableTitle">
                         <TableHead>
                             <TableRow>
-                                <TableCell>
-                                </TableCell>
-                                {headerRows.map(
-                                    (row, i) => (
-                                        <TableCell key={i} className={classes.tableCellHead}>
-                                            {row.label}
-                                        </TableCell>
-                                    )
-                                )}
-                                <TableCell align='right'/>
+                                <TableCell></TableCell>
+                                {headerRows.map((row, i) => (
+                                    <TableCell key={i} className={classes.tableCellHead}>
+                                        {row.label}
+                                    </TableCell>
+                                ))}
+                                <TableCell align="right" />
                             </TableRow>
                         </TableHead>
                         <SortableWrapp
-                            axis='xy'
+                            axis="xy"
                             onFormOpen={this.props.onFormOpen}
                             handleDelete={this.handleDelete}
                             tableCells={tableCells}
@@ -349,26 +362,25 @@ class AdminTableSortable extends React.Component {
                 </div>
                 <TablePagination
                     rowsPerPageOptions={[10, 20, 30]}
-                    component='div'
+                    component="div"
                     count={values.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-                <Dialog
-                    open={!!valueForDelete}
-                    onClose={this.handleWarningDisagree}
-                >
+                <Dialog open={!!valueForDelete} onClose={this.handleWarningDisagree}>
                     <DialogTitle>{deleteValueWarningTitle}</DialogTitle>
                     <DialogContent className={classes.warningContent}>
-                        <DialogContentText>{valueForDelete && valueForDelete.name}</DialogContentText>
+                        <DialogContentText>
+                            {valueForDelete && valueForDelete.name}
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleWarningDisagree} color='primary'>
+                        <Button onClick={this.handleWarningDisagree} color="primary">
                             Нет
                         </Button>
-                        <Button onClick={this.handleWarningAgree} color='primary' autoFocus>
+                        <Button onClick={this.handleWarningAgree} color="primary" autoFocus>
                             Да
                         </Button>
                     </DialogActions>

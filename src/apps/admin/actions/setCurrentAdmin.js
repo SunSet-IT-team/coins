@@ -1,8 +1,8 @@
-import { SET_CURRENT_ADMIN } from '../types/types';
+import {SET_CURRENT_ADMIN} from '../types/types';
 
-const setCurrentAdmin = payload => ({
+const setCurrentAdmin = (payload) => ({
     type: SET_CURRENT_ADMIN,
-    payload
+    payload,
 });
 
 export default setCurrentAdmin;

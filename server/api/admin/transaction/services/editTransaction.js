@@ -1,4 +1,4 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 
 import prepareTransaction from '../utils/prepareTransaction';
 
@@ -11,20 +11,20 @@ import getAllUsers from '../../../client/user/queries/getAllUsers';
 import getAllTransactions from '../../../client/transaction/queries/getAllTransactions';
 import getUserById from '../../../client/user/queries/getUserById';
 
-export default function editTransaction (req, res) {
+export default function editTransaction(req, res) {
     const updatedTransaction = prepareTransaction(req.body.transaction);
-    const { user } = req.body;
+    const {user} = req.body;
 
     getTransactionById(updatedTransaction.id)
-        .then(transaction => {
+        .then((transaction) => {
             getUserById(user.id)
-                .then(user => {
+                .then((user) => {
                     const diff = +updatedTransaction.value - transaction[0].value;
                     const balance = user.balance + diff;
                     const mainBalance = user.mainBalance + diff;
                     const bonuses = user.bonuses + diff;
                     const credFacilities = user.credFacilities + diff;
-                    const info = { id: user.id };
+                    const info = {id: user.id};
 
                     if (updatedTransaction.type === 'deposit') {
                         info.balance = checkBalance(balance);
@@ -46,8 +46,11 @@ export default function editTransaction (req, res) {
                                     getAllUsers()
                                         .then((users) => {
                                             getAllTransactions()
-                                                .then(transactions => {
-                                                    res.status(OKEY_STATUS_CODE).send({ transactions, users });
+                                                .then((transactions) => {
+                                                    res.status(OKEY_STATUS_CODE).send({
+                                                        transactions,
+                                                        users,
+                                                    });
                                                 })
                                                 .catch(() => {
                                                     res.status(SERVER_ERROR_STATUS_CODE).end();

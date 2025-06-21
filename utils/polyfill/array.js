@@ -1,5 +1,6 @@
 if (!Array.prototype.find) {
-    Array.prototype.find = function (predicate) { // eslint-disable-line no-extend-native
+    Array.prototype.find = function (predicate) {
+        // eslint-disable-line no-extend-native
         if (this == null) {
             throw new TypeError('Array.prototype.find called on null or undefined');
         }

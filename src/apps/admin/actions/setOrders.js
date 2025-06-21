@@ -1,8 +1,8 @@
-import { SET_ORDERS } from '../types/types';
+import {SET_ORDERS} from '../types/types';
 
-const setOrders = payload => ({
+const setOrders = (payload) => ({
     type: SET_ORDERS,
-    payload
+    payload,
 });
 
 export default setOrders;
