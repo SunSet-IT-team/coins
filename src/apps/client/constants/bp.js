@@ -8,5 +8,5 @@ module.exports = {
     DESKTOP_S: 1024,
     DESKTOP_M: 1360,
     DESKTOP_L: 1600,
-    DESKTOP_XL: 1716
+    DESKTOP_XL: 1716,
 };

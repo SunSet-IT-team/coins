@@ -1,8 +1,8 @@
-import { SET_CHART_LINE } from '../types/types';
+import {SET_CHART_LINE} from '../types/types';
 
-const setChartLine = payload => ({
+const setChartLine = (payload) => ({
     type: SET_CHART_LINE,
-    payload
+    payload,
 });
 
 export default setChartLine;

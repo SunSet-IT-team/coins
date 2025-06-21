@@ -2,10 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
 
-export default function multipart () {
+export default function multipart() {
     const destination = 'src/apps/admin/files';
     const exists = fs.existsSync(path.resolve(__dirname, '..', 'src/apps/admin'));
-    const destinationPath = exists ? path.resolve(__dirname, '..', destination) : path.resolve(__dirname, '..', '..', destination);
+    const destinationPath = exists
+        ? path.resolve(__dirname, '..', destination)
+        : path.resolve(__dirname, '..', '..', destination);
 
     if (!fs.existsSync(destinationPath)) {
         fs.mkdirSync(destinationPath);
@@ -16,7 +18,7 @@ export default function multipart () {
         },
         filename: function (req, file, cb) {
             const extname = path.extname(file.originalname);
-            const fileNameWithoutExt = file.originalname.slice(0, -(extname.length));
+            const fileNameWithoutExt = file.originalname.slice(0, -extname.length);
 
             /* if (fileNameWithoutExt === 'usdt' || fileNameWithoutExt === 'btc') */
             if (extname === '.png') {
@@ -24,8 +26,8 @@ export default function multipart () {
             } else {
                 cb(null, `${fileNameWithoutExt}-${Date.now()}${extname}`);
             }
-        }
+        },
     });
 
-    return multer({ storage }).any();
+    return multer({storage}).any();
 }

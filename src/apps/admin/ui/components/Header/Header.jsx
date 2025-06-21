@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import { matchPath } from 'react-router';
+import {matchPath} from 'react-router';
 
 import routes from '../../../constants/routes';
 
-import { withRouter, Link } from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
@@ -19,28 +19,28 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import logout from '../../../services/logout';
 
 import propOr from '@tinkoff/utils/object/propOr';
 import find from '@tinkoff/utils/array/find';
 
-import { ADMIN_PANEL_URL } from '../../../constants/constants';
+import {ADMIN_PANEL_URL} from '../../../constants/constants';
 
 const materialStyles = {
     title: {
-        flexGrow: 1
+        flexGrow: 1,
     },
     userInfo: {
-        marginRight: '16px'
+        marginRight: '16px',
     },
     popper: {
-        zIndex: 1
+        zIndex: 1,
     },
     button: {
-        textAlign: 'center'
+        textAlign: 'center',
     },
     rate: {
         marginLeft: '5px',
@@ -51,20 +51,20 @@ const materialStyles = {
         borderRadius: '50%',
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: '11px'
-    }
+        fontSize: '11px',
+    },
 };
 
-const mapStateToProps = ({ data, application }) => {
+const mapStateToProps = ({data, application}) => {
     return {
         outputs: data.unvisitedOutput.length,
         messages: data.unvisitedMessages.length,
-        currentAdmin: application.currentAdmin
+        currentAdmin: application.currentAdmin,
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    logout: payload => dispatch(logout(payload))
+    logout: (payload) => dispatch(logout(payload)),
 });
 
 class Header extends Component {
@@ -74,27 +74,29 @@ class Header extends Component {
         logout: PropTypes.func.isRequired,
         outputs: PropTypes.number.isRequired,
         messages: PropTypes.number.isRequired,
-        currentAdmin: PropTypes.object
+        currentAdmin: PropTypes.object,
     };
 
     static defaultProps = {
-        location: {}
+        location: {},
     };
 
     state = {
-        menuShowed: false
+        menuShowed: false,
     };
 
     getHeaderTitle = () => {
-        const { location: { pathname } } = this.props;
-        const match = find(route => matchPath(pathname, route), routes);
+        const {
+            location: {pathname},
+        } = this.props;
+        const match = find((route) => matchPath(pathname, route), routes);
 
         return propOr('title', 'Такой страницы не существует', match);
     };
 
     handleToggle = () => {
         this.setState({
-            menuShowed: !this.state.menuShowed
+            menuShowed: !this.state.menuShowed,
         });
     };
 
@@ -103,76 +105,112 @@ class Header extends Component {
             return;
         }
 
-        this.setState({ menuShowed: false });
+        this.setState({menuShowed: false});
     };
 
     handleLogout = () => {
         this.props.logout();
     };
 
-    render () {
-        const { classes, outputs, messages, currentAdmin } = this.props;
-        const { menuShowed } = this.state;
+    render() {
+        const {classes, outputs, messages, currentAdmin} = this.props;
+        const {menuShowed} = this.state;
         const isManager = currentAdmin && currentAdmin.id === 'manager_id';
 
-        return <AppBar position='static'>
-            <Toolbar>
-                <IconButton
-                    color='inherit'
-                    aria-label='Menu'
-                    onClick={this.handleToggle}
-                    buttonRef={node => {
-                        this.anchorEl = node;
-                    }}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <Popper open={menuShowed} anchorEl={this.anchorEl} className={classes.popper} transition>
-                    {({ TransitionProps, placement }) => (
-                        <Grow
-                            {...TransitionProps}
-                            id="menu-list-grow"
-                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                        >
-                            <Paper>
-                                <ClickAwayListener onClickAway={this.handleClose}>
-                                    <MenuList>
-                                        {routes.map((route, i) => {
-                                            if (route.notMenu || (route.adminOnly && isManager)) {
-                                                return null;
-                                            }
-                                            return <MenuItem key={i} component={Link} onClick={this.handleClose} to={route.path}>
-                                                {route.title}
-                                                {route.id === 'moneyOutput' && outputs ? <span className={classes.rate}>{outputs}</span> : undefined}
-                                                {route.id === 'messages' && messages ? <span className={classes.rate}>{messages}</span> : undefined}
-                                            </MenuItem>;
-                                        })}
-                                    </MenuList>
-                                </ClickAwayListener>
-                            </Paper>
-                        </Grow>
-                    )}
-                </Popper>
-                <Typography variant='h6' color='inherit' className={classes.title}>
-                    {this.getHeaderTitle()}
-                </Typography>
-                {isManager
-                    ? <Typography color='inherit' className={classes.userInfo}>
-                        {currentAdmin.name || currentAdmin.surname ? (currentAdmin.name + ' ' + currentAdmin.surname).trim() : currentAdmin.email}
-                        {' '}(менеджер)
-                    </Typography>
-                    : <Button color='inherit'
-                        component={Link}
-                        to={`${ADMIN_PANEL_URL}/credentials`}
-                        className={classes.button}
+        return (
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        color="inherit"
+                        aria-label="Menu"
+                        onClick={this.handleToggle}
+                        buttonRef={(node) => {
+                            this.anchorEl = node;
+                        }}
                     >
-                        Сменить учетные данные
+                        <MenuIcon />
+                    </IconButton>
+                    <Popper
+                        open={menuShowed}
+                        anchorEl={this.anchorEl}
+                        className={classes.popper}
+                        transition
+                    >
+                        {({TransitionProps, placement}) => (
+                            <Grow
+                                {...TransitionProps}
+                                id="menu-list-grow"
+                                style={{
+                                    transformOrigin:
+                                        placement === 'bottom' ? 'center top' : 'center bottom',
+                                }}
+                            >
+                                <Paper>
+                                    <ClickAwayListener onClickAway={this.handleClose}>
+                                        <MenuList>
+                                            {routes.map((route, i) => {
+                                                if (
+                                                    route.notMenu ||
+                                                    (route.adminOnly && isManager)
+                                                ) {
+                                                    return null;
+                                                }
+                                                return (
+                                                    <MenuItem
+                                                        key={i}
+                                                        component={Link}
+                                                        onClick={this.handleClose}
+                                                        to={route.path}
+                                                    >
+                                                        {route.title}
+                                                        {route.id === 'moneyOutput' && outputs ? (
+                                                            <span className={classes.rate}>
+                                                                {outputs}
+                                                            </span>
+                                                        ) : undefined}
+                                                        {route.id === 'messages' && messages ? (
+                                                            <span className={classes.rate}>
+                                                                {messages}
+                                                            </span>
+                                                        ) : undefined}
+                                                    </MenuItem>
+                                                );
+                                            })}
+                                        </MenuList>
+                                    </ClickAwayListener>
+                                </Paper>
+                            </Grow>
+                        )}
+                    </Popper>
+                    <Typography variant="h6" color="inherit" className={classes.title}>
+                        {this.getHeaderTitle()}
+                    </Typography>
+                    {isManager ? (
+                        <Typography color="inherit" className={classes.userInfo}>
+                            {currentAdmin.name || currentAdmin.surname
+                                ? (currentAdmin.name + ' ' + currentAdmin.surname).trim()
+                                : currentAdmin.email}{' '}
+                            (менеджер)
+                        </Typography>
+                    ) : (
+                        <Button
+                            color="inherit"
+                            component={Link}
+                            to={`${ADMIN_PANEL_URL}/credentials`}
+                            className={classes.button}
+                        >
+                            Сменить учетные данные
+                        </Button>
+                    )}
+                    <Button color="inherit" onClick={this.handleLogout}>
+                        Выйти
                     </Button>
-                }
-                <Button color='inherit' onClick={this.handleLogout}>Выйти</Button>
-            </Toolbar>
-        </AppBar >;
+                </Toolbar>
+            </AppBar>
+        );
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(materialStyles)(Header)));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(withStyles(materialStyles)(Header))
+);

@@ -1,8 +1,8 @@
-import { SET_CHART_SYMBOL_GROUP } from '../types/types';
+import {SET_CHART_SYMBOL_GROUP} from '../types/types';
 
-const setChartSymbolGroup = payload => ({
+const setChartSymbolGroup = (payload) => ({
     type: SET_CHART_SYMBOL_GROUP,
-    payload
+    payload,
 });
 
 export default setChartSymbolGroup;

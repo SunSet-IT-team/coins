@@ -1,11 +1,11 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 
 import getMessagesQuery from '../../../client/message/queries/getMessages';
 
-export default function getHistory (req, res) {
+export default function getHistory(req, res) {
     try {
         return getMessagesQuery()
-            .then(messages => {
+            .then((messages) => {
                 return res.status(OKEY_STATUS_CODE).send(messages);
             })
             .catch(() => {

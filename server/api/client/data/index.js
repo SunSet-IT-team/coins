@@ -4,7 +4,6 @@ import getPrices from './services/getPrices';
 
 const router = express.Router();
 
-router.route('/prices')
-    .get(getPrices);
+router.route('/prices').get(getPrices);
 
 export default router;

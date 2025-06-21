@@ -12,12 +12,12 @@ import getAdminByLogin from '../queries/getAdminByLogin';
 
 const privateKey = fs.readFileSync(
     path.resolve('./server/privateKeys/adminPrivateKey.ppk'),
-    'utf8',
+    'utf8'
 );
 
 export default function authenticate(req, res) {
     try {
-        const { login, password } = req.body;
+        const {login, password} = req.body;
 
         getAdminByLogin(login)
             .then((admin) => {
@@ -51,7 +51,7 @@ export default function authenticate(req, res) {
                                 surname: admin.surname,
                             },
                         });
-                    },
+                    }
                 );
             })
             .catch(() => {

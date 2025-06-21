@@ -1,13 +1,17 @@
 import md5 from 'md5';
 
-import { OKEY_STATUS_CODE, FORBIDDEN_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {
+    OKEY_STATUS_CODE,
+    FORBIDDEN_STATUS_CODE,
+    SERVER_ERROR_STATUS_CODE,
+} from '../../../../constants/constants';
 
 import getAdminByLogin from '../queries/getAdminByLogin';
 import changeCredentialsQuery from '../queries/changeCredentials';
 
-export default function changeCredentials (req, res) {
+export default function changeCredentials(req, res) {
     try {
-        const { oldCredentials = {}, newCredentials = {} } = req.body;
+        const {oldCredentials = {}, newCredentials = {}} = req.body;
 
         getAdminByLogin(oldCredentials.login)
             .then((admin) => {
@@ -20,7 +24,7 @@ export default function changeCredentials (req, res) {
                     password: md5(newCredentials.password),
                     email: newCredentials.email,
                     id: admin.id,
-                    qr: admin.qr || {}
+                    qr: admin.qr || {},
                 })
                     .then(() => {
                         res.status(OKEY_STATUS_CODE).end();

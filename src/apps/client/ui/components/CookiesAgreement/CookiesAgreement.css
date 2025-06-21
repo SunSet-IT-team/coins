@@ -19,12 +19,12 @@
         left: 0;
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         bottom: 56px;
         width: 100%;
     }
 
-    @media(max-height: 544px) and (orientation: landscape) {
+    @media (max-height: 544px) and (orientation: landscape) {
         bottom: 56px;
     }
 }
@@ -86,7 +86,7 @@
     height: 28px;
     transform: translate(50%, -50%);
     border-radius: 50%;
-    background-color:  #161A2A;
+    background-color: #161a2a;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -97,7 +97,7 @@
     }
 }
 
-.agreementButton{
+.agreementButton {
     @mixin removeDefaultButton;
     font-family: FuturaPt-Medium;
     font-size: 16px;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +18,7 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import noop from '@tinkoff/utils/function/noop';
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     paper: {
         margin: '30px 0 0 30px',
         display: 'inline-block',
@@ -26,8 +26,8 @@ const materialStyles = theme => ({
         '@media (max-width:1200px)': {
             paddingRight: '0',
             margin: '30px 0 0 0',
-            display: 'block'
-        }
+            display: 'block',
+        },
     },
     drawer: {
         width: '400px',
@@ -35,8 +35,9 @@ const materialStyles = theme => ({
         '@media (max-width:1200px)': {
             width: '100%',
             maxWidth: 'unset',
-            boxShadow: '0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12)'
-        }
+            boxShadow:
+                '0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12)',
+        },
     },
     drawerPaper: {
         top: '0px',
@@ -47,35 +48,35 @@ const materialStyles = theme => ({
             zIndex: '0',
             minHeight: 'unset',
             width: '100%',
-            maxWidth: 'unset'
-        }
+            maxWidth: 'unset',
+        },
     },
     content: {
         flexGrow: 1,
         padding: '30px',
         '@media (max-width:600px)': {
-            padding: '15px'
+            padding: '15px',
         },
         '@media (max-width:400px)': {
-            padding: '15px 0'
-        }
+            padding: '15px 0',
+        },
     },
     toolbar: {
-        height: '0px'
+        height: '0px',
     },
     toolbarNav: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '5px 30px 5px 30px'
+        padding: '5px 30px 5px 30px',
     },
     categoryTitle: {
-        height: '30px'
+        height: '30px',
     },
     modal: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     modalContent: {
         position: 'absolute',
@@ -87,9 +88,9 @@ const materialStyles = theme => ({
         overflowY: 'auto',
         maxHeight: '100vh',
         '@media (max-width:1300px)': {
-            width: '90%'
-        }
-    }
+            width: '90%',
+        },
+    },
 });
 
 const ROWS_PER_PAGE = 10;
@@ -98,56 +99,58 @@ class AdminSideBar extends React.Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         values: PropTypes.array,
-        onDelete: PropTypes.func
+        onDelete: PropTypes.func,
     };
 
     static defaultProps = {
         values: [],
-        onDelete: noop
+        onDelete: noop,
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { values } = this.props;
+        const {values} = this.props;
 
         this.state = {
             selected: [],
             page: 0,
             rowsPerPage: values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : values.length,
-            checkboxIndeterminate: false
+            checkboxIndeterminate: false,
         };
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.values !== this.props.values) {
             this.setState({
-                rowsPerPage: nextProps.values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : nextProps.values.length,
-                selected: []
+                rowsPerPage:
+                    nextProps.values.length > ROWS_PER_PAGE
+                        ? ROWS_PER_PAGE
+                        : nextProps.values.length,
+                selected: [],
             });
         }
     }
 
     handleWarningDisagree = () => {
         this.setState({
-            valueForDelete: null
+            valueForDelete: null,
         });
     };
 
     handleWarningAgree = () => {
-        const { valueForDelete } = this.state;
+        const {valueForDelete} = this.state;
 
-        this.props.onDelete([valueForDelete.id])
-            .then(() => {
-                this.setState({
-                    valueForDelete: null
-                });
+        this.props.onDelete([valueForDelete.id]).then(() => {
+            this.setState({
+                valueForDelete: null,
             });
+        });
     };
 
-    render () {
-        const { classes } = this.props;
-        const { valueForDelete } = this.state;
+    render() {
+        const {classes} = this.props;
+        const {valueForDelete} = this.state;
 
         return (
             <Paper className={classes.paper}>
@@ -156,40 +159,39 @@ class AdminSideBar extends React.Component {
                     variant="permanent"
                     anchor="right"
                     classes={{
-                        paper: classes.drawerPaper
+                        paper: classes.drawerPaper,
                     }}
                 >
                     <div className={classes.toolbarNav}>
-                        <Typography variant='h6' className={classes.categoryTitle}>Категории услуг</Typography>
-                        <Tooltip title='Добавление'>
-                            <IconButton aria-label='Add'>
-                                <AddIcon/>
+                        <Typography variant="h6" className={classes.categoryTitle}>
+                            Категории услуг
+                        </Typography>
+                        <Tooltip title="Добавление">
+                            <IconButton aria-label="Add">
+                                <AddIcon />
                             </IconButton>
                         </Tooltip>
                     </div>
-                    <Divider/>
-                    <div className={classes.toolbar}/>
+                    <Divider />
+                    <div className={classes.toolbar} />
                     {/* values list or table */}
                 </Drawer>
                 <Modal className={classes.modal} disableEnforceFocus open={false}>
-                    <Paper className={classes.modalContent}>
-                        {/* add new value form */}
-                    </Paper>
+                    <Paper className={classes.modalContent}>{/* add new value form */}</Paper>
                 </Modal>
-                <Dialog
-                    open={!!valueForDelete}
-                    onClose={this.handleWarningDisagree}
-                >
+                <Dialog open={!!valueForDelete} onClose={this.handleWarningDisagree}>
                     <DialogTitle>Вы точно хотите удалить категорию услуги?</DialogTitle>
                     <DialogContent className={classes.warningContent}>
-                        <DialogContentText>{valueForDelete && valueForDelete.name}</DialogContentText>
+                        <DialogContentText>
+                            {valueForDelete && valueForDelete.name}
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleWarningDisagree} color='primary'>
-                                Нет
+                        <Button onClick={this.handleWarningDisagree} color="primary">
+                            Нет
                         </Button>
-                        <Button onClick={this.handleWarningAgree} color='primary' autoFocus>
-                                Да
+                        <Button onClick={this.handleWarningAgree} color="primary" autoFocus>
+                            Да
                         </Button>
                     </DialogActions>
                 </Dialog>

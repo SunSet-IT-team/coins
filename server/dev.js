@@ -1,7 +1,7 @@
 /* eslint-disable import/no-commonjs, global-require, no-console */
 const path = require('path');
 const webpack = require('webpack');
-const { spawn } = require('child_process');
+const {spawn} = require('child_process');
 const MemoryFs = require('memory-fs');
 const nodeFs = require('fs');
 
@@ -10,7 +10,7 @@ const pkg = require('../package.json');
 
 const childEnv = Object.assign(process.env, {
     VERSION: pkg.version,
-    PORT: (+process.env.PORT || 3000)
+    PORT: +process.env.PORT || 3000,
 });
 const isDebugMode = process.env.DEBUG_SERVER;
 
@@ -34,7 +34,7 @@ compiler.hooks.watchRun.tap('DevServer', () => {
     console.log('Rebuild...');
 });
 
-compiler.hooks.done.tap('DevServer', stats => {
+compiler.hooks.done.tap('DevServer', (stats) => {
     if (stats.hasErrors()) {
         console.error(stats.compilation.errors);
         return;
@@ -47,7 +47,7 @@ compiler.hooks.done.tap('DevServer', stats => {
     const createChildProcess = () => {
         const childOpts = {
             env: childEnv,
-            stdio: ['pipe', process.stdout, process.stderr]
+            stdio: ['pipe', process.stdout, process.stderr],
         };
 
         if (isDebugMode) {
@@ -60,7 +60,7 @@ compiler.hooks.done.tap('DevServer', stats => {
         }
         child = spawn('node', [], childOpts);
 
-        child.stdin.on('error', err => {
+        child.stdin.on('error', (err) => {
             console.error(err);
         });
 
@@ -76,7 +76,7 @@ compiler.hooks.done.tap('DevServer', stats => {
     }
 });
 
-compiler.watch({}, err => {
+compiler.watch({}, (err) => {
     if (err) {
         console.error(err);
     }

@@ -4,16 +4,16 @@ import path from 'path';
 import {
     BAD_REQUEST_STATUS_CODE,
     OKEY_STATUS_CODE,
-    SERVER_ERROR_STATUS_CODE
+    SERVER_ERROR_STATUS_CODE,
 } from '../../../../constants/constants';
 import editUserQuery from '../queries/editUser';
 
 import remove from '@tinkoff/utils/array/remove';
 
-export default function removeOtherDoc (req, res) {
+export default function removeOtherDoc(req, res) {
     try {
-        const { index } = req.body;
-        const { id } = res.locals.user;
+        const {index} = req.body;
+        const {id} = res.locals.user;
 
         const othersDoc = res.locals.user.docs.others;
 
@@ -28,16 +28,16 @@ export default function removeOtherDoc (req, res) {
             id,
             docs: {
                 ...res.locals.user.docs,
-                others: !newDocs.length ? null : newDocs
+                others: !newDocs.length ? null : newDocs,
             },
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
         })
-            .then(user => {
+            .then((user) => {
                 const oldDocPathFs = path.join(__dirname, '..', oldDoc.path);
 
                 fs.unlinkSync(oldDocPathFs);
                 return res.status(OKEY_STATUS_CODE).send({
-                    user
+                    user,
                 });
             })
             .catch(() => {

@@ -1,19 +1,27 @@
 import io from 'socket.io-client';
 
-import { TOKEN_CLIENT_LOCAL_STORAGE_NAME } from '../../constants/constants';
+import {TOKEN_CLIENT_LOCAL_STORAGE_NAME} from '../../constants/constants';
 import EventEmitter from 'eventemitter3';
-import { AUTO_CLOSE_ORDER_EVENT, AUTO_CLOSE_ORDER_EVENT_CLIENT, DOMAIN, WS_MESSAGES_PORT } from '../../../../../server/constants/constants';
+import {
+    AUTO_CLOSE_ORDER_EVENT,
+    AUTO_CLOSE_ORDER_EVENT_CLIENT,
+    DOMAIN,
+    WS_MESSAGES_PORT,
+} from '../../../../../server/constants/constants';
 
-const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? `wss://${DOMAIN}:${WS_MESSAGES_PORT}` : `ws://localhost:${WS_MESSAGES_PORT}`;
+const WEBSOCKET_URL =
+    process.env.NODE_ENV === 'production'
+        ? `wss://${DOMAIN}:${WS_MESSAGES_PORT}`
+        : `ws://localhost:${WS_MESSAGES_PORT}`;
 
 class MessageWebsocketController {
     events = new EventEmitter();
 
-    connect () {
+    connect() {
         if (this.socket) {
             return;
         }
-        const socket = io(WEBSOCKET_URL, { transports: ['websocket'] });
+        const socket = io(WEBSOCKET_URL, {transports: ['websocket']});
 
         this.socket = socket;
 
@@ -22,29 +30,31 @@ class MessageWebsocketController {
 
             socket.emit('token', {
                 type: 'client',
-                token
+                token,
             });
         });
 
-        socket.on('message', data => {
+        socket.on('message', (data) => {
             this.events.emit('message', data);
         });
 
-        socket.on(AUTO_CLOSE_ORDER_EVENT, data => this.events.emit(AUTO_CLOSE_ORDER_EVENT_CLIENT, data));
+        socket.on(AUTO_CLOSE_ORDER_EVENT, (data) =>
+            this.events.emit(AUTO_CLOSE_ORDER_EVENT_CLIENT, data)
+        );
     }
 
-    disconnect () {
+    disconnect() {
         this.socket && this.socket.disconnect();
         this.socket = null;
     }
 
-    sendMessage ({ text }) {
+    sendMessage({text}) {
         if (!this.socket) {
             return;
         }
 
         this.socket.emit('message', {
-            text
+            text,
         });
     }
 }

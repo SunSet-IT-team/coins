@@ -1,4 +1,8 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE, DATABASE_URL } from '../../../../constants/constants';
+import {
+    OKEY_STATUS_CODE,
+    SERVER_ERROR_STATUS_CODE,
+    DATABASE_URL,
+} from '../../../../constants/constants';
 
 import path from 'path';
 import rimraf from 'rimraf';
@@ -10,7 +14,7 @@ const uploader = multipart();
 
 const FILES_FOLDER = path.join(__dirname, '../src/apps/admin/files');
 
-export default function upload (req, res) {
+export default function upload(req, res) {
     try {
         uploader(req, res, (err) => {
             if (err || !req.files[0]) {
@@ -34,7 +38,7 @@ export default function upload (req, res) {
                     rimraf.sync(tarPath);
 
                     return res.status(OKEY_STATUS_CODE).end();
-                }
+                },
             });
 
             res.status(OKEY_STATUS_CODE).send(`/${file.path.replace(/\\/g, '/')}`);

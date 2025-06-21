@@ -194,5 +194,5 @@ a[x-apple-data-detectors] {
   </div>  
  </body>
 </html>
-`
-}
+`;
+};

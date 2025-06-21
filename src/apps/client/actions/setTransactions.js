@@ -1,8 +1,8 @@
-import { SET_TRANSACTIONS } from '../types/types';
+import {SET_TRANSACTIONS} from '../types/types';
 
-const setTransactions = payload => ({
+const setTransactions = (payload) => ({
     type: SET_TRANSACTIONS,
-    payload
+    payload,
 });
 
 export default setTransactions;

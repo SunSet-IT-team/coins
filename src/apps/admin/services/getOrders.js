@@ -3,19 +3,14 @@ import base from './base';
 
 import setOrdersAction from '../actions/setOrders';
 
-import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
+import {TOKEN_LOCAL_STORAGE_NAME} from '../constants/constants';
 
-export default function getOrders () {
-    return dispatch => {
+export default function getOrders() {
+    return (dispatch) => {
         const token = localStorage.getItem(TOKEN_LOCAL_STORAGE_NAME);
 
-        return base(
-            request
-                .get('/api/admin/order/all')
-                .query({ token })
-        )
-            .then(orders => {
-                return dispatch(setOrdersAction(orders));
-            });
+        return base(request.get('/api/admin/order/all').query({token})).then((orders) => {
+            return dispatch(setOrdersAction(orders));
+        });
     };
 }

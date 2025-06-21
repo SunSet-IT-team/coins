@@ -48,10 +48,10 @@ export const MAIL_CREDENTIALS =
 export const DOC_NAMES = ['identity', 'residence', 'cardFront', 'cardBack', 'others'];
 
 export const AMOUNT = [
-    { id: 1, name: 'gold', value: 1000 },
-    { id: 2, name: 'platinum', value: 5000 },
-    { id: 3, name: 'diamond', value: 20000 },
-    { id: 4, name: 'vip' },
+    {id: 1, name: 'gold', value: 1000},
+    {id: 2, name: 'platinum', value: 5000},
+    {id: 3, name: 'diamond', value: 20000},
+    {id: 4, name: 'vip'},
 ];
 
 export const REQUIRED_DOC = ['identity', 'residence', 'cardFront', 'cardBack'];

@@ -9,8 +9,8 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import compression from 'compression';
 import expressStaticGzip from 'express-static-gzip';
-import { renderToString } from 'react-dom/server';
-import { Worker, isMainThread, parentPort, workerData } from 'worker_threads';
+import {renderToString} from 'react-dom/server';
+import {Worker, isMainThread, parentPort, workerData} from 'worker_threads';
 
 import ordersController from './controllers/ordersController';
 import pricesController from './controllers/pricesController';
@@ -45,18 +45,18 @@ import clientPaymentsApi from './api/client/payments';
 import adminMoneyOutputApi from './api/admin/moneyOutput';
 import clientMoneyOutputApi from './api/client/moneyOutput';
 
-import { DATABASE_URL } from './constants/constants';
-import { ADMIN_PANEL_URL } from '../src/apps/admin/constants/constants';
+import {DATABASE_URL} from './constants/constants';
+import {ADMIN_PANEL_URL} from '../src/apps/admin/constants/constants';
 import backups from './helpers/backup/backups';
 import actions from './actions';
 import getStore from '../src/apps/client/store/getStore';
 import renderAppPage from '../src/apps/client/html';
 import renderAdminPage from '../src/apps/admin/html';
 
-import { httpsRedirect, startHttpsServer } from './httpsServer';
+import {httpsRedirect, startHttpsServer} from './httpsServer';
 
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router-dom';
+import {Provider} from 'react-redux';
+import {StaticRouter} from 'react-router-dom';
 import Helmet from 'react-helmet';
 import App from '../src/apps/client/App.jsx';
 
@@ -123,7 +123,7 @@ function createApp() {
             expressStaticGzip(rootPath, {
                 enableBrotli: true,
                 orderPreference: ['br'],
-            }),
+            })
         );
         app.use(compression());
         app.use((req, res, next) => {
@@ -137,8 +137,8 @@ function createApp() {
         app.use(express.static(rootPath));
 
         // helpers
-        app.use(bodyParser.urlencoded({ limit: '25mb', extended: true }));
-        app.use(bodyParser.json({ limit: '25mb', extended: true }));
+        app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
+        app.use(bodyParser.json({limit: '25mb', extended: true}));
         app.use(cookieParser());
 
         // api
@@ -184,7 +184,7 @@ function createApp() {
             Promise.all(
                 map((actionFunc) => {
                     return actionFunc(req, res)(store.dispatch);
-                }, actions),
+                }, actions)
             ).then(() => {
                 const context = {};
                 const html = renderToString(
@@ -192,7 +192,7 @@ function createApp() {
                         <StaticRouter location={req.originalUrl} context={context}>
                             <App />
                         </StaticRouter>
-                    </Provider>,
+                    </Provider>
                 );
                 const helmet = Helmet.renderStatic();
                 const preloadedState = store.getState();
@@ -233,7 +233,7 @@ async function startMain() {
         port += i + 1;
         console.log('thread', i + 1, 'port', port);
         await new Promise((resolve) => {
-            const worker = new Worker(pathToScript, { workerData: { port, env } });
+            const worker = new Worker(pathToScript, {workerData: {port, env}});
             worker.on('message', (data) => {
                 if (data.request === 'init') {
                     console.log('init api worker', data.env, data.port);
@@ -254,5 +254,5 @@ if (isMainThread) {
     // startMain();
     createApp();
 } else {
-    createApp().then(() => parentPort.postMessage({ request: 'init', env: process.env.NODE_ENV }));
+    createApp().then(() => parentPort.postMessage({request: 'init', env: process.env.NODE_ENV}));
 }

@@ -9,10 +9,8 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/')
-    .get(getPayments);
+router.route('/').get(getPayments);
 
-router.route('/update')
-    .put(updatePayments);
+router.route('/update').put(updatePayments);
 
 export default router;

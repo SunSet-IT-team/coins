@@ -8,7 +8,7 @@
     z-index: 11;
     box-shadow: 4px 0px 5px rgba(0, 0, 0, 0.15);
 
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         display: none;
     }
 }
@@ -42,7 +42,7 @@
     color: lightBlue;
     text-align: center;
     margin-top: 5px;
-    transition: all .4s ease;
+    transition: all 0.4s ease;
 }
 
 .menuActive {
@@ -68,7 +68,7 @@
     background: rgb(27 32 51 / 90%);
     z-index: 1;
     transform: translateX(-300px);
-    transition: all .4s ease;
+    transition: all 0.4s ease;
 }
 
 .menuOpen {

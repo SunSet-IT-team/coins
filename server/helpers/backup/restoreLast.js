@@ -13,7 +13,7 @@ if (!fs.existsSync(BACKUPS_FOLDER)) {
     console.log('No backups found');
 } else {
     fs.readdirSync(BACKUPS_FOLDER)
-        .map(fileName => {
+        .map((fileName) => {
             if (!FILE_NAME_REGEX.test(fileName)) {
                 return null;
             }
@@ -23,10 +23,10 @@ if (!fs.existsSync(BACKUPS_FOLDER)) {
 
             return {
                 name: fileName,
-                date: +(new Date(+year, +month, +day, +hour, +minute))
+                date: +new Date(+year, +month, +day, +hour, +minute),
             };
         })
-        .filter(file => !!file)
+        .filter((file) => !!file)
         .sort((prevItem, nextItem) => nextItem.date - prevItem.date)
         .forEach((file, i) => {
             if (i === 0) {
@@ -50,7 +50,7 @@ if (!fs.existsSync(BACKUPS_FOLDER)) {
                 }
 
                 console.log('Success!');
-            }
+            },
         });
     }
 }

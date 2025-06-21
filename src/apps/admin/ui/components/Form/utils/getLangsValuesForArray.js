@@ -5,7 +5,14 @@ import path from '@tinkoff/utils/object/path';
 
 import getLangsValuesForObject from './getLangsValuesForObject';
 
-export default function getLangsValuesForArray (resultPathValue, pathValue, value = [], valueLangStructure, values, changesByLang) {
+export default function getLangsValuesForArray(
+    resultPathValue,
+    pathValue,
+    value = [],
+    valueLangStructure,
+    values,
+    changesByLang
+) {
     if (isObject(valueLangStructure[0])) {
         if (!valueLangStructure[0].id) {
             /* eslint-disable-next-line no-console */
@@ -17,11 +24,17 @@ export default function getLangsValuesForArray (resultPathValue, pathValue, valu
 
         value.forEach((valueItem, i) => {
             const valueItemId = valueItem.id;
-            let valueItemIndex = findIndex(({ id }) => id === valueItemId, path(pathValue, values));
+            let valueItemIndex = findIndex(({id}) => id === valueItemId, path(pathValue, values));
             valueItemIndex = valueItemIndex === -1 ? i : valueItemIndex;
 
-            changesByLang =
-                getLangsValuesForObject([...resultPathValue, i], [...pathValue, valueItemIndex], value[i], valueLangStructure[0], values, changesByLang);
+            changesByLang = getLangsValuesForObject(
+                [...resultPathValue, i],
+                [...pathValue, valueItemIndex],
+                value[i],
+                valueLangStructure[0],
+                values,
+                changesByLang
+            );
         });
 
         return changesByLang;

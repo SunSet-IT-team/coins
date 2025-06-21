@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import getHistoryPrice from '../../../services/client/getHistoryPrice';
 import assetPriceWebsocketController from '../../../services/client/assetPriceWebsocket';
@@ -15,7 +15,7 @@ import max from 'lodash.max';
 import isUndefined from '@tinkoff/utils/is/undefined';
 import isEmpty from '@tinkoff/utils/is/empty';
 
-import { CHART_SYMBOL_INFO_MAP } from '../../../../../../server/constants/symbols';
+import {CHART_SYMBOL_INFO_MAP} from '../../../../../../server/constants/symbols';
 
 import styles from './MainPage.css';
 
@@ -25,57 +25,57 @@ const PRICE_UP_COLOR = '#0ea97b';
 const PRICE_DOWN_COLOR = 'rgba(235, 87, 87, 0.75)';
 
 if (typeof window !== 'undefined') {
-    var { createChart } = require('lightweight-charts/dist/lightweight-charts.esm.production.js');
+    var {createChart} = require('lightweight-charts/dist/lightweight-charts.esm.production.js');
 }
 
 const chartOptions = {
     layout: {
         backgroundColor: 'rgb(20,26,43)',
         border: 'solid',
-        textColor: '#d1d4dc'
+        textColor: '#d1d4dc',
     },
     grid: {
         vertLines: {
-            color: 'rgba(42, 46, 57, 0.5)'
+            color: 'rgba(42, 46, 57, 0.5)',
         },
         horzLines: {
-            color: 'rgba(42, 46, 57, 0.5)'
-        }
+            color: 'rgba(42, 46, 57, 0.5)',
+        },
     },
     rightPriceScale: {
-        borderVisible: true
+        borderVisible: true,
     },
     crosshair: {
         horzLine: {
-            visible: true
-        }
+            visible: true,
+        },
     },
     timeScale: {
         borderVisible: true,
-        timeVisible: true
+        timeVisible: true,
     },
     watermark: {
         color: 'rgba(231,232,238,0.05)',
         visible: true,
         fontFamily: 'FuturaPT-Medium',
         fontSize: 128,
-        letterSpacing: '0.012em'
-    }
+        letterSpacing: '0.012em',
+    },
 };
 
-const mapStateToProps = ({ application, charts }) => {
+const mapStateToProps = ({application, charts}) => {
     return {
         chartTimeframe: charts.chartTimeframe,
         chartType: charts.chartType,
         chartSymbolGroup: charts.chartSymbolGroup,
         chartSymbol: charts.chartSymbol,
         mediaWidth: application.media.width,
-        mediaHeight: application.media.height
+        mediaHeight: application.media.height,
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    getHistoryPrice: payload => dispatch(getHistoryPrice(payload))
+    getHistoryPrice: (payload) => dispatch(getHistoryPrice(payload)),
 });
 
 class MainPage extends Component {
@@ -84,13 +84,13 @@ class MainPage extends Component {
         chartTimeframe: PropTypes.object.isRequired,
         chartType: PropTypes.object.isRequired,
         chartSymbolGroup: PropTypes.object.isRequired,
-        chartSymbol: PropTypes.object.isRequired
+        chartSymbol: PropTypes.object.isRequired,
     };
 
     state = {
         width: 0,
         height: 0,
-        asset: {}
+        asset: {},
     };
 
     prevFloatingPrice = null;
@@ -104,10 +104,15 @@ class MainPage extends Component {
     status = true;
     isLoading = false;
 
-    componentDidMount () {
+    componentDidMount() {
         // console.log('componentDidMount');
         this.setChart();
-        this.setNewTypeOrTimeChart(this.props.chartSymbolGroup.id, this.props.chartSymbol.name, this.props.chartTimeframe.value, this.props.chartType.value);
+        this.setNewTypeOrTimeChart(
+            this.props.chartSymbolGroup.id,
+            this.props.chartSymbol.name,
+            this.props.chartTimeframe.value,
+            this.props.chartType.value
+        );
 
         assetPriceWebsocketController.events.on('status', (status) => {
             if (status && !this.status) {
@@ -123,78 +128,84 @@ class MainPage extends Component {
         });
     }
 
-    componentWillReceiveProps (nextProps, nextContext) {
+    componentWillReceiveProps(nextProps, nextContext) {
         // console.log('componentWillReceiveProps');
-        if (this.props.chartSymbol !== nextProps.chartSymbol ||
+        if (
+            this.props.chartSymbol !== nextProps.chartSymbol ||
             this.props.chartTimeframe !== nextProps.chartTimeframe ||
             this.props.chartType !== nextProps.chartType
         ) {
-            this.setNewTypeOrTimeChart(nextProps.chartSymbolGroup.id, nextProps.chartSymbol.name, nextProps.chartTimeframe.value, nextProps.chartType.value);
+            this.setNewTypeOrTimeChart(
+                nextProps.chartSymbolGroup.id,
+                nextProps.chartSymbol.name,
+                nextProps.chartTimeframe.value,
+                nextProps.chartType.value
+            );
         }
     }
 
-    getSeriesByType = type => {
+    getSeriesByType = (type) => {
         switch (type) {
-        case 'candlesticks':
-            return this.chart.addCandlestickSeries({
-                upColor: PRICE_UP_COLOR,
-                downColor: PRICE_DOWN_COLOR,
-                priceFormat: {
-                    precision: 4,
-                    minMove: 0.0001
-                }
-            });
-        case 'heikinashi':
-            return this.chart.addCandlestickSeries({
-                upColor: PRICE_UP_COLOR,
-                downColor: PRICE_DOWN_COLOR,
-                priceFormat: {
-                    precision: 4,
-                    minMove: 0.0001
-                }
-            });
-        case 'hlc':
-            return this.chart.addBarSeries({
-                thinBars: false,
-                upColor: PRICE_UP_COLOR,
-                downColor: PRICE_DOWN_COLOR,
-                priceFormat: {
-                    precision: 4,
-                    minMove: 0.0001
-                }
-            });
-        case 'line':
-            return this.chart.addLineSeries({
-                priceFormat: {
-                    precision: 4,
-                    minMove: 0.0001
-                }
-            });
-        case 'area':
-            return this.chart.addAreaSeries({
-                lineColor: '#1567a4',
-                topColor: 'rgba(30,118,187,0.6)',
-                bottomColor: 'rgba(34, 150, 243, 0)',
-                priceFormat: {
-                    precision: 4,
-                    minMove: 0.0001
-                }
-            });
-        case 'dots':
-            return this.chart.addLineSeries({
-                color: 'transparent',
-                crosshairMarkerVisible: false,
-                priceFormat: {
-                    precision: 4,
-                    minMove: 0.0001
-                }
-            });
+            case 'candlesticks':
+                return this.chart.addCandlestickSeries({
+                    upColor: PRICE_UP_COLOR,
+                    downColor: PRICE_DOWN_COLOR,
+                    priceFormat: {
+                        precision: 4,
+                        minMove: 0.0001,
+                    },
+                });
+            case 'heikinashi':
+                return this.chart.addCandlestickSeries({
+                    upColor: PRICE_UP_COLOR,
+                    downColor: PRICE_DOWN_COLOR,
+                    priceFormat: {
+                        precision: 4,
+                        minMove: 0.0001,
+                    },
+                });
+            case 'hlc':
+                return this.chart.addBarSeries({
+                    thinBars: false,
+                    upColor: PRICE_UP_COLOR,
+                    downColor: PRICE_DOWN_COLOR,
+                    priceFormat: {
+                        precision: 4,
+                        minMove: 0.0001,
+                    },
+                });
+            case 'line':
+                return this.chart.addLineSeries({
+                    priceFormat: {
+                        precision: 4,
+                        minMove: 0.0001,
+                    },
+                });
+            case 'area':
+                return this.chart.addAreaSeries({
+                    lineColor: '#1567a4',
+                    topColor: 'rgba(30,118,187,0.6)',
+                    bottomColor: 'rgba(34, 150, 243, 0)',
+                    priceFormat: {
+                        precision: 4,
+                        minMove: 0.0001,
+                    },
+                });
+            case 'dots':
+                return this.chart.addLineSeries({
+                    color: 'transparent',
+                    crosshairMarkerVisible: false,
+                    priceFormat: {
+                        precision: 4,
+                        minMove: 0.0001,
+                    },
+                });
         }
     };
 
-    getCandlesData = (type, { low, high, open, close, newCandle = true }) => {
+    getCandlesData = (type, {low, high, open, close, newCandle = true}) => {
         if (type !== 'heikinashi' || !this.haOpen || !this.haClose) {
-            return { low, high, open, close };
+            return {low, high, open, close};
         }
 
         const haClose = (low + high + open + close) / 4;
@@ -211,7 +222,7 @@ class MainPage extends Component {
             low: haLow,
             high: haHigh,
             open: haOpen,
-            close: haClose
+            close: haClose,
         };
     };
 
@@ -231,14 +242,14 @@ class MainPage extends Component {
             width = window.innerWidth;
             height = window.innerHeight - 135;
         }
-        return { width, height };
-    }
+        return {width, height};
+    };
 
     setChart = () => {
         this.chart = createChart(this.chartsContainer.current, {
             ...chartOptions,
             width: this.findRightDimensions().width,
-            height: this.findRightDimensions().height
+            height: this.findRightDimensions().height,
         });
 
         assetPriceWebsocketController.events.on('data', this.handlePriceChange);
@@ -247,16 +258,20 @@ class MainPage extends Component {
             this.chart.resize(this.findRightDimensions().width, this.findRightDimensions().height);
         });
 
-        this.chart.timeScale().subscribeVisibleLogicalRangeChange(this.onVisibleLogicalRangeChanged);
+        this.chart
+            .timeScale()
+            .subscribeVisibleLogicalRangeChange(this.onVisibleLogicalRangeChanged);
     };
 
     handleUnsubscribeVisibleLogicalRangeChange = () => {
-        this.chart.timeScale().unsubscribeVisibleLogicalRangeChange(this.onVisibleLogicalRangeChanged);
-    }
+        this.chart
+            .timeScale()
+            .unsubscribeVisibleLogicalRangeChange(this.onVisibleLogicalRangeChanged);
+    };
 
-    onVisibleLogicalRangeChanged = newVisibleLogicalRange => {
+    onVisibleLogicalRangeChanged = (newVisibleLogicalRange) => {
         // console.log('onVisibleLogicalRangeChanged');
-        const { chartSymbolGroup, chartSymbol, chartTimeframe, chartType } = this.props;
+        const {chartSymbolGroup, chartSymbol, chartTimeframe, chartType} = this.props;
 
         if (!newVisibleLogicalRange) {
             return;
@@ -265,22 +280,30 @@ class MainPage extends Component {
         const barsInfo = this.series.barsInLogicalRange(newVisibleLogicalRange);
 
         if (barsInfo !== null && barsInfo.barsBefore < 0 && !this.isLoading) {
-            this.setNewDataChart(chartSymbolGroup.id, chartSymbol.name, chartTimeframe.value, chartType.value, barsInfo.from, barsInfo.to);
+            this.setNewDataChart(
+                chartSymbolGroup.id,
+                chartSymbol.name,
+                chartTimeframe.value,
+                chartType.value,
+                barsInfo.from,
+                barsInfo.to
+            );
         }
-    }
+    };
 
     setNewDataChart = (symbolGroup, symbol, timeframe, type, from, to) => {
         // console.log('setNewDataChart');
         this.isLoading = true;
         this.handleUnsubscribeVisibleLogicalRangeChange();
 
-        this.props.getHistoryPrice({
-            ...getPeriodByTimeframe(timeframe, symbolGroup, from),
-            resolution: timeframe,
-            symbolGroup: symbolGroup,
-            symbol
-        })
-            .then(historyData => {
+        this.props
+            .getHistoryPrice({
+                ...getPeriodByTimeframe(timeframe, symbolGroup, from),
+                resolution: timeframe,
+                symbolGroup: symbolGroup,
+                symbol,
+            })
+            .then((historyData) => {
                 if (this.series) {
                     this.chart.removeSeries(this.series);
                     this.series = null;
@@ -297,25 +320,31 @@ class MainPage extends Component {
                     this.lowPrices = [...historyData.l.slice(0, -2), ...this.lowPrices];
                     this.highPrices = [...historyData.h.slice(0, -2), ...this.highPrices];
 
-                    series.setData(this.times.map((time, i) => {
-                        if (i === 0) {
-                            return null;
-                        }
+                    series.setData(
+                        this.times
+                            .map((time, i) => {
+                                if (i === 0) {
+                                    return null;
+                                }
 
-                        return {
-                            time,
-                            value: this.prices[i],
-                            ...this.getCandlesData(type, {
-                                open: this.openPrices[i],
-                                low: this.lowPrices[i],
-                                high: this.highPrices[i],
-                                close: this.prices[i]
+                                return {
+                                    time,
+                                    value: this.prices[i],
+                                    ...this.getCandlesData(type, {
+                                        open: this.openPrices[i],
+                                        low: this.lowPrices[i],
+                                        high: this.highPrices[i],
+                                        close: this.prices[i],
+                                    }),
+                                };
                             })
-                        };
-                    }).filter(data => !!data));
+                            .filter((data) => !!data)
+                    );
 
-                    this.chart.timeScale().setVisibleRange({ from, to });
-                    this.chart.timeScale().subscribeVisibleLogicalRangeChange(this.onVisibleLogicalRangeChanged);
+                    this.chart.timeScale().setVisibleRange({from, to});
+                    this.chart
+                        .timeScale()
+                        .subscribeVisibleLogicalRangeChange(this.onVisibleLogicalRangeChanged);
                     this.isLoading = false;
                 }
             });
@@ -328,27 +357,29 @@ class MainPage extends Component {
 
             this.chart.applyOptions({
                 watermark: {
-                    text: ''
-                }
+                    text: '',
+                },
             });
 
-            this.setState({ asset: {} });
-            this.chart.priceScale().applyOptions({ autoScale: true });
+            this.setState({asset: {}});
+            this.chart.priceScale().applyOptions({autoScale: true});
         }
-        this.props.getHistoryPrice({
-            ...getPeriodByTimeframe(timeframe, symbolGroup),
-            resolution: timeframe,
-            symbolGroup: symbolGroup,
-            symbol
-        })
-            .then(historyData => {
+        this.props
+            .getHistoryPrice({
+                ...getPeriodByTimeframe(timeframe, symbolGroup),
+                resolution: timeframe,
+                symbolGroup: symbolGroup,
+                symbol,
+            })
+            .then((historyData) => {
                 const series = this.getSeriesByType(type);
 
                 this.series = series;
 
                 if (historyData.s === 'ok') {
                     if (!isUndefined(assetPriceWebsocketController.prices[symbol])) {
-                        historyData.c[historyData.c.length - 1] = assetPriceWebsocketController.prices[symbol];
+                        historyData.c[historyData.c.length - 1] =
+                            assetPriceWebsocketController.prices[symbol];
                     }
 
                     this.times = historyData.t;
@@ -361,53 +392,63 @@ class MainPage extends Component {
                     this.haOpen = historyData.o[0];
                     this.haClose = historyData.c[0];
 
-                    const data = historyData.t.map((time, i) => {
-                        if (i === 0) {
-                            return null;
-                        }
-
-                        return {
-                            time,
-                            value: historyData.c[i],
-                            ...this.getCandlesData(type, {
-                                open: historyData.o[i],
-                                low: historyData.l[i],
-                                high: historyData.h[i],
-                                close: historyData.c[i]
-                            })
-                        };
-                    }).filter(data => !!data);
-
-                    series.setData(data);
-
-                    if (type === 'dots') {
-                        this.markers = historyData.t.map((time, i) => {
+                    const data = historyData.t
+                        .map((time, i) => {
                             if (i === 0) {
                                 return null;
                             }
 
                             return {
                                 time,
-                                position: 'inBar',
-                                size: 1,
-                                shape: 'circle',
                                 value: historyData.c[i],
-                                color: historyData.c[i] > historyData.c[i - 1] ? PRICE_UP_COLOR : PRICE_DOWN_COLOR
+                                ...this.getCandlesData(type, {
+                                    open: historyData.o[i],
+                                    low: historyData.l[i],
+                                    high: historyData.h[i],
+                                    close: historyData.c[i],
+                                }),
                             };
-                        }).filter(data => !!data);
+                        })
+                        .filter((data) => !!data);
+
+                    series.setData(data);
+
+                    if (type === 'dots') {
+                        this.markers = historyData.t
+                            .map((time, i) => {
+                                if (i === 0) {
+                                    return null;
+                                }
+
+                                return {
+                                    time,
+                                    position: 'inBar',
+                                    size: 1,
+                                    shape: 'circle',
+                                    value: historyData.c[i],
+                                    color:
+                                        historyData.c[i] > historyData.c[i - 1]
+                                            ? PRICE_UP_COLOR
+                                            : PRICE_DOWN_COLOR,
+                                };
+                            })
+                            .filter((data) => !!data);
                         series.setMarkers(this.markers);
 
                         const lastIndex = historyData.c.length - 1;
 
                         series.applyOptions({
-                            priceLineColor: historyData.c[lastIndex] > historyData.c[lastIndex - 1] ? PRICE_UP_COLOR : PRICE_DOWN_COLOR
+                            priceLineColor:
+                                historyData.c[lastIndex] > historyData.c[lastIndex - 1]
+                                    ? PRICE_UP_COLOR
+                                    : PRICE_DOWN_COLOR,
                         });
                     }
 
                     this.chart.applyOptions({
                         watermark: {
-                            text: `${CHART_SYMBOL_INFO_MAP[symbol].title}`
-                        }
+                            text: `${CHART_SYMBOL_INFO_MAP[symbol].title}`,
+                        },
                     });
 
                     this.handleAssetSet(this.props.chartSymbol);
@@ -415,22 +456,22 @@ class MainPage extends Component {
             });
     };
 
-    handleAssetSet = chartSymbol => {
+    handleAssetSet = (chartSymbol) => {
         const price = assetPriceWebsocketController.prices[chartSymbol.name];
         this.setState({
             asset: {
                 assetName: chartSymbol.name,
                 purchasePrice: calculateBuyingPrice(chartSymbol.name, price),
-                sellingPrice: price
-            }
+                sellingPrice: price,
+            },
         });
-    }
+    };
 
-    handlePriceChange = data => {
+    handlePriceChange = (data) => {
         if (!this.series) {
             return;
         }
-        const { chartTimeframe, chartType, chartSymbol } = this.props;
+        const {chartTimeframe, chartType, chartSymbol} = this.props;
 
         if (data.name !== chartSymbol.name) {
             return;
@@ -458,7 +499,7 @@ class MainPage extends Component {
                     size: 1,
                     shape: 'circle',
                     value: data.price,
-                    color: data.price > last(this.prices) ? PRICE_UP_COLOR : PRICE_DOWN_COLOR
+                    color: data.price > last(this.prices) ? PRICE_UP_COLOR : PRICE_DOWN_COLOR,
                 });
                 this.series.setMarkers(this.markers);
             }
@@ -482,14 +523,17 @@ class MainPage extends Component {
                 low: last(this.lowPrices),
                 high: last(this.highPrices),
                 close: data.price,
-                newCandle
-            })
+                newCandle,
+            }),
         });
 
         if (chartType.value === 'dots') {
-            const newPriceColor = data.price > this.prices[this.prices.length - 2] ? PRICE_UP_COLOR : PRICE_DOWN_COLOR;
+            const newPriceColor =
+                data.price > this.prices[this.prices.length - 2]
+                    ? PRICE_UP_COLOR
+                    : PRICE_DOWN_COLOR;
             this.series.applyOptions({
-                priceLineColor: newPriceColor
+                priceLineColor: newPriceColor,
             });
 
             if (newPriceColor !== last(this.markers).color) {
@@ -499,30 +543,29 @@ class MainPage extends Component {
         }
     };
 
-    render () {
-        const { asset } = this.state;
+    render() {
+        const {asset} = this.state;
 
-        return <section className={styles.root}>
-            <section className={styles.rootChart} ref={this.chartsContainer} />
-            {
-                !isEmpty(asset) &&
-                <div className={styles.assetContainer}>
-                    <div className={styles.assetTitle}>
-                        {
-                            CHART_SYMBOL_INFO_MAP[asset.assetName].title
-                        }
+        return (
+            <section className={styles.root}>
+                <section className={styles.rootChart} ref={this.chartsContainer} />
+                {!isEmpty(asset) && (
+                    <div className={styles.assetContainer}>
+                        <div className={styles.assetTitle}>
+                            {CHART_SYMBOL_INFO_MAP[asset.assetName].title}
+                        </div>
+                        <div className={styles.purchasePrice}>
+                            <img src="/src/apps/client/ui/pages/MainPage/images/up.svg" />
+                            <div>{formatPriceToString(asset.purchasePrice)}</div>
+                        </div>
+                        <div className={styles.sellingPrice}>
+                            <img src="/src/apps/client/ui/pages/MainPage/images/down.svg" />
+                            <div>{formatPriceToString(asset.sellingPrice)}</div>
+                        </div>
                     </div>
-                    <div className={styles.purchasePrice}>
-                        <img src="/src/apps/client/ui/pages/MainPage/images/up.svg" />
-                        <div>{formatPriceToString(asset.purchasePrice)}</div>
-                    </div>
-                    <div className={styles.sellingPrice}>
-                        <img src="/src/apps/client/ui/pages/MainPage/images/down.svg" />
-                        <div>{formatPriceToString(asset.sellingPrice)}</div>
-                    </div>
-                </div>
-            }
-        </section>;
+                )}
+            </section>
+        );
     }
 }
 

@@ -11,5 +11,5 @@ module.exports = {
     '--media-desktop-s': `(min-width: ${bp.DESKTOP_S}px)`,
     '--media-desktop-m': `(min-width: ${bp.DESKTOP_M}px)`,
     '--media-desktop-l': `(min-width: ${bp.DESKTOP_L}px)`,
-    '--media-desktop-xl': `(min-width: ${bp.DESKTOP_XL}px)`
+    '--media-desktop-xl': `(min-width: ${bp.DESKTOP_XL}px)`,
 };

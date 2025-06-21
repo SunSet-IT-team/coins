@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import ErrorIcon from '@material-ui/icons/Error';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import authenticate from '../../../services/authenticate';
-import { ADMIN_PANEL_URL } from '../../../constants/constants';
+import {ADMIN_PANEL_URL} from '../../../constants/constants';
 
 import styles from './Authentication.css';
 
@@ -70,7 +70,7 @@ class Authentication extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        const { login, password } = this.state;
+        const {login, password} = this.state;
         const credentials = {
             login: login.trim(),
             password: password.trim(),
@@ -104,8 +104,8 @@ class Authentication extends Component {
     };
 
     render() {
-        const { classes } = this.props;
-        const { login, password, errors, authFailed } = this.state;
+        const {classes} = this.props;
+        const {login, password, errors, authFailed} = this.state;
 
         return (
             <div className={styles.container}>
@@ -114,7 +114,8 @@ class Authentication extends Component {
                     className={styles.form}
                     noValidate
                     autoComplete="off"
-                    onSubmit={this.handleSubmit}>
+                    onSubmit={this.handleSubmit}
+                >
                     <TextField
                         label="Логин"
                         value={login}
@@ -142,7 +143,8 @@ class Authentication extends Component {
                             variant="contained"
                             color="default"
                             fullWidth
-                            href={`${ADMIN_PANEL_URL}/recovery`}>
+                            href={`${ADMIN_PANEL_URL}/recovery`}
+                        >
                             Забыли пароль?
                         </Button>
                     </div>
@@ -154,7 +156,8 @@ class Authentication extends Component {
                     }}
                     onClose={this.handleHideFailMessage}
                     open={authFailed}
-                    autoHideDuration={2000}>
+                    autoHideDuration={2000}
+                >
                     <SnackbarContent
                         className={classNames(classes.error, classes.margin)}
                         message={

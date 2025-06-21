@@ -11,10 +11,6 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/')
-    .get(getArticles)
-    .post(saveArticle)
-    .put(editArticle)
-    .delete(deleteByIds);
+router.route('/').get(getArticles).post(saveArticle).put(editArticle).delete(deleteByIds);
 
 export default router;

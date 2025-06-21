@@ -1,5 +1,5 @@
 import Admin from '../model';
 
-export default function getAdminByLogin (login) {
-    return Admin.findOne({ login });
+export default function getAdminByLogin(login) {
+    return Admin.findOne({login});
 }

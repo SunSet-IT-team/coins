@@ -1,8 +1,8 @@
-import { SET_LANG_ROUTE } from '../types/types';
+import {SET_LANG_ROUTE} from '../types/types';
 
-const setLangRoute = payload => ({
+const setLangRoute = (payload) => ({
     type: SET_LANG_ROUTE,
-    payload
+    payload,
 });
 
 export default setLangRoute;

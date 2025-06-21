@@ -1,4 +1,4 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 import uniqid from 'uniqid';
 import format from 'date-fns/format';
 import addHours from 'date-fns/addHours';
@@ -8,12 +8,12 @@ import base from '../../../../../src/apps/admin/services/base';
 
 import getTokenQuery from '../../../client/qiwi/queries/getToken';
 
-export default function saveToken (req, res) {
+export default function saveToken(req, res) {
     try {
-        const { amount } = req.body;
+        const {amount} = req.body;
 
         return getTokenQuery()
-            .then(tokenInfo => {
+            .then((tokenInfo) => {
                 const id = uniqid();
 
                 const expirationDateTime = addHours(Date.now(), 1);
@@ -25,11 +25,11 @@ export default function saveToken (req, res) {
                         .set('require', 'application/json')
                         .send({
                             amount,
-                            expirationDateTime: `${format(expirationDateTime, 'yyyy-MM-dd')}T${format(expirationDateTime, 'HH:mm:ss')}`
+                            expirationDateTime: `${format(expirationDateTime, 'yyyy-MM-dd')}T${format(expirationDateTime, 'HH:mm:ss')}`,
                         })
                 )
-                    .then(({ payUrl }) => {
-                        return res.status(OKEY_STATUS_CODE).send({ payUrl });
+                    .then(({payUrl}) => {
+                        return res.status(OKEY_STATUS_CODE).send({payUrl});
                     })
                     .catch(() => {
                         return res.status(SERVER_ERROR_STATUS_CODE).end();

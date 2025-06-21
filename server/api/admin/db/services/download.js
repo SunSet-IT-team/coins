@@ -1,7 +1,7 @@
 import {
     OKEY_STATUS_CODE,
     SERVER_ERROR_STATUS_CODE,
-    DATABASE_URL
+    DATABASE_URL,
 } from '../../../../constants/constants';
 
 import backup from 'mongodb-backup';
@@ -12,7 +12,7 @@ import rimraf from 'rimraf';
 
 const TEMP_FOLDER = path.join(__dirname, 'api/admin/db/temp');
 
-export default function download (req, res) {
+export default function download(req, res) {
     try {
         const dumpName = `dump-${format(new Date(), 'yyyy-MM-dd')}.tar`;
 
@@ -33,8 +33,10 @@ export default function download (req, res) {
 
                 const host = req.get('host');
 
-                res.status(OKEY_STATUS_CODE).send(`${req.protocol}://${host}/server/api/admin/db/temp/${dumpName}`);
-            }
+                res.status(OKEY_STATUS_CODE).send(
+                    `${req.protocol}://${host}/server/api/admin/db/temp/${dumpName}`
+                );
+            },
         });
     } catch (e) {
         return res.status(SERVER_ERROR_STATUS_CODE).end();

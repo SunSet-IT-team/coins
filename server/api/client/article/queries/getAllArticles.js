@@ -1,5 +1,5 @@
 import Article from '../model';
 
-export default function getAllArticles () {
+export default function getAllArticles() {
     return Article.find({});
 }

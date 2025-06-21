@@ -10,13 +10,10 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/all')
-    .get(getManagers);
+router.route('/all').get(getManagers);
 
-router.route('/save')
-    .post(saveManager);
+router.route('/save').post(saveManager);
 
-router.route('/delete')
-    .delete(deleteManagerByEmail);
+router.route('/delete').delete(deleteManagerByEmail);
 
 export default router;

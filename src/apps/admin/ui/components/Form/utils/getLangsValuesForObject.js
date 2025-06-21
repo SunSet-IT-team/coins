@@ -6,10 +6,21 @@ import isObject from '@tinkoff/utils/is/plainObject';
 
 import getLangsValuesForArray from './getLangsValuesForArray';
 
-export default function getLangsValuesForObject (resultPathValue, pathValue, value = {}, valueLangStructure, values, changesByLang) {
+export default function getLangsValuesForObject(
+    resultPathValue,
+    pathValue,
+    value = {},
+    valueLangStructure,
+    values,
+    changesByLang
+) {
     forEachObj((propValue, propName) => {
         if (propValue === 'depend') {
-            changesByLang = pathSet(changesByLang, [...resultPathValue, propName], path([...pathValue, propName], values));
+            changesByLang = pathSet(
+                changesByLang,
+                [...resultPathValue, propName],
+                path([...pathValue, propName], values)
+            );
         } else if (isObject(propValue)) {
             changesByLang = getLangsValuesForObject(
                 [...resultPathValue, propName],

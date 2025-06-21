@@ -1,4 +1,4 @@
-import { SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 /* , BAD_REQUEST_STATUS_CODE, QR_PAYMENTS, OKEY_STATUS_CODE  */
 /* import includes from '@tinkoff/utils/array/includes';
 import fs from 'fs';
@@ -7,7 +7,7 @@ import multipart from '../../../../helpers/multipart';
 
 const uploader = multipart();
 
-export default function uploadFilesQr (req, res) {
+export default function uploadFilesQr(req, res) {
     try {
         uploader(req, res, (err) => {
             if (err || !req.files[0]) {

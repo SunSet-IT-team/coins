@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import _find from 'lodash.find';
 
@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import styles from './LanguagesSelector.css';
 
 import outsideClick from '../../hocs/outsideClick';
-import { COUNTRY_INFO, LANGUAGES } from '../../../constants/constants';
+import {COUNTRY_INFO, LANGUAGES} from '../../../constants/constants';
 
 @outsideClick
 class LanguagesSelector extends Component {
@@ -18,73 +18,94 @@ class LanguagesSelector extends Component {
         title: PropTypes.string,
         setLanguage: PropTypes.func.isRequired,
         outsideClickEnabled: PropTypes.bool,
-        turnOnClickOutside: PropTypes.func
+        turnOnClickOutside: PropTypes.func,
     };
 
     state = {
-        isLanguageOpen: false
-    }
+        isLanguageOpen: false,
+    };
 
     static defaultProps = {
         setLanguage: noop,
-        handleCurrentWidth: noop
-    }
+        handleCurrentWidth: noop,
+    };
 
-    componentDidUpdate () {
-        const { outsideClickEnabled } = this.props;
+    componentDidUpdate() {
+        const {outsideClickEnabled} = this.props;
         if (this.state.isLanguageOpen && !outsideClickEnabled) {
-            this.props.turnOnClickOutside(this, () => this.setState({ isLanguageOpen: false }));
+            this.props.turnOnClickOutside(this, () => this.setState({isLanguageOpen: false}));
         }
     }
 
-    handleLanguagesClick = e => {
+    handleLanguagesClick = (e) => {
         e.preventDefault();
-        this.setState({ isLanguageOpen: !this.state.isLanguageOpen });
-    }
+        this.setState({isLanguageOpen: !this.state.isLanguageOpen});
+    };
 
-    handleSetLanguage = language => () => {
+    handleSetLanguage = (language) => () => {
         this.props.setLanguage(language);
-    }
+    };
 
     setFlag = (name) => {
-        const item = _find(COUNTRY_INFO, { name });
+        const item = _find(COUNTRY_INFO, {name});
         if (!item) {
             return;
         }
 
         return item.flag;
-    }
+    };
 
-    render () {
-        const { title, currentLanguage } = this.props;
-        const { isLanguageOpen } = this.state;
+    render() {
+        const {title, currentLanguage} = this.props;
+        const {isLanguageOpen} = this.state;
 
         // Проверяем, что LANGUAGES существует и является массивом
-        const availableLanguages = Array.isArray(LANGUAGES) ? LANGUAGES.filter(language => language && language.id !== currentLanguage.id) : [];
+        const availableLanguages = Array.isArray(LANGUAGES)
+            ? LANGUAGES.filter((language) => language && language.id !== currentLanguage.id)
+            : [];
 
-        return <div className={classNames(styles.selectorContainer, {
-            [styles.selectorContainerActive]: isLanguageOpen
-        })} onClick={this.handleLanguagesClick}>
-            <img className={styles.iconFlag} src={currentLanguage.flag} alt="flag" />
-            {title &&
-            <div className={styles.currentCountryTitle}>{title}</div>}
-            <div className={classNames(styles.innerCountryContainer, {
-                [styles.innerCountryContainerOpen]: isLanguageOpen
-            })}>
-                {availableLanguages
-                    .map(language => <div key={language.id} className={styles.countryContainer} onClick={this.handleSetLanguage(language)}>
-                        <img className={styles.iconFlag} src={language.flag || this.setFlag(language.countryCode)} alt={language.name} />
-                        <div className={styles.countryNameBlock}>
-                            <div className={styles.countryNameText}>{language.name}</div>
+        return (
+            <div
+                className={classNames(styles.selectorContainer, {
+                    [styles.selectorContainerActive]: isLanguageOpen,
+                })}
+                onClick={this.handleLanguagesClick}
+            >
+                <img className={styles.iconFlag} src={currentLanguage.flag} alt="flag" />
+                {title && <div className={styles.currentCountryTitle}>{title}</div>}
+                <div
+                    className={classNames(styles.innerCountryContainer, {
+                        [styles.innerCountryContainerOpen]: isLanguageOpen,
+                    })}
+                >
+                    {availableLanguages.map((language) => (
+                        <div
+                            key={language.id}
+                            className={styles.countryContainer}
+                            onClick={this.handleSetLanguage(language)}
+                        >
+                            <img
+                                className={styles.iconFlag}
+                                src={language.flag || this.setFlag(language.countryCode)}
+                                alt={language.name}
+                            />
+                            <div className={styles.countryNameBlock}>
+                                <div className={styles.countryNameText}>{language.name}</div>
+                            </div>
                         </div>
-                    </div>)}
+                    ))}
+                </div>
+                <div>
+                    <img
+                        className={classNames(styles.iconArrowDown, {
+                            [styles.rotateImg]: isLanguageOpen,
+                        })}
+                        src="/src/apps/client/ui/components/PrivateDataFormPopup/images/arrowDown.svg"
+                        alt=""
+                    />
+                </div>
             </div>
-            <div>
-                <img className={classNames(styles.iconArrowDown, {
-                    [styles.rotateImg]: isLanguageOpen
-                })} src="/src/apps/client/ui/components/PrivateDataFormPopup/images/arrowDown.svg" alt="" />
-            </div>
-        </div>;
+        );
     }
 }
 

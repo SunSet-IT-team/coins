@@ -15,5 +15,5 @@ export default {
     desktopXL: `(min-width: ${bp.DESKTOP_XL}px)`,
     fullScreen: '(display-mode: fullscreen)',
     retina: '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)',
-    smallHeight: '(max-height: 480px)'
+    smallHeight: '(max-height: 480px)',
 };

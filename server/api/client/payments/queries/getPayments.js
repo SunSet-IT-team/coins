@@ -1,5 +1,5 @@
 import Payments from '../model';
 
-export default function getPayments () {
+export default function getPayments() {
     return Payments.find({});
 }

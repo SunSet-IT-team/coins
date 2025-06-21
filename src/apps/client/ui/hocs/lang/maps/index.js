@@ -7,5 +7,5 @@ export default {
     ua,
     ru,
     en,
-    pl
+    pl,
 };

@@ -4,20 +4,25 @@ import path from 'path';
 
 const publicKey = fs.readFileSync(path.resolve('./server/privateKeys/adminPublicKey.ppk'), 'utf8');
 
-export default function verifyTokenClient (token) {
+export default function verifyTokenClient(token) {
     return new Promise((resolve, reject) => {
         if (!token) {
             // eslint-disable-next-line prefer-promise-reject-errors
-            return reject({ message: 'No token' });
+            return reject({message: 'No token'});
         }
 
-        jsonwebtoken.verify(token, publicKey, {
-            algorithm: 'RS256'
-        }, (err, data) => {
-            if (err) {
-                // reject(err);
+        jsonwebtoken.verify(
+            token,
+            publicKey,
+            {
+                algorithm: 'RS256',
+            },
+            (err, data) => {
+                if (err) {
+                    // reject(err);
+                }
+                resolve(data);
             }
-            resolve(data);
-        });
+        );
     });
 }

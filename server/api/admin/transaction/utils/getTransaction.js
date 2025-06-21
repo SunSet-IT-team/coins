@@ -1,5 +1,5 @@
-export default function getTransaction (body) {
-    const { id, userId, dirName, amount, content } = body;
+export default function getTransaction(body) {
+    const {id, userId, dirName, amount, content} = body;
 
-    return { id, userId, dirName, amount, content };
+    return {id, userId, dirName, amount, content};
 }

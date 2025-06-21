@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const {exec} = require('child_process');
 const path = require('path');
 const http = require('http');
 const cron = require('node-cron');
@@ -6,10 +6,10 @@ const cron = require('node-cron');
 const serverPath = path.join(__dirname, 'server');
 const PORT = 3002;
 
-function runReload (res) {
+function runReload(res) {
     console.log(`[${new Date().toLocaleString()}] Запуск перезагрузки...`);
 
-    exec('yarn deploy:server', { cwd: serverPath }, (error, stdout, stderr) => {
+    exec('yarn deploy:server', {cwd: serverPath}, (error, stdout, stderr) => {
         if (error) {
             console.error(`[${new Date().toLocaleString()}] Ошибка перезагрузки: ${error.message}`);
             if (res) {
@@ -42,9 +42,11 @@ const server = http.createServer((req, res) => {
     if (req.method === 'POST' && req.url === '/deploy') {
         console.log(`[${new Date().toLocaleString()}] Получен запрос на развёртывание...`);
 
-        exec('yarn deploy', { cwd: serverPath }, (error, stdout, stderr) => {
+        exec('yarn deploy', {cwd: serverPath}, (error, stdout, stderr) => {
             if (error) {
-                console.error(`[${new Date().toLocaleString()}] Ошибка развёртывания: ${error.message}`);
+                console.error(
+                    `[${new Date().toLocaleString()}] Ошибка развёртывания: ${error.message}`
+                );
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'text/plain');
                 res.end('Ошибка развёртывания');

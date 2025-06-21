@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/all')
-    .get(getPayments);
+router.route('/all').get(getPayments);
 
 export default router;

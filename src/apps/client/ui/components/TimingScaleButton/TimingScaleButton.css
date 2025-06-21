@@ -15,7 +15,7 @@
     align-items: center;
     cursor: pointer;
     background: deepBlue;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     position: relative;
 
     &::after {
@@ -26,7 +26,7 @@
         height: 100%;
         width: 2px;
         z-index: 1;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
         background: lightBlueDingy;
         box-shadow: 0 0 5px 1px lightBlueDingy;
         opacity: 0;
@@ -38,7 +38,7 @@
         }
     }
 
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         border-right: 0;
         margin-right: 4px;
 
@@ -50,17 +50,17 @@
         }
     }
 
-    @media(max-width: 756px) {
+    @media (max-width: 756px) {
         width: 56px;
         height: 56px;
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         width: 36px;
         height: 36px;
     }
 
-    @media(max-height: 544px) {
+    @media (max-height: 544px) {
         width: 36px;
         height: 36px;
     }
@@ -74,13 +74,13 @@
     color: lightBlue;
     text-align: center;
     margin-top: 5px;
-    transition: all .4s ease;
+    transition: all 0.4s ease;
 
-    @media(max-width: 756px) {
+    @media (max-width: 756px) {
         display: none;
     }
 
-    @media(max-height: 756px) and (max-width: 1024px) {
+    @media (max-height: 756px) and (max-width: 1024px) {
         display: none;
     }
 }
@@ -94,31 +94,30 @@
     width: 152px;
     z-index: -1;
     transform: translateX(-300px);
-    transition: all .4s ease;
+    transition: all 0.4s ease;
     background: rgb(27 32 51 / 90%);
 
-
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         top: 92px;
         transform: translateX(256px);
         z-index: 0;
     }
 
-    @media(max-width: 756px) {
+    @media (max-width: 756px) {
         top: 76px;
-        transform: translateX(172px)
+        transform: translateX(172px);
     }
 
-    @media(max-width: 900px) and (orientation: landscape) {
+    @media (max-width: 900px) and (orientation: landscape) {
         top: 76px;
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         top: 50px;
         transform: translateX(134px);
     }
 
-    @media(max-height: 550px) and (orientation: landscape) {
+    @media (max-height: 550px) and (orientation: landscape) {
         top: 50px;
     }
 }
@@ -126,23 +125,23 @@
 .menuOpen {
     transform: translateX(92px);
 
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         transform: translateX(-66px);
     }
 
-    @media(max-width: 900px) and (orientation: landscape) {
-        transform: translateX(-94px)
+    @media (max-width: 900px) and (orientation: landscape) {
+        transform: translateX(-94px);
     }
 
-    @media(max-width: 756px) {
-        transform: translateX(-94px)
+    @media (max-width: 756px) {
+        transform: translateX(-94px);
     }
 
-    @media(max-width: 544px) {
-        transform: translateX(-114px)
+    @media (max-width: 544px) {
+        transform: translateX(-114px);
     }
 
-    @media(max-height: 550px) and (orientation: landscape) {
+    @media (max-height: 550px) and (orientation: landscape) {
         transform: translateX(-114px);
     }
 }
@@ -160,28 +159,28 @@
 }
 
 .buttonActive {
-    background: #161A2A;
+    background: #161a2a;
 
     &::after {
         opacity: 1;
     }
 
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         border-right: none;
     }
 }
 
 .buttonImg {
     path {
-        transition: all .3s ease;
+        transition: all 0.3s ease;
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         width: 8px;
         height: 13px;
     }
 
-    @media(max-height: 544px) {
+    @media (max-height: 544px) {
         width: 8px;
         height: 13px;
     }
@@ -210,7 +209,7 @@
     background: rgba(166, 177, 220, 0.05);
     margin-right: 2px;
     margin-bottom: 2px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     cursor: pointer;
 
     &:hover {
@@ -239,24 +238,24 @@
     left: 53px;
     top: 26px;
 
-    @media(max-width: 756px) {
+    @media (max-width: 756px) {
         left: 39px;
         top: 29px;
     }
 
-    @media(max-width: 900px) and (orientation: landscape) {
+    @media (max-width: 900px) and (orientation: landscape) {
         left: 39px;
         top: 29px;
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         left: 25px;
         top: 18px;
         font-size: 10px;
         line-height: 13px;
     }
 
-    @media(max-height: 544px) {
+    @media (max-height: 544px) {
         left: 25px;
         top: 18px;
         font-size: 10px;
