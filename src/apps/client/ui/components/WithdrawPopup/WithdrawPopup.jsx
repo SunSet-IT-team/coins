@@ -252,272 +252,238 @@ class WithdrawPopup extends Component {
         const {error} = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
 
-        return (
-            <div
-                onClick={this.handleOutsideClick}
-                className={classNames(styles.root, {
-                    [styles.isVisible]: isVisible,
-                })}
-            >
-                <div className={styles.cover} />
-                <div className={styles.popupWrap}>
-                    <div className={styles.popup}>
-                        <div className={styles.popupContent}>
-                            <div className={classNames(styles.content)}>
-                                <button
-                                    className={classNames(styles.closeButton)}
-                                    onClick={this.closePopup}
-                                >
-                                    <svg
-                                        width="12"
-                                        height="12"
-                                        viewBox="0 0 12 12"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        {/* eslint-disable-next-line max-len */}
-                                        <path
-                                            d="M12 1.05L10.95 0L6 4.95L1.05 0L0 1.05L4.95 6L0 10.95L1.05 12L6 7.05L10.95 12L12 10.95L7.05 6L12 1.05Z"
-                                            fill="#F8F8F8"
-                                        />
-                                    </svg>
-                                </button>
-                                <div className={styles.transactionPopupContainer}>
-                                    <div className={styles.footer}>
-                                        <div className={styles.rightContainer}>
-                                            <div className={styles.funds}>
-                                                <div
-                                                    className={classNames(styles.choiceFunds, {
-                                                        [styles.activeFunds]:
-                                                            this.state.withdrawOnCard.active,
-                                                    })}
-                                                    onClick={() =>
-                                                        this.choiceFunds('withdrawOnCard')
-                                                    }
-                                                >
-                                                    {text.withdrawOnCard}
-                                                </div>
-                                                <div
-                                                    className={classNames(styles.choiceFunds, {
-                                                        [styles.activeFunds]:
-                                                            this.state.withdrawOnCrypto.active,
-                                                    })}
-                                                    onClick={() =>
-                                                        this.choiceFunds('withdrawOnCrypto')
-                                                    }
-                                                >
-                                                    {text.withdrawOnCrypto}
-                                                </div>
-                                                <div
-                                                    className={classNames(styles.choiceFunds, {
-                                                        [styles.activeFunds]:
-                                                            this.state.withdrawOnBank.active,
-                                                    })}
-                                                    onClick={() =>
-                                                        this.choiceFunds('withdrawOnBank')
-                                                    }
-                                                >
-                                                    {text.withdrawOnBank}
-                                                </div>
-                                            </div>
-                                            {this.state.withdrawOnCard.active && (
-                                                <form
-                                                    className={styles.form}
-                                                    onSubmit={this.handleSubmit}
-                                                >
-                                                    <div className={styles.inputWrapper}>
-                                                        <div
-                                                            className={styles.amountContainerField}
-                                                        >
-                                                            <div className={styles.summ}>
-                                                                {text.cardNumberTitle}
-                                                            </div>
-                                                            <FormInput
-                                                                texts={{
-                                                                    numberCard:
-                                                                        text.inputPlaceholderCard,
-                                                                }}
-                                                                name="numberCard"
-                                                                onFocus={this.onFocus}
-                                                                onBlur={this.onBlur}
-                                                                handleChange={this.handleChange}
-                                                                value={this.state.numberCard.value}
-                                                                focus={this.state.numberCard.value}
-                                                                type="number"
-                                                            />
-                                                        </div>
-                                                        <div
-                                                            className={styles.amountContainerField}
-                                                        >
-                                                            <div className={styles.summ}>
-                                                                {text.cardHolderName}
-                                                            </div>
-                                                            <FormInput
-                                                                texts={{
-                                                                    cardHolderName:
-                                                                        text.inputPlaceholderName,
-                                                                }}
-                                                                name="cardHolderName"
-                                                                onFocus={this.onFocus}
-                                                                onBlur={this.onBlur}
-                                                                handleChange={this.handleChange}
-                                                                value={
-                                                                    this.state.cardHolderName.value
-                                                                }
-                                                                focus={
-                                                                    this.state.cardHolderName.value
-                                                                }
-                                                                type="text"
-                                                            />
-                                                        </div>
-                                                        <div
-                                                            className={styles.amountContainerField}
-                                                        >
-                                                            <div className={styles.summ}>
-                                                                {text.withdrawSumm}, $
-                                                            </div>
-                                                            <FormInput
-                                                                texts={{
-                                                                    amount: text.inputPlaceholderWithdraw,
-                                                                }}
-                                                                name="amount"
-                                                                onFocus={this.onFocus}
-                                                                onBlur={this.onBlur}
-                                                                handleChange={this.handleChange}
-                                                                value={this.state.amount.value}
-                                                                focus={this.state.amount.value}
-                                                                type="number"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        type="submit"
-                                                        className={classNames(styles.button, {
-                                                            [styles.buttonUnactive]:
-                                                                !this.state['amount'].isValid ||
-                                                                error,
-                                                        })}
-                                                    >
-                                                        {text.moneyWithdrawal}
-                                                        <div
-                                                            className={classNames(
-                                                                styles.failedPopup,
-                                                                {
-                                                                    [styles.isFailedPopup]:
-                                                                        !this.state['amount']
-                                                                            .isValid || error,
-                                                                }
-                                                            )}
-                                                        >
-                                                            <img
-                                                                src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg"
-                                                                alt="info"
-                                                            />
-                                                            <div className={styles.title}>
-                                                                {!this.state['amount'].isValid &&
-                                                                    'Недостаточно средств'}
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </form>
-                                            )}
-                                            {this.state.withdrawOnCrypto.active && (
-                                                <form
-                                                    className={styles.form}
-                                                    onSubmit={this.handleSubmit}
-                                                >
-                                                    <div className={styles.inputWrapper}>
-                                                        <div
-                                                            className={styles.amountContainerField}
-                                                        >
-                                                            <div className={styles.summ}>
-                                                                {text.wallet}
-                                                            </div>
-                                                            <FormInput
-                                                                texts={{
-                                                                    wallet: text.inputPlaceholderWallet,
-                                                                }}
-                                                                name="wallet"
-                                                                onFocus={this.onFocus}
-                                                                onBlur={this.onBlur}
-                                                                handleChange={this.handleChange}
-                                                                value={this.state.wallet.value}
-                                                                focus={this.state.wallet.value}
-                                                                type="text"
-                                                            />
-                                                        </div>
-                                                        <div
-                                                            className={styles.amountContainerField}
-                                                        >
-                                                            <div className={styles.summ}>
-                                                                {text.summ}, $
-                                                            </div>
-                                                            <FormInput
-                                                                texts={{
-                                                                    amount: text.inputPlaceholder,
-                                                                }}
-                                                                name="amount"
-                                                                onFocus={this.onFocus}
-                                                                onBlur={this.onBlur}
-                                                                handleChange={this.handleChange}
-                                                                value={this.state.amount.value}
-                                                                focus={this.state.amount.value}
-                                                                type="number"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        type="submit"
-                                                        className={classNames(styles.button, {
-                                                            [styles.buttonUnactive]:
-                                                                !this.state['amount'].isValid ||
-                                                                error,
-                                                        })}
-                                                    >
-                                                        {text.moneyWithdrawal}
-                                                        <div
-                                                            className={classNames(
-                                                                styles.failedPopup,
-                                                                {
-                                                                    [styles.isFailedPopup]:
-                                                                        !this.state['amount']
-                                                                            .isValid || error,
-                                                                }
-                                                            )}
-                                                        >
-                                                            <img
-                                                                src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg"
-                                                                alt="info"
-                                                            />
-                                                            <div className={styles.title}>
-                                                                {!this.state['amount'].isValid &&
-                                                                    'Недостаточно средств'}
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </form>
-                                            )}
-                                            {this.state.withdrawOnBank.active && (
-                                                <div
-                                                    className={classNames(
-                                                        styles.summ,
-                                                        styles.wrapText,
-                                                        styles.tabletText
-                                                    )}
-                                                >
-                                                    {text.bankTransferText}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    return (
+      <div
+        onClick={this.handleOutsideClick}
+        className={classNames(styles.root, {
+          [styles.isVisible]: isVisible,
+        })}
+      >
+        <div className={styles.cover} />
+        <div className={styles.popupWrap}>
+          <div className={styles.popup}>
+            <div className={styles.popupContent}>
+              <div className={classNames(styles.content)}>
+                <button
+                  className={classNames(styles.closeButton)}
+                  onClick={this.closePopup}
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    {/* eslint-disable-next-line max-len */}
+                    <path
+                      d="M12 1.05L10.95 0L6 4.95L1.05 0L0 1.05L4.95 6L0 10.95L1.05 12L6 7.05L10.95 12L12 10.95L7.05 6L12 1.05Z"
+                      fill="#F8F8F8"
+                    />
+                  </svg>
+                </button>
+                <div className={styles.transactionPopupContainer}>
+                  <div className={styles.footer}>
+                    <div className={styles.rightContainer}>
+                      <div className={styles.funds}>
+                        <div
+                          className={classNames(styles.choiceFunds, {
+                            [styles.activeFunds]:
+                              this.state.withdrawOnCard.active,
+                          })}
+                          onClick={() => this.choiceFunds("withdrawOnCard")}
+                        >
+                          {text.withdrawOnCard}
                         </div>
+                        <div
+                          className={classNames(styles.choiceFunds, {
+                            [styles.activeFunds]:
+                              this.state.withdrawOnCrypto.active,
+                          })}
+                          onClick={() => this.choiceFunds("withdrawOnCrypto")}
+                        >
+                          {text.withdrawOnCrypto}
+                        </div>
+                        <div
+                          className={classNames(styles.choiceFunds, {
+                            [styles.activeFunds]:
+                              this.state.withdrawOnBank.active,
+                          })}
+                          onClick={() => this.choiceFunds("withdrawOnBank")}
+                        >
+                          {text.withdrawOnBank}
+                        </div>
+                      </div>
+                      {this.state.withdrawOnCard.active && (
+                        <form
+                          className={styles.form}
+                          onSubmit={this.handleSubmit}
+                        >
+                          <div className={styles.inputWrapper}>
+                            <div className={styles.amountContainerField}>
+                              <div className={styles.summ}>
+                                {text.cardNumberTitle}
+                              </div>
+                              <FormInput
+                                texts={{
+                                  numberCard: text.inputPlaceholderCard,
+                                }}
+                                name="numberCard"
+                                onFocus={this.onFocus}
+                                onBlur={this.onBlur}
+                                handleChange={this.handleChange}
+                                value={this.state.numberCard.value}
+                                focus={this.state.numberCard.value}
+                                type="number"
+                              />
+                            </div>
+                            <div className={styles.amountContainerField}>
+                              <div className={styles.summ}>
+                                {text.cardHolderName}
+                              </div>
+                              <FormInput
+                                texts={{
+                                  cardHolderName: text.inputPlaceholderName,
+                                }}
+                                name="cardHolderName"
+                                onFocus={this.onFocus}
+                                onBlur={this.onBlur}
+                                handleChange={this.handleChange}
+                                value={this.state.cardHolderName.value}
+                                focus={this.state.cardHolderName.value}
+                                type="text"
+                              />
+                            </div>
+                            <div className={styles.amountContainerField}>
+                              <div className={styles.summ}>
+                                {text.withdrawSumm}, $
+                              </div>
+                              <FormInput
+                                texts={{
+                                  amount: text.inputPlaceholderWithdraw,
+                                }}
+                                name="amount"
+                                onFocus={this.onFocus}
+                                onBlur={this.onBlur}
+                                handleChange={this.handleChange}
+                                value={this.state.amount.value}
+                                focus={this.state.amount.value}
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                          <button
+                            type="submit"
+                            className={classNames(styles.button, {
+                              [styles.buttonUnactive]:
+                                !this.state["amount"].isValid || error,
+                            })}
+                          >
+                            {text.moneyWithdrawal}
+                            <div
+                              className={classNames(styles.failedPopup, {
+                                [styles.isFailedPopup]:
+                                  !this.state["amount"].isValid || error,
+                              })}
+                            >
+                              <img
+                                src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg"
+                                alt="info"
+                              />
+                              <div className={styles.title}>
+                                {!this.state["amount"].isValid &&
+                                  "Недостаточно средств"}
+                              </div>
+                            </div>
+                          </button>
+                        </form>
+                      )}
+                      {this.state.withdrawOnCrypto.active && (
+                        <form
+                          className={styles.form}
+                          onSubmit={this.handleSubmit}
+                        >
+                          <div className={styles.inputWrapper}>
+                            <div className={styles.amountContainerField}>
+                              <div className={styles.summ}>{text.wallet}</div>
+                              <FormInput
+                                texts={{
+                                  wallet: text.inputPlaceholderWallet,
+                                }}
+                                name="wallet"
+                                onFocus={this.onFocus}
+                                onBlur={this.onBlur}
+                                handleChange={this.handleChange}
+                                value={this.state.wallet.value}
+                                focus={this.state.wallet.value}
+                                type="text"
+                              />
+                            </div>
+                            <div className={styles.amountContainerField}>
+                              <div className={styles.summ}>
+                                {text.withdrawSumm}, $
+                              </div>
+                              <FormInput
+                                texts={{
+                                  amount: text.inputPlaceholderWithdraw,
+                                }}
+                                name="amount"
+                                onFocus={this.onFocus}
+                                onBlur={this.onBlur}
+                                handleChange={this.handleChange}
+                                value={this.state.amount.value}
+                                focus={this.state.amount.value}
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                          <button
+                            type="submit"
+                            className={classNames(styles.button, {
+                              [styles.buttonUnactive]:
+                                !this.state["amount"].isValid || error,
+                            })}
+                          >
+                            {text.moneyWithdrawal}
+                            <div
+                              className={classNames(styles.failedPopup, {
+                                [styles.isFailedPopup]:
+                                  !this.state["amount"].isValid || error,
+                              })}
+                            >
+                              <img
+                                src="/src/apps/client/ui/components/ConfirmPopup/img/info.svg"
+                                alt="info"
+                              />
+                              <div className={styles.title}>
+                                {!this.state["amount"].isValid &&
+                                  "Недостаточно средств"}
+                              </div>
+                            </div>
+                          </button>
+                        </form>
+                      )}
+                      {this.state.withdrawOnBank.active && (
+                        <div
+                          className={classNames(
+                            styles.summ,
+                            styles.wrapText,
+                            styles.tabletText
+                          )}
+                        >
+                          {text.bankTransferText}
+                        </div>
+                      )}
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        );
-    }
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithdrawPopup);
