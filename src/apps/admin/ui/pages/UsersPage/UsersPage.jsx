@@ -525,7 +525,7 @@ class UsersPage extends Component {
     };
 
     updateOrdersAssets() {
-        const updatedOrders = this.state.orders.map((order) => {
+        const updatedOrders = this.state.orders.map((order) => { 
             if (order.isClosed) return order;
 
             const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
