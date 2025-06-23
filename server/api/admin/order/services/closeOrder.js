@@ -17,48 +17,55 @@ import numeral from 'numeral';
 export default function closeOrder(req, res) {
     try {
         const orderInfo = req.body;
+
         getOrderById(orderInfo.id)
             .then((order) => {
+                if (!order) return res.status(BAD_REQUEST_STATUS_CODE).send();
+
                 getUserById(order.userId)
                     .then((user) => {
-                        if (!order || order.userId !== user.id) {
+                        if (!user || user.id !== order.userId) {
                             return res.status(BAD_REQUEST_STATUS_CODE).send();
                         }
 
+                        const closedPrice = numeral(orderInfo.closedPrice).value();
+                        const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
+
+                        // Корректный расчёт прибыли, если она не задана
+                        let profit =
+                            typeof order.profit === 'number'
+                                ? order.profit
+                                : getProfit(
+                                      order.amount,
+                                      order.openingPrice,
+                                      closedPrice,
+                                      order.type,
+                                      asset
+                                  );
+
+                        const commission = getCommission(order.pledge, COMMISSION);
+                        const netProfit = profit - commission;
+
                         const closedOrder = {
                             id: order.id,
-                            isClosed: orderInfo.isClosed,
+                            isClosed: true,
                             closedAt: orderInfo.closedAt,
-                            closedPrice: numeral(orderInfo.closedPrice).value(),
+                            closedPrice,
+                            profit,
                         };
 
-                        const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
-                        const profit = getProfit(
-                            order.amount,
-                            order.openingPrice,
-                            closedOrder.closedPrice,
-                            order.type,
-                            asset
-                        );
-                        const commission = getCommission(order.pledge, COMMISSION);
                         const updatedUser = {
-                            id: orderInfo.userId,
-                            balance: user.balance + profit - commission,
+                            id: user.id,
+                            balance: user.balance + netProfit,
                         };
 
-                        Promise.all([editOrderQuery(closedOrder), editUserQuery(updatedUser)]).then(
-                            () => {
-                                res.status(OKEY_STATUS_CODE).end();
-                            }
-                        );
+                        Promise.all([editOrderQuery(closedOrder), editUserQuery(updatedUser)])
+                            .then(() => res.status(OKEY_STATUS_CODE).end())
+                            .catch(() => res.status(SERVER_ERROR_STATUS_CODE).end());
                     })
-                    .catch(() => {
-                        res.status(SERVER_ERROR_STATUS_CODE).end();
-                    });
+                    .catch(() => res.status(SERVER_ERROR_STATUS_CODE).end());
             })
-            .catch(() => {
-                res.status(SERVER_ERROR_STATUS_CODE).end();
-            });
+            .catch(() => res.status(SERVER_ERROR_STATUS_CODE).end());
     } catch (e) {
         res.status(SERVER_ERROR_STATUS_CODE).end();
     }
