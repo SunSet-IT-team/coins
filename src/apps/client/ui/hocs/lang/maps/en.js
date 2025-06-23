@@ -219,6 +219,7 @@ export default {
             statusWithdraw: 'Status',
             moneyWithdrawal: 'Withdraw',
             moneyDeposit: 'Deposit',
+            transactionSumm: 'Transaction amount',
             withdrawSumm: 'Amount withdrawal',
             depositSumm: 'Amount deposit',
             withdraw: 'Withdraw',

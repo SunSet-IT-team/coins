@@ -265,7 +265,7 @@ class TransactionInfoPopup extends Component {
             <div className={styles.transactionPopupContainer}>
                 <div className={styles.navbar}>
                     <div className={styles.itemNum}>#</div>
-                    <div className={styles.itemSum}>{text.summ}</div>
+                    <div className={styles.itemSum}>{text.transactionSumm}</div>
                     <div className={styles.itemStatus}>{text.status}</div>
                     <div className={styles.itemDate}>{text.date}</div>
                 </div>

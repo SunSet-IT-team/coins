@@ -184,6 +184,7 @@ export default {
             withdraw: 'Вывод средств',
             moneyWithdrawal: 'Вывести',
             moneyDeposit: 'Пополнить',
+            transactionSumm: 'Сумма транзакции',
             withdrawSumm: 'Сумма',
             depositSumm: 'Сумма',
             inputPlaceholderWithdraw: 'Вывод от $ 5.00',
