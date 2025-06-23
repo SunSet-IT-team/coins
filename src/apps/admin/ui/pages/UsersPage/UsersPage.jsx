@@ -78,6 +78,7 @@ import clone from '@tinkoff/utils/clone';
 import ErrorIcon from '@material-ui/icons/Error';
 import assetPriceWebsocketController from '../../../../client/services/client/assetPriceWebsocket.js';
 import calculateBuyingPrice from '../../../../client/utils/calculateBuyPrice.js';
+import ChartChangeForm from '../../components/ChartChangeForm/ChartChangeForm.jsx';
 
 const ORDERS_TYPE_TEXT = [
     {id: 1, type: 'buy', text: 'Покупка'},
@@ -1023,6 +1024,7 @@ class UsersPage extends Component {
                     onClose={this.handleChangeFormTransactionClose}
                     onDone={this.handleCloseTransactionForm}
                 />
+                <ChartChangeForm />
             </div>
         );
     };
