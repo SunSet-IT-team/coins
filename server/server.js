@@ -36,6 +36,7 @@ import adminMessageApi from './api/admin/message';
 import clientMessageApi from './api/client/message';
 import clientOrderApi from './api/client/order';
 import adminOrderApi from './api/admin/order';
+import changeChartValuesApi from './api/admin/charts'; //// this is charts api
 import clientDataApi from './api/client/data';
 import clientTransactionApi from './api/client/transaction';
 import adminTransactionApi from './api/admin/transaction';
@@ -166,6 +167,7 @@ function createApp() {
         app.use('/api/client/payments', clientPaymentsApi);
         app.use('/api/admin/output', adminMoneyOutputApi);
         app.use('/api/client/output', clientMoneyOutputApi);
+        app.use('/api/admin', changeChartValuesApi);
 
         // admin
         const adminUrlRegex = new RegExp(`^${ADMIN_PANEL_URL}`);

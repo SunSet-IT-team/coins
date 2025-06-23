@@ -11,7 +11,7 @@ import schedule from 'node-schedule';
 import {CRYPTO_CURRENCIES_SYMBOLS} from '../constants/symbols';
 import base from '../../src/apps/admin/services/base';
 import request from 'superagent';
-import {COMMISSION} from '../../src/apps/client/constants/constants';
+// import {COMMISSION} from '../../src/apps/client/constants/constants';
 
 export const pricesEvents = new EventEmitter();
 
