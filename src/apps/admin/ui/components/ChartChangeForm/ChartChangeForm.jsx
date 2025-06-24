@@ -7,12 +7,18 @@ import {
     CHART_SYMBOL_INFO_MAP,
     CRYPTO_CURRENCIES_SYMBOLS,
 } from '../../../../../../server/constants/symbols';
+import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
+import saveChartChanges from '../../../services/saveChartChanges';
 
 const materialStyles = (theme) => ({
     root: {
         padding: '10px',
     },
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    saveChartChanges: (payload) => dispatch(saveChartChanges(payload)),
 });
 
 class ChartChangeForm extends Component {
@@ -62,21 +68,20 @@ class ChartChangeForm extends Component {
         });
     }
 
-    getOrderPayload = ({assetName, priceOffset}) => {
+    getSendingPayload = ({assetName, priceOffset}) => {
         return {
-            assetName,
-            priceOffset,
+            currency: assetName,
+            offset: Number(priceOffset),
         };
     };
 
     handleSubmit = async (values) => {
-        const orderPayload = this.getOrderPayload(values);
-        // console.log(orderPayload);
-        // const {editOrder, saveOrder, onDone} = this.props;
+        const payload = this.getSendingPayload(values);
+        const {saveChartChanges} = this.props;
 
         return new Promise(async (resolve, reject) => {
             try {
-                // onDone();
+                (await saveChartChanges(payload)).then((res) => console.log(res));
                 resolve();
             } catch (e) {
                 reject(e);
@@ -122,7 +127,7 @@ class ChartChangeForm extends Component {
 
     render() {
         const {classes} = this.props;
-        // console.log(classes);
+        console.log(classes);
 
         const initialValues = {
             ...this.initialValues,
@@ -145,4 +150,4 @@ class ChartChangeForm extends Component {
     }
 }
 
-export default withStyles(materialStyles)(ChartChangeForm);
+export default connect(null, mapDispatchToProps)(withStyles(materialStyles)(ChartChangeForm));
