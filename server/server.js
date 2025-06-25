@@ -147,7 +147,9 @@ function createApp() {
         app.use('/api/admin/payment', adminPaymentApi);
         app.use('/api/admin/article', adminArticleApi);
         app.use('/api/admin/files', adminFilesApi);
+
         app.use('/api/client/article', clientArticleApi);
+
         app.use('/api/admin/db', adminDbApi);
         app.use('/api/admin/user', adminUserApi);
         app.use('/api/admin/manager', adminManagerApi);
