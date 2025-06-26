@@ -35,7 +35,7 @@ export default function checkAuthentication(req, res) {
                             console.log('Admin not found:', decoded.email);
                             return res.status(FORBIDDEN_STATUS_CODE).end();
                         }
-                        console.log('Admin found:', admin);
+                        // console.log('Admin found:', admin);
 
                         res.status(OKEY_STATUS_CODE).send({
                             id: admin.id,

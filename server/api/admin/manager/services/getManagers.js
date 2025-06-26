@@ -4,10 +4,10 @@ import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/
 
 export default function getManagers(req, res) {
     try {
-        console.log('getManagers');
+        // console.log('getManagers');
         getAllManagers()
             .then((managers) => {
-                console.log('managers', managers);
+                // console.log('managers', managers);
                 res.status(OKEY_STATUS_CODE).send(managers);
             })
             .catch((e) => {
