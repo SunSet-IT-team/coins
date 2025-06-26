@@ -1,6 +1,6 @@
 import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 
-import getMoneyInputQuery from '../queries/getMoneyOutput'; //*
+import getMoneyInputQuery from '../queries/getMoneyInput'; //*
 
 export default function getClientMoneyOutput(req, res) {
     const {id: userId} = res.locals.user;
