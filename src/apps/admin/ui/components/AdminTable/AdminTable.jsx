@@ -159,7 +159,7 @@ class AdminTable extends React.Component {
         this.state = {
             selected: [],
             page: 0,
-            rowsPerPage: values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : values.length,
+            rowsPerPage: values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : 10,
             checkboxIndeterminate: false,
         };
     }

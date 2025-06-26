@@ -12,6 +12,7 @@ import {
     SET_PAYMENTS,
     SET_TRANSACTIONS,
     SET_MONEY_OUTPUT,
+    SET_MONEY_INPUT,
 } from '../types/types';
 
 const initialState = {
@@ -120,6 +121,8 @@ export default function (state = initialState, action) {
             return {...state, transactions: action.payload};
         case SET_MONEY_OUTPUT:
             return {...state, moneyOutput: action.payload};
+        case SET_MONEY_INPUT:
+            return {...state, moneyInput: action.payload};
         default:
             return state;
     }
