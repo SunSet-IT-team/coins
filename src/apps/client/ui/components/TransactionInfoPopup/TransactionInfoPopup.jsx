@@ -270,7 +270,7 @@ class TransactionInfoPopup extends Component {
         const {langMap, transactions} = this.props;
         const {outputByUser, inputByUser} = this.state;
 
-        const transactionList = [...outputByUser, ...inputByUser, ...transactions];
+        const transactionList = [...outputByUser, ...transactions, ...inputByUser];
 
         const text = propOr('accountInfo', {}, langMap).transaction;
 

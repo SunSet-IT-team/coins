@@ -262,8 +262,7 @@ class SwiftForm extends Component {
         const {langMap} = this.props;
         const {error} = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
-        console.log(text);
-
+        
         return (
             <div className={styles.transactionPopupContainer}>
                 <div className={styles.footer}>
