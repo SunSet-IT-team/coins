@@ -127,7 +127,6 @@ class ChartChangeForm extends Component {
 
     render() {
         const {classes} = this.props;
-        console.log(classes);
 
         const initialValues = {
             ...this.initialValues,
