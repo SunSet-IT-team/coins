@@ -60,14 +60,14 @@ export default function deleteByIds(req, res) {
 
             deleteByIdsQuery(ids)
                 .then(() => {
-                    console.log('save', {
-                        id: user.id,
-                        balance: user.balance,
-                        mainBalance: user.mainBalance,
-                        accountStatus: user.accountStatus,
-                        bonuses: user.bonuses,
-                        credFacilities: user.credFacilities,
-                    });
+                    // console.log('save', {
+                    //     id: user.id,
+                    //     balance: user.balance,
+                    //     mainBalance: user.mainBalance,
+                    //     accountStatus: user.accountStatus,
+                    //     bonuses: user.bonuses,
+                    //     credFacilities: user.credFacilities,
+                    // });
                     editUser({
                         id: user.id,
                         balance: user.balance,

@@ -104,11 +104,11 @@ class MessagesWebsocketController {
                             });
                         })
                         .catch((e) => {
-                            console.log(e);
-                            console.log(777);
+                            // console.log(e);
+                            // console.log(777);
                         });
                 } catch (e) {
-                    console.log(e);
+                    // console.log(e);
                 }
             });
         });

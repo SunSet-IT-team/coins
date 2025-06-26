@@ -71,8 +71,8 @@ function createApp() {
 
         app.use(helmet());
 
-        console.log('DATABASE_URL');
-        console.log(DATABASE_URL);
+        // console.log('DATABASE_URL');
+        // console.log(DATABASE_URL);
 
         // mongodb
         mongoose.connect(DATABASE_URL, {
@@ -209,7 +209,7 @@ function createApp() {
         }
 
         app.listen(isMainThread ? PORT : workerData.port, '0.0.0.0', () => {
-            console.log('listening on port', isMainThread ? PORT : workerData.port); // eslint-disable-line no-console
+            console.log('listening on port', isMainThread ? PORT : workerData.port);
 
             if (isMainThread) {
                 pricesController.start();
@@ -237,12 +237,12 @@ async function startMain() {
 
     for (let i = 0; i < os.cpus().length - 1; i++) {
         port += i + 1;
-        console.log('thread', i + 1, 'port', port);
+        // console.log('thread', i + 1, 'port', port);
         await new Promise((resolve) => {
             const worker = new Worker(pathToScript, {workerData: {port, env}});
             worker.on('message', (data) => {
                 if (data.request === 'init') {
-                    console.log('init api worker', data.env, data.port);
+                    // console.log('init api worker', data.env, data.port);
 
                     resolve();
                 }

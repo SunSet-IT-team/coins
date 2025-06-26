@@ -18,7 +18,7 @@ export default function changeCredentials(req, res) {
                 if (admin.password !== md5(oldCredentials.password)) {
                     return res.status(FORBIDDEN_STATUS_CODE).end();
                 }
-                console.log(admin);
+                // console.log(admin);
                 changeCredentialsQuery({
                     login: newCredentials.login,
                     password: md5(newCredentials.password),
