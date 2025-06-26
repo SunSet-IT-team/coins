@@ -18,6 +18,7 @@ import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
 import getClientMoneyOutput from '../../../services/client/getClientMoneyOutput';
+import getClientMoneyInput from '../../../services/client/gitClientMoneyInput';
 import outputWebsocketController from '../../../../admin/services/outputWebsocket';
 
 // import FormInput from '../FormInput/FormInput';
@@ -29,6 +30,7 @@ const mapStateToProps = ({application, data}) => {
         transactions: data.transactions,
         user: data.user,
         moneyOutput: data.moneyOutput,
+        moneyInput: data.moneyInput,
     };
 };
 
@@ -37,6 +39,7 @@ const mapDispatchToProps = (dispatch) => ({
     setAccountInfoPopup: (payload) => dispatch(setAccountInfoPopup(payload)),
     setWithdrawSuccessPopup: (payload) => dispatch(setWithdrawSuccessPopup(payload)),
     getClientMoneyOutput: (payload) => dispatch(getClientMoneyOutput(payload)),
+    getClientMoneyInput: (payload) => dispatch(getClientMoneyInput(payload)),
 });
 
 class TransactionInfoPopup extends Component {
@@ -70,24 +73,34 @@ class TransactionInfoPopup extends Component {
     defaultState() {
         return {
             amount: {value: '', focus: false, isValid: true},
-            outputByUsers: [],
+            outputByUser: [],
+            inputByUser: [],
         };
     }
 
     getData = () => {
         const {user} = this.props;
         if (user === null) return;
-        return this.props
-            .getClientMoneyOutput()
+        return Promise.all([this.props.getClientMoneyOutput(), this.props.getClientMoneyInput()])
             .then(() => {
-                const userOutputs = this.props.moneyOutput.filter(
-                    (item) => item.userId === user.id
-                );
-
                 this.setState({
-                    outputByUsers: userOutputs.map((item) => ({
+                    outputByUser: this.props.moneyOutput.map((item) => ({
                         status: item.status,
                         date: item.createdAt,
+                        type: 'withdraw',
+                        createdAt: item.createdAtDate,
+                        amount: item.amount,
+                        wallet: item.wallet,
+                        numberCard: item.numberCard,
+                        cardHolderName: item.cardHolderName,
+                        id: item.id,
+                        visited: item.visited,
+                        userId: user.id,
+                    })),
+                    inputByUser: this.props.moneyInput.map((item) => ({
+                        status: item.status,
+                        date: item.createdAt,
+                        type: 'deposit',
                         createdAt: item.createdAtDate,
                         amount: item.amount,
                         wallet: item.wallet,
@@ -255,9 +268,9 @@ class TransactionInfoPopup extends Component {
 
     render() {
         const {langMap, transactions} = this.props;
-        const {outputByUsers} = this.state;
+        const {outputByUser, inputByUser} = this.state;
 
-        const transactionList = [...outputByUsers, ...transactions];
+        const transactionList = [...outputByUser, ...inputByUser, ...transactions];
 
         const text = propOr('accountInfo', {}, langMap).transaction;
 
@@ -327,6 +340,18 @@ class TransactionInfoPopup extends Component {
                                                         {item.cardHolderName}
                                                     </p>
                                                 </div>
+                                            )}
+                                            {item.type && (
+                                                <p>
+                                                    {text.type}:{' '}
+                                                    {item.type === 'withdraw'
+                                                        ? text.types.output
+                                                        : item.type === 'deposit'
+                                                          ? text.types.deposit
+                                                          : item.type === 'bonuses'
+                                                            ? text.types.bonuses
+                                                            : text.types.other}
+                                                </p>
                                             )}
                                         </div>
                                     )}

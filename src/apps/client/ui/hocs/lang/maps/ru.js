@@ -193,6 +193,13 @@ export default {
             inputPlaceholderName: 'Имя держателя',
             inputPlaceholderWallet: 'Номер кошелька',
             status: 'Описание',
+            type: 'Тип транзакции',
+            types: {
+                output: 'Вывод средств',
+                deposit: 'Депозит',
+                bonuses: 'Бонусы',
+                other: 'Другое',
+            },
             date: 'Дата',
             moneyWithdrawalTitle: 'Вывод средств',
             withdrawOnCard: 'Visa/Mastercard',

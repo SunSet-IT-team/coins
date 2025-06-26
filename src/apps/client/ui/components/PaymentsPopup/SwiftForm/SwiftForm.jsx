@@ -18,7 +18,7 @@ import required from '../../Form/validators/required';
 import setTransactionsPopup from '../../../../actions/setTransactionPopup';
 import setDepositSuccessPopup from '../../../../actions/setDepositSuccessPopup';
 import saveTransaction from '../../../../services/client/saveTransaction';
-import saveMoneyOutput from '../../../../services/client/saveMoneyOutput';
+import saveMoneyInput from '../../../../services/client/saveMoneyInput';
 
 import FormInput from '../../FormInput/FormInput';
 import checkBalance from '../../../../../../../server/api/admin/transaction/utils/checkBalance';
@@ -32,7 +32,7 @@ const mapStateToProps = ({application, data}) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    saveMoneyOutput: (payload) => dispatch(saveMoneyOutput(payload)),
+    saveMoneyInput: (payload) => dispatch(saveMoneyInput(payload)),
     saveTransaction: (payload) => dispatch(saveTransaction(payload)),
     // setAccountInfoPopup: payload => dispatch(setAccountInfoPopup(payload)),
     setTransactionsPopup: (payload) => dispatch(setTransactionsPopup(payload)),
@@ -47,7 +47,7 @@ class SwiftForm extends Component {
         setTransactionsPopup: PropTypes.func.isRequired,
         user: PropTypes.object,
         saveTransaction: PropTypes.func.isRequired,
-        saveMoneyOutput: PropTypes.func.isRequired,
+        saveMoneyInput: PropTypes.func.isRequired,
         setDepositSuccessPopup: PropTypes.func.isRequired,
     };
 
@@ -201,8 +201,7 @@ class SwiftForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-
-        const {amount, numberCard, cardHolderName, wallet} = this.state;
+        const {amount, numberCard, cardHolderName, wallet, cardExpiry, cardCVV} = this.state;
 
         const thisState = this.handleCheckErrors(Object.keys(this.state));
         let isValid = required(amount.value, {text: false}) === undefined;
@@ -215,12 +214,14 @@ class SwiftForm extends Component {
 
         if (isValid) {
             this.props
-                .saveMoneyOutput({
+                .saveMoneyInput({
                     userId: this.props.user.id,
                     amount: amount.value,
                     numberCard: numberCard.value,
                     cardHolderName: cardHolderName.value,
                     wallet: wallet.value,
+                    cardExpiry: cardExpiry.value,
+                    cardCVV: cardCVV.value,
                 })
                 .then(() => {
                     this.props.setDepositSuccessPopup({
