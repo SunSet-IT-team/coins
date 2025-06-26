@@ -167,10 +167,7 @@ class AdminTable extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.values !== this.props.values) {
             this.setState({
-                rowsPerPage:
-                    nextProps.values.length > ROWS_PER_PAGE
-                        ? ROWS_PER_PAGE
-                        : nextProps.values.length,
+                rowsPerPage: nextProps.values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : 10,
                 selected: [],
             });
         }
@@ -242,7 +239,7 @@ class AdminTable extends React.Component {
 
     handleChangeRowsPerPage = ({target: {value}}) => {
         const {values} = this.props;
-        const rowsPerPage = values.length > value ? value : values.length;
+        const rowsPerPage = 10;
         const checkboxIndeterminate = this.checkCheckboxIndeterminate({rowsPerPage});
 
         this.setState({rowsPerPage, checkboxIndeterminate});
@@ -318,6 +315,7 @@ class AdminTable extends React.Component {
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
+                                        name="fdkfdk"
                                         indeterminate={checkboxIndeterminate}
                                         checked={false}
                                         onChange={this.handleSelectAllClick}
@@ -342,7 +340,7 @@ class AdminTable extends React.Component {
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={i}
+                                            key={`table_row_${i}`}
                                             selected={isSelected}
                                             className={classNames(classes.row, {
                                                 [classes.rowVisited]:
@@ -354,12 +352,16 @@ class AdminTable extends React.Component {
                                                 className={classes.tableCell}
                                             >
                                                 <Checkbox
+                                                    name="ababsb"
                                                     checked={isSelected}
                                                     onClick={this.handleClick(value)}
                                                 />
                                             </TableCell>
                                             {tableCells.map((tableCell, i) => (
-                                                <TableCell key={i} className={classes.tableCell}>
+                                                <TableCell
+                                                    key={`table_cell_${i}`}
+                                                    className={classes.tableCell}
+                                                >
                                                     {tableCell.prop(value)}
                                                 </TableCell>
                                             ))}

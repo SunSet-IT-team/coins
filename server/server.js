@@ -44,7 +44,7 @@ import clientTempApi from './api/client/temp';
 import adminPaymentsApi from './api/admin/payments';
 import clientPaymentsApi from './api/client/payments';
 import adminMoneyOutputApi from './api/admin/moneyOutput';
-import clientMoneyOutputApi from './api/client/moneyOutput';
+import clientMoneyInputApi from './api/client/moneyInput';
 
 import {DATABASE_URL} from './constants/constants';
 import {ADMIN_PANEL_URL} from '../src/apps/admin/constants/constants';
@@ -147,7 +147,9 @@ function createApp() {
         app.use('/api/admin/payment', adminPaymentApi);
         app.use('/api/admin/article', adminArticleApi);
         app.use('/api/admin/files', adminFilesApi);
+
         app.use('/api/client/article', clientArticleApi);
+
         app.use('/api/admin/db', adminDbApi);
         app.use('/api/admin/user', adminUserApi);
         app.use('/api/admin/manager', adminManagerApi);
@@ -166,7 +168,7 @@ function createApp() {
         app.use('/api/admin/payments', adminPaymentsApi);
         app.use('/api/client/payments', clientPaymentsApi);
         app.use('/api/admin/output', adminMoneyOutputApi);
-        app.use('/api/client/output', clientMoneyOutputApi);
+        app.use('/api/client/input', clientMoneyInputApi);
         app.use('/api/admin', changeChartValuesApi);
 
         // admin
