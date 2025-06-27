@@ -61,17 +61,18 @@ export default function closeOrder(req, res) {
                     id,
                     isClosed: true,
                     closedAt: Date.now(),
-                    closedPrice: closedPriceParam || closedPriceReal,
+                    closedPrice: closedPriceParam || closedPriceReal.value,
                 };
 
                 const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
                 const profit = getProfit(
                     order.amount,
                     order.openingPrice,
-                    closedPriceReal,
+                    closedPriceReal.value,
                     order.type,
                     asset
                 );
+
                 const commission = getCommission(order.pledge, COMMISSION);
                 const updatedUser = {
                     id: userId,
@@ -91,7 +92,10 @@ export default function closeOrder(req, res) {
                             .status(OKEY_STATUS_CODE)
                             .send({openOrders, closedOrders: [order], countClosedOrders, user});
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        console.log('-----------Тут егор-------------');
+                        console.log(e);
+                        console.log('------------Тут егор------------');
                         res.status(SERVER_ERROR_STATUS_CODE).end();
                     });
             });
