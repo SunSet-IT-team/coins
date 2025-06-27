@@ -31,9 +31,11 @@ class ChartChangeForm extends Component {
 
         this.initialValues = {
             assetName: CRYPTO_CURRENCIES_SYMBOLS[0].name,
-            currentPrice: assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name],
+            currentPrice:
+                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name].value -
+                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name].offset,
             priceWithOffset:
-                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name],
+                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name].value,
             priceOffset: '',
         };
 
@@ -60,8 +62,10 @@ class ChartChangeForm extends Component {
             ...this.state.userFormData,
         };
 
-        formData.currentPrice = data.price;
-        formData.priceWithOffset = data.price + Number(formData.priceOffset);
+        console.log(data.price);
+
+        formData.currentPrice = data.price.value - data.price.offset;
+        formData.priceWithOffset = data.price.value + Number(formData.priceOffset);
 
         this.setState({
             userFormData: formData,
