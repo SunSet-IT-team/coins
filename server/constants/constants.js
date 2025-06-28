@@ -9,6 +9,8 @@ export const APP_FORM_FILE_FIELD_NAME_REGEX = /app-form-file-/g;
 
 // export const DOMAIN = 'coinwalletcapital.ru';
 
+export const DOMAIN = 'coinwalletcapital.ru';
+
 export const DATABASE_URL =
     process.env.DATABASE_URL ||
     (process.env.NODE_ENV === 'production'
