@@ -3,7 +3,7 @@ import {CRYPTO_CURRENCIES_SYMBOLS} from '../constants/symbols';
 import {pricesEvents} from './pricesController';
 import {SYMBOL_PRICE_CHANGE_EVENT} from '../constants/events';
 
-const FINNHUB_WS = `wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY_PROD}`;
+const FINNHUB_WS = `wss://ws.finnhub.io?token=cpkt1rhr01qulsvjo5m0cpkt1rhr01qulsvjo5mg`;
 const BASE_RECONNECT_DELAY = 5000;
 const MAX_BACKOFF_MULTIPLIER = 8;
 const HEARTBEAT_INTERVAL = 1000;
