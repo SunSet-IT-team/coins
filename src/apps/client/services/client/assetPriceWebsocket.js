@@ -8,7 +8,9 @@ import {DOMAIN} from '../../../../../server/constants/constants';
 import calculateBuyingPrice from '../../utils/calculateBuyPrice';
 
 const WEBSOCKET_URL =
-    process.env.NODE_ENV === 'production' ? `wss://${DOMAIN}:8443` : 'ws://localhost:8443';
+    process.env.NODE_ENV === 'production'
+        ? `wss://${process.env.DOMAIN}:8443`
+        : 'ws://localhost:8443';
 
 const DISCONNECT_TIMEOUT = 2000;
 
