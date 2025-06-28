@@ -1,156 +1,148 @@
 import React, {Component} from 'react';
+import Typography from '@material-ui/core/Typography';
+import {connect} from 'react-redux';
+import {withStyles} from '@material-ui/core/styles';
+
 import Form from '../Form/Form';
 import getSchema from './orderFormSchema';
 import assetPriceWebsocketController from '../../../../client/services/client/assetPriceWebsocket';
-import Typography from '@material-ui/core/Typography';
-import {
-    CHART_SYMBOL_INFO_MAP,
-    CRYPTO_CURRENCIES_SYMBOLS,
-} from '../../../../../../server/constants/symbols';
-import {connect} from 'react-redux';
-import {withStyles} from '@material-ui/core/styles';
 import saveChartChanges from '../../../services/saveChartChanges';
+import {CRYPTO_CURRENCIES_SYMBOLS} from '../../../../../../server/constants/symbols';
 
-const materialStyles = (theme) => ({
-    root: {
-        padding: '10px',
-    },
-});
+const styles = () => ({root: {padding: 10}});
+const mapDispatch = (d) => ({saveChartChanges: (p) => d(saveChartChanges(p))});
 
-const mapDispatchToProps = (dispatch) => ({
-    saveChartChanges: (payload) => dispatch(saveChartChanges(payload)),
+// Форматируем число в строку с 2 знаками после запятой
+const format = (num) => Number(num).toFixed(2);
+
+/**
+ * raw = { value (opt), price (opt), offset }
+ * возвращает { base, offset } (числа)
+ */
+const parseRaw = (raw) => {
+    if (raw && typeof raw === 'object') {
+        const off = Number(raw.offset) || 0;
+        const total =
+            raw.value !== undefined
+                ? Number(raw.value) || 0
+                : raw.price !== undefined
+                  ? Number(raw.price) || 0
+                  : 0;
+        return {base: total - off, offset: off};
+    }
+    const num = Number(raw) || 0;
+    return {base: num, offset: 0};
+};
+
+const buildForm = ({symbol, base, offset}) => ({
+    assetName: symbol,
+    currentPrice: format(base),
+    priceOffset: format(offset),
+    priceWithOffset: format(base + offset),
 });
 
 class ChartChangeForm extends Component {
     constructor(props) {
         super(props);
-
+        const symbol = CRYPTO_CURRENCIES_SYMBOLS[0].name;
+        const {base, offset} = parseRaw(assetPriceWebsocketController.prices[symbol]);
         this.state = {
-            userFormData: {},
+            form: buildForm({symbol, base, offset}),
+            editing: null,
+            touched: new Set(),
+            lastSubmit: Date.now(),
         };
-
-        this.initialValues = {
-            assetName: CRYPTO_CURRENCIES_SYMBOLS[0].name,
-            currentPrice:
-                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name].value -
-                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name].offset,
-            priceWithOffset:
-                assetPriceWebsocketController.prices[CRYPTO_CURRENCIES_SYMBOLS[0].name].value,
-            priceOffset: '',
-        };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handlePriceUpdate = this.handlePriceUpdate.bind(this);
     }
 
     componentDidMount() {
-        assetPriceWebsocketController.events.on('data', this.handlePriceUpdate);
+        assetPriceWebsocketController.events.on('data', this.onWsData);
     }
-
     componentWillUnmount() {
-        assetPriceWebsocketController.events.off('data', this.handlePriceUpdate);
+        assetPriceWebsocketController.events.off('data', this.onWsData);
     }
 
-    handlePriceUpdate(data) {
-        const assetName = this.state.userFormData.assetName || this.initialValues.assetName;
+    // WS-апдейт: обновляем currentPrice и нетронутые поля
+    onWsData = ({name, price, offset}) => {
+        if (name !== this.state.form.assetName) return;
+        const {base, offset: off} = parseRaw({price, offset});
 
-        if (data.name !== assetName) return;
+        this.setState(({form, editing, touched}) => {
+            const next = {...form, currentPrice: format(base)};
 
-        const formData = {
-            ...this.initialValues,
-            ...this.state.userFormData,
-        };
-
-        console.log(data.price);
-
-        formData.currentPrice = data.price.value - data.price.offset;
-        formData.priceWithOffset = data.price.value + Number(formData.priceOffset);
-
-        this.setState({
-            userFormData: formData,
-        });
-    }
-
-    getSendingPayload = ({assetName, priceOffset}) => {
-        return {
-            currency: assetName,
-            offset: Number(priceOffset),
-        };
-    };
-
-    handleSubmit = async (values) => {
-        const payload = this.getSendingPayload(values);
-        const {saveChartChanges} = this.props;
-
-        return new Promise(async (resolve, reject) => {
-            try {
-                (await saveChartChanges(payload)).then((res) => console.log(res));
-                resolve();
-            } catch (e) {
-                reject(e);
+            if (editing !== 'priceOffset' && !touched.has('priceOffset')) {
+                next.priceOffset = format(off);
             }
+            if (editing !== 'priceWithOffset' && !touched.has('priceWithOffset')) {
+                next.priceWithOffset = format(base + off);
+            }
+
+            return {form: next};
         });
     };
 
-    handleChange = (values, changes) => {
-        const changeKey = Object.keys(changes)[0];
-        const changeValue = changes[changeKey];
-
-        const updatedFormData = {
-            ...values,
-            ...this.state.userFormData,
-            ...changes,
-        };
-
-        const asset = CHART_SYMBOL_INFO_MAP[updatedFormData.assetName];
-
-        switch (changeKey) {
-            case 'assetName':
-                const currentPrice = assetPriceWebsocketController.prices[changeValue] || '';
-                updatedFormData.currentPrice = currentPrice;
-                updatedFormData.priceWithOffset =
-                    currentPrice + Number(updatedFormData.priceOffset);
-                break;
-
-            case 'priceOffset':
-                updatedFormData.priceWithOffset =
-                    updatedFormData.currentPrice + Number(changeValue);
-                break;
-        }
-
+    handleSubmit = async ({assetName, priceOffset}) => {
+        const payload = {currency: assetName, offset: Number(priceOffset)};
+        const res = await this.props.saveChartChanges(payload);
         this.setState({
-            userFormData: updatedFormData,
+            touched: new Set(),
+            editing: null,
+            lastSubmit: Date.now(),
+        });
+        return res;
+    };
+
+    // Любые изменения из Form
+    handleChange = (_all, changes) => {
+        const [field] = Object.keys(changes);
+        const val = changes[field];
+
+        this.setState(({form, touched}) => {
+            const next = {...form, ...changes};
+
+            if (field === 'assetName') {
+                const {base, offset} = parseRaw(assetPriceWebsocketController.prices[val]);
+                Object.assign(next, buildForm({symbol: val, base, offset}));
+                touched = new Set();
+            }
+
+            if (field === 'priceOffset') {
+                const cp = parseFloat(next.currentPrice);
+                next.priceWithOffset = format(cp + Number(val));
+            }
+            if (field === 'priceWithOffset') {
+                const cp = parseFloat(next.currentPrice);
+                next.priceOffset = format(Number(val) - cp);
+            }
+
+            const newTouched = new Set(touched);
+            newTouched.add(field);
+            return {form: next, editing: field, touched: newTouched};
         });
     };
 
-    handleInputChange = (e) => {
-        const {name, value} = e.target;
-        this.handleChange({[name]: value}, {[name]: value});
-    };
+    // Фокус/блюр для блокировки WS-перезаписи
+    setEditing = (e) => this.setState({editing: e.target.name});
+    clearEditing = () => this.setState({editing: null});
 
     render() {
         const {classes} = this.props;
-
-        const initialValues = {
-            ...this.initialValues,
-            ...this.state.userFormData,
-        };
+        const {form, lastSubmit} = this.state;
 
         return (
             <div className={classes.root}>
                 <Typography variant="h6">Изменение графика валют</Typography>
                 <Form
-                    initialValues={initialValues}
-                    schema={getSchema({
-                        data: {},
-                    })}
+                    key={lastSubmit}
+                    initialValues={form}
+                    schema={getSchema({data: {}})}
                     onChange={this.handleChange}
                     onSubmit={this.handleSubmit}
+                    onFocus={this.setEditing}
+                    onBlur={this.clearEditing}
                 />
             </div>
         );
     }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(materialStyles)(ChartChangeForm));
+export default connect(null, mapDispatch)(withStyles(styles)(ChartChangeForm));
