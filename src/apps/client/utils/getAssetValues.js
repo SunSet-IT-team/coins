@@ -1,11 +1,13 @@
-export const getOpeningSlotPrice = (asset, openingPrice) => openingPrice / asset.leverage;
+export const getOpeningSlotPrice = (asset, openingPrice) => {
+    const leverage = asset && asset.leverage ? asset.leverage : 1;
+    return openingPrice / leverage;
+};
+
 export const getPledge = (amount, openingSlotPrice) => amount * openingSlotPrice;
 export const getProfit = (amount, openingPrice, price, type, asset) =>
-  (type === "buy" ? price - openingPrice : openingPrice - price) * amount
+    (type === 'buy' ? price - openingPrice : openingPrice - price) * amount;
 export const getPriceByProfit = (amount, openingPrice, profit, type, asset) =>
-  type === "buy"
-    ? profit / amount + openingPrice
-    : profit / amount - openingPrice
+    type === 'buy' ? profit / amount + openingPrice : profit / amount - openingPrice;
 /**
  * Получение цены прибыли, при которой цена закрытия = 0
  */

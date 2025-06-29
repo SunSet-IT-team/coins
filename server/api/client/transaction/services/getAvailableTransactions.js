@@ -3,6 +3,8 @@ import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/
 import getAllTransactions from '../queries/getAllTransactions';
 
 export default function getAvailableTransactions(req, res) {
+    const {type} = req.query;
+
     getAllTransactions()
         .then((transactions) => {
             const availableTransactions = transactions.sort(
