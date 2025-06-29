@@ -6,7 +6,7 @@ import {WS_MESSAGES_PORT} from '../../../../server/constants/constants';
 
 const WEBSOCKET_URL =
     process.env.NODE_ENV === 'production'
-        ? `wss://${process.env.DOMAIN}:${WS_MESSAGES_PORT}`
+        ? `wss://coinwalletcapital.ru:${WS_MESSAGES_PORT}`
         : `ws://localhost:${WS_MESSAGES_PORT}`;
 
 class MessageWebsocketController {
