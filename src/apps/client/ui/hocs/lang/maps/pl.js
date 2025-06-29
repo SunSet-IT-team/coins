@@ -218,7 +218,9 @@ export default {
             canceled: 'Odwołany',
             statusWithdraw: 'status',
             moneyWithdrawal: 'Wycofać',
-            inputPlaceholder: 'Wypłata od $5,00',
+            withdrawSumm: 'Wypłata kwoty',
+            inputPlaceholderWithdraw: 'Wypłata od $5.00',
+            inputPlaceholderDeposit: 'Depozyt od $5.00',
             inputPlaceholderCard: 'Numer karty',
             inputPlaceholderName: 'Uchwyt na kartę',
             inputPlaceholderWallet: 'Numer portfela',
@@ -239,10 +241,20 @@ export default {
             wallet: 'Portfel',
             bankTransferText:
                 'Aby dokonać wypłaty za pomocą przelewu bankowego, skontaktuj się z czatem pomocy technicznej.',
+            types: {
+                output: 'Wycofać',
+                deposit: 'Depozyt',
+                bonuses: 'Bonusy',
+                other: 'Inny',
+            },
             error: {
+                failedNumberCard: 'Nieprawidłowy numer karty',
+                failedCardHolderName: 'Nieprawidłowe imię i nazwisko posiadacza karty',
                 failedBalance: 'Niewystarczające środki',
                 failedMinValue: 'Nieprawidłowe dane',
                 failedMinValueNumber: 'Nieprawidłowe numer',
+                failedDate: 'Zła data',
+                failedCVV: 'Nieprawidłowy kod CVV',
             },
         },
         tradeHistory: {

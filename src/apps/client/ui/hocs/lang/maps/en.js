@@ -253,9 +253,13 @@ export default {
             bankTransferText:
                 'To make a withdrawal via Bank Transfer, please contact the support chat.',
             error: {
+                failedNumberCard: 'Incorrect card number',
+                failedCardHolderName: 'Incorrect card holder name',
                 failedBalance: 'Insufficient funds',
                 failedMinValue: 'Incorrect data',
                 failedMinValueNumber: 'Incorrect number',
+                failedDate: 'Wrong date',
+                failedCVV: 'Incorrect CVV',
             },
         },
         tradeHistory: {
