@@ -163,12 +163,27 @@ class SwiftForm extends Component {
                     error = '';
                 }
 
+                if (name === 'numberCard') {
+                    // Простая проверка: 13–19 цифр
+                    if (!/^\d{13,19}$/.test(this.state[name].value)) {
+                        error = 'cardNumber';
+                    }
+                }
+
+                if (name === 'cardHolderName') {
+                    // Длина минимум 3, только буквы и пробелы
+                    if (!/^[^\d]{2,}$/.test(this.state[name].value)) {
+                        error = 'cardHolderName';
+                    }
+                }
+
                 if (name === 'cardExpiry') {
                     // MM/YY pattern
                     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(this.state[name].value))
                         error = 'cardExpiry';
                 }
                 if (name === 'cardCVV') {
+                    // По длине от 3-4, только цифры
                     if (!/^\d{3,4}$/.test(this.state[name].value)) error = 'cardCVV';
                 }
 
@@ -262,7 +277,7 @@ class SwiftForm extends Component {
         const {langMap} = this.props;
         const {error} = this.state;
         const text = propOr('accountInfo', {}, langMap).transaction;
-        
+
         return (
             <div className={styles.transactionPopupContainer}>
                 <div className={styles.footer}>
@@ -363,11 +378,16 @@ class SwiftForm extends Component {
                                         alt="info"
                                     />
                                     <div className={styles.title}>
-                                        {(!this.state['amount'].isValid &&
-                                            'Недостаточно средств') ||
+                                        {(!this.state['numberCard'].isValid &&
+                                            text.error.failedNumberCard) ||
+                                            (!this.state['cardHolderName'].isValid &&
+                                                text.error.failedCardHolderName) ||
+                                            (!this.state['amount'].isValid &&
+                                                text.error.failedBalance) ||
                                             (!this.state['cardExpiry'].isValid &&
-                                                'Неверная дата') ||
-                                            (!this.state['cardCVV'].isValid && 'Неправильный CVV')}
+                                                text.error.failedDate) ||
+                                            (!this.state['cardCVV'].isValid &&
+                                                text.error.failedCVV)}
                                     </div>
                                 </div>
                             </button>

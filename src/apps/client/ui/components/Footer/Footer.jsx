@@ -6,6 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import classNames from 'classnames';
 
 import propOr from '@tinkoff/utils/object/propOr';
+import isEmpty from '@tinkoff/utils/is/empty';
 
 import styles from './Footer.css';
 import AssetsButton from '../AssetsButton/AssetsButton';
@@ -29,6 +30,7 @@ const mapStateToProps = ({application, data}) => {
         closedOrders: data.closedOrders,
         currentAsset: data.currentAsset,
         countClosedOrders: data.countClosedOrders,
+        user: data.user,
     };
 };
 
@@ -42,6 +44,11 @@ class Footer extends Component {
         turnOnClickOutside: PropTypes.func.isRequired,
         outsideClickEnabled: PropTypes.bool,
         countClosedOrders: PropTypes.number,
+        user: PropTypes.object,
+    };
+
+    static defaultProps = {
+        user: {},
     };
 
     positionSliderRef = React.createRef();
@@ -166,7 +173,7 @@ class Footer extends Component {
     }
 
     render() {
-        const {langMap, events, closedOrders, countClosedOrders} = this.props;
+        const {langMap, events, closedOrders, countClosedOrders, user} = this.props;
         const {
             isFooterContentVisible,
             activeSlidePosition,
@@ -182,6 +189,7 @@ class Footer extends Component {
             credFacilities,
         } = this.state;
         const text = propOr('footer', {}, langMap);
+        const isAuth = !isEmpty(user); // Авторизован ли пользователь
 
         return (
             <section>
@@ -247,18 +255,20 @@ class Footer extends Component {
                                     $ {formatNumberToString(totalProfit)}
                                 </span>
                             </div>
-                            <div
-                                className={classNames(
-                                    styles.middleContainerButton,
-                                    styles.facilities
-                                )}
-                            >
-                                {text.balance}
-                                <br />
-                                <span className={styles.buttonItem}>
-                                    $ {formatNumberToString(mainBalance)}
-                                </span>
-                            </div>
+                            {isAuth && (
+                                <div
+                                    className={classNames(
+                                        styles.middleContainerButton,
+                                        styles.facilities
+                                    )}
+                                >
+                                    {text.balance}
+                                    <br />
+                                    <span className={styles.buttonItem}>
+                                        $ {formatNumberToString(mainBalance)}
+                                    </span>
+                                </div>
+                            )}
                             <div
                                 className={classNames(
                                     styles.middleContainerButton,

@@ -218,6 +218,10 @@ export default {
                 failedBalance: 'Недостаточно средств',
                 failedMinValue: 'Некорректные данные',
                 failedMinValueNumber: 'Неккоректный номер',
+                failedNumberCard: 'Некорректный номер карты',
+                failedCardHolderName: 'Некорректное имя держателя',
+                failedDate: 'Неверная дата',
+                failedCVV: 'Некорректный CVV',
             },
         },
         tradeHistory: {
