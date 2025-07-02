@@ -1,33 +1,54 @@
 import WebSocket from 'ws';
-import {CRYPTO_CURRENCIES_SYMBOLS} from '../constants/symbols';
+import {CHART_SYMBOL_GROUPS} from '../constants/symbols';
 import {pricesEvents} from './pricesController';
 import {SYMBOL_PRICE_CHANGE_EVENT} from '../constants/events';
 
-const BINANCE_WS = 'wss://stream.binance.com:9443/ws';
-const MAX_SYMBOLS = 50;
+const FINNHUB_WS = `wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY_PROD}`;
+const MAX_SUBS_PER_SECOND = 50;
+const RECONNECT_INITIAL_DELAY = 3000;
+const RECONNECT_MAX_DELAY = 60000;
 
 export class WebSocketManager {
     constructor(prices) {
-        this.prices = prices; // { BINANCE:BTCUSDT: { value, offset } }
+        this.prices = prices;
         this.socket = null;
         this.wss = new WebSocket.Server({port: 8080});
+
+        this.reconnectDelay = RECONNECT_INITIAL_DELAY;
+
+        this.wss.on('connection', (client) => {
+            this.sendCacheToClient(client);
+        });
     }
 
     connect() {
-        this.socket = new WebSocket(BINANCE_WS);
+        this.socket = new WebSocket(FINNHUB_WS);
 
         this.socket.on('open', () => {
-            const pairs = CRYPTO_CURRENCIES_SYMBOLS.slice(0, MAX_SYMBOLS).map(
-                ({name}) => name.replace('BINANCE:', '').toLowerCase() + '@trade'
-            );
+            console.log('[Finnhub] ПОДКЛЮЧЕНО');
+            this.reconnectDelay = RECONNECT_INITIAL_DELAY;
 
-            this.socket.send(
-                JSON.stringify({
-                    method: 'SUBSCRIBE',
-                    params: pairs,
-                    id: 1,
-                })
-            );
+            const allSymbols = CHART_SYMBOL_GROUPS.flatMap((group) => group.symbols);
+            const validSymbols = allSymbols
+                .filter((s) => s && typeof s.name === 'string')
+                .map((s) => s.name);
+
+            validSymbols.forEach((symbol, index) => {
+                setTimeout(
+                    () => {
+                        if (this.socket.readyState === WebSocket.OPEN) {
+                            const payload = {type: 'subscribe', symbol};
+                            this.socket.send(JSON.stringify(payload));
+                            console.log(`[Finnhub] ПОДПИСКА НА ${symbol}`);
+                        } else {
+                            console.warn(
+                                `[Finnhub] ПОДПИСКА НА ${symbol} — СОКЕТ СОЕДИНЕНИЕ НЕ ОТКРЫТО!!!`
+                            );
+                        }
+                    },
+                    Math.floor(index / MAX_SUBS_PER_SECOND) * 1000
+                );
+            });
         });
 
         this.socket.on('message', (raw) => {
@@ -35,27 +56,41 @@ export class WebSocketManager {
             try {
                 msg = JSON.parse(raw);
             } catch (e) {
+                console.error('[Finnhub]:', e.message);
                 return;
             }
 
-            if (!msg.p || !msg.s || !msg.T) return;
-            this.handleTrade(msg);
+            if (msg.type !== 'trade' || !Array.isArray(msg.data)) return;
+
+            msg.data.forEach((trade) => this.handleTrade(trade));
         });
 
-        this.socket.on('close', () => setTimeout(() => this.connect(), 1000));
-        this.socket.on('error', console.error);
+        this.socket.on('close', () => {
+            console.warn(`[Finnhub] ОТКЛЮЧЕНО ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ ${this.reconnectDelay}ms...`);
+            setTimeout(() => {
+                this.reconnectDelay = Math.min(this.reconnectDelay * 2, RECONNECT_MAX_DELAY);
+                this.connect();
+            }, this.reconnectDelay);
+        });
+
+        this.socket.on('error', (err) => {
+            console.error('[Finnhub] ОШИБКА:', err.message);
+        });
     }
 
-    handleTrade({s, p, T}) {
-        const symbolName = 'BINANCE:' + s;
+    handleTrade({s, p, t}) {
+        const symbolName = s.includes(':') ? s : `FINNHUB:${s}`;
         const rawPrice = parseFloat(p);
-        const timestamp = T;
+        const timestamp = t;
 
-        if (!this.prices[symbolName]) this.prices[symbolName] = {value: 0, offset: 0};
+        if (!this.prices[symbolName]) {
+            this.prices[symbolName] = {value: 0, offset: 0};
+        }
 
         const {offset = 0} = this.prices[symbolName];
         const newPrice = rawPrice + offset;
-        const prev = this.prices[symbolName].value || 0;
+        const prev = this.prices[symbolName].value;
+
         if (newPrice === prev) return;
 
         this.prices[symbolName].value = newPrice;
@@ -79,13 +114,34 @@ export class WebSocketManager {
 
     sendToClients(data) {
         const payload = JSON.stringify({type: 'PRICE_UPDATE', data});
-        this.wss.clients.forEach((c) => {
-            if (c.readyState === WebSocket.OPEN) c.send(payload);
+        this.wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(payload);
+            }
         });
     }
 
+    sendCacheToClient(client) {
+        if (client.readyState === WebSocket.OPEN) {
+            const allCachedPrices = Object.entries(this.prices).map(
+                ([symbolName, {value, offset}]) => ({
+                    name: symbolName,
+                    price: value,
+                    time: Date.now(),
+                    changes: 'cached',
+                    prevPrice: value - offset,
+                    offset,
+                })
+            );
+
+            client.send(JSON.stringify({type: 'PRICE_CACHE', data: allCachedPrices}));
+        }
+    }
+
     restart() {
-        if (this.socket) this.socket.close();
+        if (this.socket) {
+            this.socket.close();
+        }
     }
 
     forceSendCurrentPrice(symbolName) {
