@@ -25,7 +25,7 @@ export default function (html, helmet, preloadedState = {}) {
                     '\\\\\\\\\u003c'
                 )}
             </script>
-            <script src="//www.instagram.com/embed.js" defer='defer'></script>
+            <!-- <script src="//www.instagram.com/embed.js" defer='defer'></script> -->
             <script src='${ASSET_HOST}/public/vendors-client.chunk.js' defer='defer'></script>
             <script src='${ASSET_HOST}/public/client.chunk.js' defer='defer'></script>
         </body>
