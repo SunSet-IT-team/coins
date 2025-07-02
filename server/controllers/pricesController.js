@@ -1,4 +1,9 @@
-import { AUTO_CLOSE_ORDER_EVENT, FINNHUB_API_KEY, SYMBOL_PRICE_CHANGE_EVENT, DOMAIN } from '../constants/constants';
+import {
+    AUTO_CLOSE_ORDER_EVENT,
+    FINNHUB_API_KEY,
+    SYMBOL_PRICE_CHANGE_EVENT,
+    DOMAIN,
+} from '../constants/constants';
 import WebSocket from 'ws';
 import EventEmitter from 'eventemitter3';
 import _remove from 'lodash.remove';
@@ -18,7 +23,7 @@ import {
     INDICES_SYMBOLS,
     CRYPTO_CURRENCIES_SYMBOLS,
     CHART_SYMBOL_GROUPS,
-    CHART_SYMBOL_INFO_MAP
+    CHART_SYMBOL_INFO_MAP,
 } from '../constants/symbols';
 
 import getPeriodByTimeframe from '../../src/apps/client/ui/pages/MainPage/utils/getPeriodByTimeframe';
@@ -36,26 +41,30 @@ class PricesController {
     prices = {};
     prevPrices = {};
 
-    constructor () {
+    constructor() {
         this.orders = [];
 
-        this.prefix = process.env.NODE_ENV === 'production' ? `https://${DOMAIN}` : 'http://localhost:4000';
+        this.prefix =
+            process.env.NODE_ENV === 'production' ? `https://${DOMAIN}` : 'http://localhost:4000';
 
-        this.getOredrs().then((orders) => {
-            // console.log('constructor -> getOredrs');
-            this.orders = orders;
+        this.getOredrs()
+            .then((orders) => {
+                this.orders = orders;
 
-            this.checkBeforeCloseOrder();
-        }).catch((e) => e);
+                this.checkBeforeCloseOrder();
+            })
+            .catch((e) => e);
 
         setInterval(() => {
-            this.getOredrs().then((orders) => {
-                this.orders = orders;
-            }).catch(e => e);
+            this.getOredrs()
+                .then((orders) => {
+                    this.orders = orders;
+                })
+                .catch((e) => e);
         }, 10 * 1000);
     }
 
-    start () {
+    start() {
         // if (process.env.NODE_ENV === 'production') {
         this.getInitPrices();
         // }
@@ -66,23 +75,23 @@ class PricesController {
 
                 socket.addEventListener('open', () => {
                     CURRENCIES_SYMBOLS.forEach(({ name }) => {
-                        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': name }));
+                        socket.send(JSON.stringify({ type: 'subscribe', symbol: name }));
                     });
                     VALUES_SYMBOLS.forEach(({ name }) => {
-                        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': name }));
+                        socket.send(JSON.stringify({ type: 'subscribe', symbol: name }));
                     });
                     COMPANY_SHARES_SYMBOLS.forEach(({ name }) => {
-                        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': name }));
+                        socket.send(JSON.stringify({ type: 'subscribe', symbol: name }));
                     });
                     INDICES_SYMBOLS.forEach(({ name }) => {
-                        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': name }));
+                        socket.send(JSON.stringify({ type: 'subscribe', symbol: name }));
                     });
                     CRYPTO_CURRENCIES_SYMBOLS.forEach(({ name }) => {
-                        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': name }));
+                        socket.send(JSON.stringify({ type: 'subscribe', symbol: name }));
                     });
                 });
 
-                socket.addEventListener('message', event => {
+                socket.addEventListener('message', (event) => {
                     const data = JSON.parse(event.data);
 
                     if (!data.data) {
@@ -100,14 +109,17 @@ class PricesController {
                         name: symbolName,
                         price: newPrice,
                         time: symbolTime,
-                        changes: newPrice > this.prices[symbolName] ? 'up' : 'down'
+                        changes: newPrice > this.prices[symbolName] ? 'up' : 'down',
                     };
                     this.prevPrices[symbolName] = this.prices[symbolName];
                     this.prices[symbolName] = newPrice;
 
                     assetPriceChange.prevPrice = this.prevPrices[symbolName];
 
-                    pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, { prices: this.prices, assetPriceChange });
+                    pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
+                        prices: this.prices,
+                        assetPriceChange,
+                    });
                 });
 
                 // socket.addEventListener('error', (data) => console.log(data));
@@ -126,82 +138,85 @@ class PricesController {
 
         setWebsocket();
 
-        schedule.scheduleJob({ hour: 6 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 8 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 10 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 12 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 14 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 16 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 18 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 18 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 20 }, this.restartConnection);
-        schedule.scheduleJob({ hour: 22 }, this.restartConnection);
-        schedule.scheduleJob({ minute: 10 }, this.restartConnection);
-        schedule.scheduleJob({ minute: 35 }, this.restartConnection);
-        schedule.scheduleJob({ minute: 55 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 6 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 8 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 10 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 12 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 14 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 16 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 18 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 18 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 20 }, this.restartConnection);
+        // schedule.scheduleJob({ hour: 22 }, this.restartConnection);
+        // schedule.scheduleJob({ minute: 10 }, this.restartConnection);
+        // schedule.scheduleJob({ minute: 35 }, this.restartConnection);
+        // schedule.scheduleJob({ minute: 55 }, this.restartConnection);
     }
 
     restartConnection = () => {
         // this.socket && this.socket.close();
     };
 
-    getInitPrices () {
+    getInitPrices() {
         try {
             const timeframe = '5';
             const symbolsInfo = CHART_SYMBOL_GROUPS.reduce((result, assetGroup) => {
                 return [
                     ...result,
-                    ...assetGroup.symbols.map(symbol => ({
+                    ...assetGroup.symbols.map((symbol) => ({
                         ...getPeriodByTimeframe(timeframe, assetGroup.id),
                         resolution: timeframe,
                         symbolGroup: assetGroup.id,
-                        symbol: symbol.name
-                    }))
+                        symbol: symbol.name,
+                    })),
                 ];
             }, []);
-            const getHistoryFuncs = symbolsInfo.map(info => getHistoryPrice(info));
+            const getHistoryFuncs = symbolsInfo.map((info) => getHistoryPrice(info));
             for (let i = 0; i < Math.ceil(getHistoryFuncs.length / 10); i++) {
                 const currentSymbols = symbolsInfo.slice(i * 10, (i + 1) * 10);
 
                 setTimeout(() => {
-                    Promise.all(
-                        currentSymbols.map(info => getHistoryPrice(info)())
-                    )
-                        .then(prices => {
+                    Promise.all(currentSymbols.map((info) => getHistoryPrice(info)()))
+                        .then((prices) => {
                             prices.forEach((data, i) => {
                                 if (!data.c) {
                                     return;
                                 }
-
                                 if (isUndefined(this.prices[currentSymbols[i].symbol])) {
                                     this.prices = {
                                         ...this.prices,
-                                        [currentSymbols[i].symbol]: last(data.c)
+                                        [currentSymbols[i].symbol]: last(data.c),
                                     };
                                 }
-
                                 if (isUndefined(this.prevPrices[currentSymbols[i].symbol])) {
                                     if (isUndefined(this.prices[currentSymbols[i].symbol])) {
                                         this.prevPrices = {
                                             ...this.prevPrices,
-                                            [currentSymbols[i].symbol]: data.c[data.c.length - 2]
+                                            [currentSymbols[i].symbol]: data.c[data.c.length - 2],
                                         };
                                     } else {
                                         this.prevPrices = {
                                             ...this.prevPrices,
-                                            [currentSymbols[i].symbol]: data.c[data.c.length - 1]
+                                            [currentSymbols[i].symbol]: data.c[data.c.length - 1],
                                         };
                                     }
                                 }
                             });
                         })
-                        .catch(() => {});
+                        .catch((e) => {
+                            console.log('getInitPrices error:');
+                            console.log(e);
+                        });
                 }, i * 30000);
             }
-        } catch (e) {}
+        } catch (e) {
+            console.log('getInitPrices error:');
+
+            console.log(e);
+        }
     }
 
-    async checkBeforeCloseOrder () {
+    async checkBeforeCloseOrder() {
         // console.log('this.orders', this.orders.length);
         for (const order of this.orders) {
             const assetPrice = this.prices[order.assetName];
@@ -209,20 +224,40 @@ class PricesController {
 
             // const openingSlotPrice = getOpeningSlotPrice(asset, assetPrice);
             let orderType;
-            if (order.type === 'buy' && (order.takeProfit && assetPrice >= order.takeProfit && assetPrice > order.openingPrice &&
-                (orderType = 'takeProfit') || order.stopLoss && assetPrice <= order.stopLoss && assetPrice < order.openingPrice &&
-                (orderType = 'stopLoss'))) {
+            if (
+                order.type === 'buy' &&
+                ((order.takeProfit &&
+                    assetPrice >= order.takeProfit &&
+                    assetPrice > order.openingPrice &&
+                    (orderType = 'takeProfit')) ||
+                    (order.stopLoss &&
+                        assetPrice <= order.stopLoss &&
+                        assetPrice < order.openingPrice &&
+                        (orderType = 'stopLoss')))
+            ) {
                 // console.log('close buy -> order.id', `old ${order.openingPrice}`, `new assetPrice ${assetPrice}`);
                 _remove(this.orders, (item) => order.id === item.id);
-                this.closeOrder(order.id, order.userId, order[orderType]).then((data) => pricesEvents.emit(AUTO_CLOSE_ORDER_EVENT, data)).catch(e => e);
+                this.closeOrder(order.id, order.userId, order[orderType])
+                    .then((data) => pricesEvents.emit(AUTO_CLOSE_ORDER_EVENT, data))
+                    .catch((e) => e);
             }
 
-            if (order.type === 'sell' && (order.takeProfit && assetPrice <= order.takeProfit && assetPrice < order.openingPrice &&
-                (orderType = 'takeProfit') || order.stopLoss && assetPrice >= order.stopLoss && assetPrice > order.openingPrice &&
-                (orderType = 'stopLoss'))) {
+            if (
+                order.type === 'sell' &&
+                ((order.takeProfit &&
+                    assetPrice <= order.takeProfit &&
+                    assetPrice < order.openingPrice &&
+                    (orderType = 'takeProfit')) ||
+                    (order.stopLoss &&
+                        assetPrice >= order.stopLoss &&
+                        assetPrice > order.openingPrice &&
+                        (orderType = 'stopLoss')))
+            ) {
                 // console.log('close sell -> order.id', `old ${order.openingPrice}`, `new $${openingSlotPrice}`);
                 _remove(this.orders, (item) => order.id === item.id);
-                this.closeOrder(order.id, order.userId, order[orderType]).then((data) => pricesEvents.emit(AUTO_CLOSE_ORDER_EVENT, data)).catch(e => e);
+                this.closeOrder(order.id, order.userId, order[orderType])
+                    .then((data) => pricesEvents.emit(AUTO_CLOSE_ORDER_EVENT, data))
+                    .catch((e) => e);
             }
         }
 
@@ -230,21 +265,16 @@ class PricesController {
         await this.checkBeforeCloseOrder();
     }
 
-    async getOredrs () {
-        return base(
-            request
-                .get(`${this.prefix}/api/client/order/all-open`)
-                .cert(cert)
-                .key(key)
-        );
+    async getOredrs() {
+        return base(request.get(`${this.prefix}/api/client/order/all-open`).cert(cert).key(key));
     }
 
-    closeOrder (id, userId, closedPrice) {
+    closeOrder(id, userId, closedPrice) {
         return base(
             request
                 .get(`${this.prefix}/api/client/order/close-all/${id}__${userId}__${closedPrice}`)
                 .cert(cert)
-                .key(key)
+                .key(key),
         );
     }
 }

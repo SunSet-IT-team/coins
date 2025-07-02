@@ -69,9 +69,6 @@ function createApp() {
 
         app.use(helmet());
 
-        console.log('DATABASE_URL');
-        console.log(DATABASE_URL);
-
         // mongodb
         mongoose.connect(DATABASE_URL, {
             useNewUrlParser: true,
@@ -250,9 +247,19 @@ async function startMain() {
 }
 
 if (isMainThread) {
-    process.env.NODE_ENV === 'production' ? startMain() : '';
-    // startMain();
-    createApp();
+    try {
+        process.env.NODE_ENV === 'production' ? startMain() : '';
+        createApp();
+    } catch (err) {
+        console.error('Main thread error:', err);
+    }
 } else {
-    createApp().then(() => parentPort.postMessage({ request: 'init', env: process.env.NODE_ENV }));
+    try {
+        createApp().then(() =>
+            parentPort.postMessage({ request: 'init', env: process.env.NODE_ENV }),
+        );
+    } catch (err) {
+        console.error('Worker thread error:', err);
+        process.exit(1);
+    }
 }
