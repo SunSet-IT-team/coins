@@ -56,7 +56,7 @@ class OutputsWebsocketController {
                     client.on('disconnect', () => {
                         connections[clientId].delete(client);
                     });
-                });
+                }).catch(()=>{});
             });
         });
     }

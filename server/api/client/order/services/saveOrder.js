@@ -46,6 +46,7 @@ export default function saveOrder(req, res) {
             type === 'sell' ? openingPrice : calculateBuyingPrice(assetName, openingPrice);
         const asset = CHART_SYMBOL_INFO_MAP[assetName];
 
+        console.log('saveOrder asset');
         console.log(asset);
 
         if (!asset) {
@@ -71,6 +72,7 @@ export default function saveOrder(req, res) {
             profit: profit || 0,
         };
 
+        console.log('saveOrder orderObj');
         console.log(orderObj);
 
         const isOrderValid = validate(orderObj, orderFieldsValidatorsMap);

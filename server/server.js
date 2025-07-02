@@ -65,6 +65,11 @@ import App from '../src/apps/client/App.jsx';
 const rootPath = path.resolve(__dirname, '..');
 const PORT = 3003;
 
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('UNHANDLED REJECTION at:', promise, 'REASON:', reason);
+});
+
+
 function createApp() {
     return new Promise((resolve) => {
         const app = express();
