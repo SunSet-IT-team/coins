@@ -75,20 +75,32 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.props.checkAuthentication();
-        this.props.getUnvisitedMoneyOutput();
-        this.props.getUnvisitedMessageHistory();
+        const {
+            checkAuthentication,
+            getUnvisitedMoneyOutput,
+            getUnvisitedMessageHistory,
+            getPrices,
+        } = this.props;
 
-        outputWebsocketController.events.on('output', this.props.getUnvisitedMoneyOutput);
+        checkAuthentication();
+        getUnvisitedMoneyOutput();
+        getUnvisitedMessageHistory();
 
-        this.props.getPrices().then((prices) => {
+        outputWebsocketController.events.on('output', getUnvisitedMoneyOutput);
+
+        getPrices().then((prices) => {
             assetPriceWebsocketController.setPrices(prices);
+            assetPriceWebsocketController.connect();
         });
 
-        assetPriceWebsocketController.connect();
+        assetPriceWebsocketController.events.on('status', (isConnected) => {
+            if (isConnected) {
+            } else {
+            }
+        });
 
-        assetPriceWebsocketController.events.on('status', (status) => {
-            console.log('Вебсокет сервер подключен!');
+        assetPriceWebsocketController.events.on('allPrices', (cachedPrices) => {
+            console.log('✅ Получены последние кэшированные цены:', cachedPrices);
         });
     }
 
