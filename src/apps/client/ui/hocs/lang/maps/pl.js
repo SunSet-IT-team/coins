@@ -201,6 +201,10 @@ export default {
             documents: 'Dokumenty',
             transaction: 'Transakcje',
             tradeHistory: 'Historia handlowania',
+            transactionTabs: {
+                transactions: 'Transakcje',
+                deposits: 'Depozyty',
+            },
         },
         documents: {
             personality: 'weryfikacja tożsamości',

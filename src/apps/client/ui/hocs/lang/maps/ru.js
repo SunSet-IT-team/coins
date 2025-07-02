@@ -165,6 +165,10 @@ export default {
             documents: 'Документы',
             transaction: 'Транзакции',
             tradeHistory: 'Торговая история',
+            transactionTabs: {
+                transactions: 'Транзакции',
+                deposits: 'Депозиты',
+            },
         },
         documents: {
             personality: 'Подтверждения личности',
