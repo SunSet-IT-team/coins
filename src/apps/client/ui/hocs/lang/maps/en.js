@@ -201,6 +201,10 @@ export default {
             documents: 'Documentation',
             transaction: 'Transactions',
             tradeHistory: 'Trading history',
+            transactionTabs: {
+                transactions: 'Transactions',
+                deposits: 'Deposits',
+            },
         },
         documents: {
             personality: 'Identity Verification',

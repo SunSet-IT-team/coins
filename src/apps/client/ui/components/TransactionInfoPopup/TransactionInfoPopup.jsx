@@ -288,6 +288,7 @@ class TransactionInfoPopup extends Component {
         const transactionList = [...outputByUser, ...transactions, ...inputByUser];
 
         const text = propOr('accountInfo', {}, langMap).transaction;
+        const textTabs = propOr('accountInfo', {}, langMap).navbar.transactionTabs;
 
         return (
             <div className={styles.transactionPopupContainer}>
@@ -298,7 +299,7 @@ class TransactionInfoPopup extends Component {
                         })}
                         onClick={this.handleTabClick(1)}
                     >
-                        transactions
+                        {textTabs.transactions}
                     </div>
                     <div
                         className={classNames(styles.tab, {
@@ -306,7 +307,7 @@ class TransactionInfoPopup extends Component {
                         })}
                         onClick={this.handleTabClick(2)}
                     >
-                        deposites
+                        {textTabs.deposits}
                     </div>
                 </div>
                 <div ref={this.transactionsBodyRef} className={styles.transactionPopupBody}>
@@ -478,7 +479,9 @@ class TransactionInfoPopup extends Component {
                                                             </p>
                                                         </div>
                                                     )}
-                                                    <p>text.types.deposit</p>
+                                                    <p>
+                                                        {text.type}: {text.types.deposit}
+                                                    </p>
                                                 </div>
                                             )}
                                         </div>

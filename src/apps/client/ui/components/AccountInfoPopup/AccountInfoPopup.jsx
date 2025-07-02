@@ -40,7 +40,7 @@ class AccountInfoPopup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeSlide: 3,
+            activeSlide: 1,
         };
     }
 
@@ -53,10 +53,6 @@ class AccountInfoPopup extends Component {
         if (this.props.isVisible !== prevProps.isVisible && !outsideClickEnabled) {
             this.props.turnOnClickOutside(this, this.closePopup);
         }
-    }
-
-    componentDidMount () {
-        this.formsSliderContainerRef.current.style.marginLeft = '-1720px';
     }
 
     handleOutsideClick = () => {
