@@ -19,9 +19,9 @@ const VALUES = [
     'password',
     'docs',
     'isActive',
-    'isVipStatus'
+    'isVipStatus',
 ];
 
-export default function prepareUser (body) {
+export default function prepareUser(body) {
     return pick(VALUES, body);
 }

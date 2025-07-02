@@ -2,7 +2,7 @@ import 'log-timestamp-moment';
 import request from 'superagent';
 import base from '../../src/apps/admin/services/base';
 
-import { token } from '../constants';
+import {token} from '../constants';
 
 export class OrderCheckRequests {
     constructor() {
@@ -42,19 +42,19 @@ export class OrderCheckRequests {
     openOrder(order) {
         console.log('openOrder');
         return base(
-            request.post(`${this.prefix}/api/client/order/new`).send(order).query({ token }),
+            request.post(`${this.prefix}/api/client/order/new`).send(order).query({token})
         ).catch((e) => console.log(e));
     }
 
     closeOrder(id) {
         console.log('closeOrder');
-        return base(request.get(`${this.prefix}/api/client/order/close/${id}`).query({ token }));
+        return base(request.get(`${this.prefix}/api/client/order/close/${id}`).query({token}));
     }
 
     getOredrs() {
         console.log('before get orders');
         return base(
-            request.get(`${this.prefix}/api/client/order/all-open`),
+            request.get(`${this.prefix}/api/client/order/all-open`)
             // .query({ token })
         );
     }

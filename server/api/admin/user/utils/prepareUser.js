@@ -20,9 +20,10 @@ const VALUES = [
     'docs',
     'isActive',
     'isVipStatus',
-    'manager'
+    'manager',
+    'isSwiftDepositAvailable', // Новое поле для пополнения баланса
 ];
 
-export default function prepareUser (body) {
+export default function prepareUser(body) {
     return pick(VALUES, body);
 }

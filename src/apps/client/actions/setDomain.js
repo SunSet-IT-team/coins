@@ -1,8 +1,8 @@
-import { SET_DOMAIN } from '../types/types';
+import {SET_DOMAIN} from '../types/types';
 
-const setDomain = payload => ({
+const setDomain = (payload) => ({
     type: SET_DOMAIN,
-    payload
+    payload,
 });
 
 export default setDomain;

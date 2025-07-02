@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import propOr from '@tinkoff/utils/object/propOr';
 
@@ -15,7 +15,7 @@ import setPaymentsPopup from './../../../actions/setPaymentsPopup';
 import maps from '../../hocs/lang/maps';
 import lang from '../../hocs/lang/lang';
 
-const mapStateToProps = ({ application, data }) => {
+const mapStateToProps = ({application, data}) => {
     return {
         lang: application.lang,
         langMap: application.langMap,
@@ -49,15 +49,19 @@ class Header extends Component {
     };
 
     componentDidMount() {
-        setInterval(() => {
-            this.setState({ time: new Date() });
+        this.timerId = setInterval(() => {
+            this.setState({time: new Date()});
         }, 1000);
 
         this.setCurrenLanguage();
     }
 
+    componentWillUnmount() {
+        clearInterval(this.timerId);
+    }
+
     componentWillReceiveProps(nextProps) {
-        this.setState({ currentLanguage: nextProps.lang });
+        this.setState({currentLanguage: nextProps.lang});
     }
 
     handleAccountInfoPopup = () => {
@@ -74,17 +78,17 @@ class Header extends Component {
 
     setCurrenLanguage() {
         if (typeof window !== 'undefined' && localStorage.lang) {
-            this.setState({ currentLanguage: localStorage.lang });
+            this.setState({currentLanguage: localStorage.lang});
         }
 
         if (typeof window !== 'undefined' && !localStorage.lang) {
-            this.setState({ currentLanguage: this.props.lang });
+            this.setState({currentLanguage: this.props.lang});
         }
     }
 
     render() {
-        const { time, currentLanguage } = this.state;
-        const { langMap, events, user } = this.props;
+        const {time, currentLanguage} = this.state;
+        const {langMap, events, user} = this.props;
         const text = propOr('header', {}, langMap);
 
         const CURRENT_TIME =

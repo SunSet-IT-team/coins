@@ -22,7 +22,12 @@
     "start:pm2:server": "pm2 start server/compiled/server.js --name app",
     "stop:pm2:server": "pm2 stop app",
     "deploy": "npm run stop:pm2:server & npm run build:static:prod && npm run build:server:prod && cross-env PORT=80 npm run start:pm2:server",
-    "deploy:server": "npm run stop:pm2:server && cross-env PORT=80 npm run start:pm2:server"
+    "deploy:server": "npm run stop:pm2:server && cross-env PORT=80 npm run start:pm2:server",
+    "prepare": "husky",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --write"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": "prettier --write"
   },
   "repository": {
     "type": "git",
@@ -82,6 +87,7 @@
     "file-loader": "^1.1.11",
     "find-package": "^1.0.0",
     "forever": "0.15.3",
+    "husky": "8.0.3",
     "json-loader": "^0.5.7",
     "node-pre-gyp": "^0.17.0",
     "optimize-js-plugin": "0.0.4",
@@ -98,6 +104,7 @@
     "postcss-modules-values-replace-node6": "^3.0.3",
     "postcss-nested": "^4.1.0",
     "postcss-use": "^3.0.0",
+    "prettier": "^3.6.0",
     "progress-bar-webpack-plugin": "^1.11.0",
     "prun": "^1.0.1",
     "raw-loader": "^3.1.0",
@@ -142,6 +149,7 @@
     "js-cookie": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
     "lightweight-charts": "^3.1.5",
+    "lint-staged": "13.2.3",
     "lodash.debounce": "^4.0.8",
     "lodash.find": "^4.6.0",
     "lodash.max": "^4.0.1",
@@ -181,6 +189,7 @@
     "rimraf": "^3.0.2",
     "smoothscroll-polyfill": "^0.4.4",
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "style-loader": "^1.0.0",
     "superagent": "3.5.2",
     "tar": "^6.1.0",

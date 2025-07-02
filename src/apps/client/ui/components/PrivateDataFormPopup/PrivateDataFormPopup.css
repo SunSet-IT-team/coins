@@ -5,7 +5,7 @@
 .privateDataContainer {
     width: 100%;
     max-width: 860px;
-    background: #1B2033;
+    background: #1b2033;
     height: 572px;
     overflow: auto;
     width: calc(100vw - 60px);
@@ -40,7 +40,7 @@
                 font-size: 24px;
                 line-height: 31px;
                 letter-spacing: 0.01em;
-                color: #F8F8F8;
+                color: #f8f8f8;
                 white-space: nowrap;
             }
 
@@ -59,19 +59,19 @@
             }
 
             .goldStatus {
-                color: #F6B93B;
+                color: #f6b93b;
             }
 
             .platinumStatus {
-                color: #E5E4E2;
+                color: #e5e4e2;
             }
 
             .diamondStatus {
-                color: #B9F2FF;
+                color: #b9f2ff;
             }
 
             .vipStatus {
-                color: #FF8541;
+                color: #ff8541;
             }
 
             .hash {
@@ -83,11 +83,11 @@
         }
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         width: calc(100vw - 48px);
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         width: calc(100vw - 32px);
 
         .mainDataContainer {
@@ -96,14 +96,14 @@
         }
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         height: 472px;
     }
 }
 
 .form {
     margin-top: 41px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -119,7 +119,7 @@
         line-height: 15px;
         letter-spacing: 0.01em;
         color: rgba(166, 177, 220, 0.25);
-        transition: all .3s ease;
+        transition: all 0.3s ease;
         opacity: 0;
         pointer-events: none;
     }
@@ -132,7 +132,7 @@
         opacity: 1 !important;
     }
 
-    @media(max-width: 450px) {
+    @media (max-width: 450px) {
         padding: 0 16px;
     }
 }
@@ -153,7 +153,7 @@
     overflow: hidden;
     box-sizing: border-box;
     outline: none;
-    transition: .5s ease;
+    transition: 0.5s ease;
     border: none;
     position: absolute;
     padding: 7.5px 42.5px;
@@ -162,7 +162,7 @@
     max-width: 124px;
     box-shadow: 0 0 5px 1px lightBlueDingy;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         position: relative;
         bottom: initial;
         right: initial;
@@ -170,11 +170,11 @@
         margin-bottom: 67px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         width: 100%;
         max-width: initial;
         margin-top: 43px;
-        margin-bottom: 0
+        margin-bottom: 0;
     }
 }
 
@@ -186,10 +186,17 @@
     }
 }
 
-.genderContainerField, .birthDateContainerField, .phoneContainerField,
-.countryContainerField, .cityContainerField, .addressContainerField,
-.accountNumberContainerField, .emailContainerField, .emptyContainerField,
-.newPasswordContainerField, .confirmPasswordContainerField {
+.genderContainerField,
+.birthDateContainerField,
+.phoneContainerField,
+.countryContainerField,
+.cityContainerField,
+.addressContainerField,
+.accountNumberContainerField,
+.emailContainerField,
+.emptyContainerField,
+.newPasswordContainerField,
+.confirmPasswordContainerField {
     position: relative;
     margin-bottom: 62px;
     max-width: 242px;
@@ -208,18 +215,18 @@
         cursor: pointer;
     }
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         max-width: initial;
         width: 48%;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         width: 100%;
     }
 }
 
 .emailContainerField {
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         margin-bottom: 87px;
     }
 }
@@ -229,7 +236,7 @@
 }
 
 .birthDateContainerField {
-    background: #161A2A;
+    background: #161a2a;
 
     .birthDateContainerFormInput {
         input {
@@ -241,7 +248,7 @@
             line-height: 15px !important;
             top: -20px !important;
             left: 0px !important;
-            opacity: .7;
+            opacity: 0.7;
         }
     }
 
@@ -250,11 +257,11 @@
         pointer-events: none;
     }
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         .birthDateContainerFormInput {
             input {
                 opacity: 1;
-                color: #161A2A;
+                color: #161a2a;
             }
         }
     }
@@ -270,13 +277,13 @@
         line-height: 15px !important;
         top: -20px !important;
         left: 0px !important;
-        opacity: .7;
+        opacity: 0.7;
     }
 }
 
 .genderContainerField {
     img {
-        transition: all .3s ease;
+        transition: all 0.3s ease;
         top: 16px;
     }
 
@@ -285,7 +292,7 @@
         width: 100%;
 
         & > div {
-            margin-bottom: 0!important;
+            margin-bottom: 0 !important;
         }
 
         input {
@@ -302,7 +309,7 @@
     width: 242px;
     height: 36px;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         display: none;
     }
 }
@@ -330,7 +337,7 @@
     .iconArrowDown {
         top: 15px;
         left: 43px;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
     }
 }
 
@@ -338,12 +345,12 @@
     margin-top: 35px;
     transform: translateY(-19px);
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         margin-top: 25px;
         transform: none;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         margin-top: 0;
     }
 }
@@ -355,14 +362,14 @@
     right: 0;
     margin: auto;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         position: relative;
         bottom: initial;
         margin: initial;
         margin-top: 25px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         margin-top: 0;
     }
 }
@@ -380,7 +387,7 @@
     font-weight: 600;
     font-size: 16px;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         position: relative;
         bottom: initial;
         top: -19px;
@@ -388,7 +395,7 @@
         right: 36px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         margin: auto;
         right: initial;
         width: 100%;
@@ -413,17 +420,17 @@
     left: 0;
     bottom: 155px;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         bottom: 220px;
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         bottom: 322px;
         width: calc(100% - 62px);
         left: auto;
     }
 
-    @media(max-width: 450px) {
+    @media (max-width: 450px) {
         width: calc(100% - 32px);
     }
 }
@@ -444,7 +451,7 @@
 
 .genderSelect {
     height: 100%;
-    background: #161A2A;
+    background: #161a2a;
     position: relative;
     cursor: pointer;
 }
@@ -455,7 +462,7 @@
     width: 100%;
     top: 36px;
     z-index: 3;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     pointer-events: none;
 }
 
@@ -470,7 +477,7 @@
 }
 
 .genderContainer {
-    background: #22273A;
+    background: #22273a;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
     height: 36px;
     width: 100%;
@@ -481,11 +488,11 @@
     display: flex;
     align-items: center;
     padding-left: 16px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     color: rgba(166, 177, 220, 0.5);
 
     &:hover {
-        background: rgb(67,73,98);
+        background: rgb(67, 73, 98);
         color: rgba(248, 248, 248, 0.75);
     }
 }
@@ -501,7 +508,7 @@
     display: flex;
     align-items: center;
     padding-left: 16px;
-    background: #161A2A;
+    background: #161a2a;
     position: relative;
     cursor: pointer;
 }
@@ -521,7 +528,7 @@
     line-height: 18px;
     color: rgba(166, 177, 220, 0.5);
     left: 16px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 }
 
 .phoneInputActive {
@@ -547,13 +554,13 @@
         font-size: 14px;
         line-height: 18px;
         letter-spacing: 0.012em;
-        background: #161A2A;
+        background: #161a2a;
         padding-left: 16px;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
         color: rgba(166, 177, 220, 0.5);
     }
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         display: none;
 
         input {
@@ -569,11 +576,11 @@
     color: rgba(166, 177, 220, 0.5);
     position: absolute;
     top: -20px;
-    opacity: .7;
+    opacity: 0.7;
 }
 
 .buttonContainer {
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         width: 100%;
     }
 }
@@ -590,9 +597,9 @@
     z-index: 1;
     padding: 9px 16px;
     font-family: FuturaPT-Medium;
-    transition: all .3s;
+    transition: all 0.3s;
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         display: block;
         position: absolute;
         z-index: 7;
@@ -602,11 +609,11 @@
 }
 
 .mobileMaskDateActive {
-    outline: .5px solid lightBlue;
+    outline: 0.5px solid lightBlue;
     color: lightBlue !important;
 }
 
-.successPopup{
+.successPopup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -614,7 +621,7 @@
     width: 70%;
     max-width: 300px;
     height: auto;
-    background: rgb(56,63,87, .9);
+    background: rgb(56, 63, 87, 0.9);
     z-index: 1;
     padding: 10px;
     text-align: center;
@@ -623,17 +630,17 @@
     visibility: hidden;
 }
 
-.active{
+.active {
     opacity: 1;
     transition: opacity 1s;
     visibility: visible;
 }
 
-.successPopupTitle{
+.successPopupTitle {
     font-size: 14px;
     line-height: 18px;
     letter-spacing: 0.012em;
-    color: #F8F8F8;
+    color: #f8f8f8;
     font-family: FuturaPT-Medium;
     margin-bottom: 20px;
 }

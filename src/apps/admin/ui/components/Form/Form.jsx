@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -8,7 +8,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import ErrorIcon from '@material-ui/icons/Error';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import getLangsValuesForArray from './utils/getLangsValuesForArray';
 import getLangsValuesForObject from './utils/getLangsValuesForObject';
@@ -24,32 +24,32 @@ import clone from '@tinkoff/utils/clone';
 
 import validatorsList from './validators';
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     form: {
         display: 'flex',
         flexDirection: 'column',
-        width: '100%'
+        width: '100%',
     },
     error: {
-        backgroundColor: theme.palette.error.dark
+        backgroundColor: theme.palette.error.dark,
     },
     success: {
-        backgroundColor: theme.palette.success.main
+        backgroundColor: theme.palette.success.main,
     },
     icon: {
-        fontSize: 20
+        fontSize: 20,
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing.unit,
     },
     message: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     margin: {
-        margin: theme.spacing.unit
-    }
+        margin: theme.spacing.unit,
+    },
 });
 
 class Form extends Component {
@@ -60,8 +60,9 @@ class Form extends Component {
         langs: PropTypes.array,
         onChange: PropTypes.func,
         onSubmit: PropTypes.func,
+        onKeyDown: PropTypes.func,
         hidden: PropTypes.bool,
-        isClickedSubmit: PropTypes.bool
+        isClickedSubmit: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -69,18 +70,19 @@ class Form extends Component {
         langs: [],
         onChange: noop,
         onSubmit: noop,
+        onKeyDown: noop,
         hidden: false,
-        isClickedSubmit: false
+        isClickedSubmit: false,
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
         this.state = {
             values: clone(this.props.initialValues),
             validationMessages: {},
             lang: this.props.langs[0],
-            isClickedSubmit: this.props.isClickedSubmit
+            isClickedSubmit: this.props.isClickedSubmit,
         };
         this.validators = this.getFieldsValidators();
     }
@@ -95,32 +97,32 @@ class Form extends Component {
     //     return null;
     // }
 
-    componentWillReceiveProps (nextProps, nextContext) {
+    componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.schema !== this.props.schema) {
             this.validators = this.getFieldsValidators(nextProps);
         }
 
         if (nextProps.initialValues !== this.props.initialValues) {
             this.setState({
-                values: clone(nextProps.initialValues)
+                values: clone(nextProps.initialValues),
             });
         }
     }
 
-    getFieldsValidators = (props = this.props) => props.schema.fields
-        .reduce((validators, field) => {
+    getFieldsValidators = (props = this.props) =>
+        props.schema.fields.reduce((validators, field) => {
             if (!field.validators) {
                 return validators;
             }
 
-            const { langs } = this.props;
+            const {langs} = this.props;
             let newValidators = {};
 
             if (field.valueLangStructure) {
                 newValidators = langs.reduce((result, lang) => {
                     return {
                         ...result,
-                        [`${lang}_${field.name}`]: field.validators
+                        [`${lang}_${field.name}`]: field.validators,
                     };
                 }, {});
             } else {
@@ -129,7 +131,7 @@ class Form extends Component {
 
             return {
                 ...validators,
-                ...newValidators
+                ...newValidators,
             };
         }, {});
 
@@ -138,11 +140,11 @@ class Form extends Component {
             return {};
         }
 
-        const { langs } = this.props;
-        const { values, lang: currentLang } = this.state;
+        const {langs} = this.props;
+        const {values, lang: currentLang} = this.state;
         const changesByLang = {};
 
-        langs.forEach(lang => {
+        langs.forEach((lang) => {
             if (currentLang !== lang) {
                 if (isArray(field.valueLangStructure) && isArray(value)) {
                     return getLangsValuesForArray(
@@ -150,7 +152,8 @@ class Form extends Component {
                         [`${lang}_${field.name}`],
                         value,
                         field.valueLangStructure,
-                        values, changesByLang
+                        values,
+                        changesByLang
                     );
                 }
 
@@ -175,9 +178,10 @@ class Form extends Component {
             return;
         }
 
-        const { values, validationMessages, lang } = this.state;
+        const {values, validationMessages, lang} = this.state;
         const FieldComponent = field.component;
         const fieldName = field.valueLangStructure ? `${lang}_${field.name}` : field.name;
+
         const validationMessage = validationMessages[fieldName];
         const hasError = Boolean(validationMessage);
 
@@ -186,25 +190,29 @@ class Form extends Component {
             onBlur: this.handleFieldBlur(field),
             name: fieldName,
             value: values[fieldName],
-            isRequired: any(validator => validator.name === 'required', field.validators || []),
+            isRequired: any((validator) => validator.name === 'required', field.validators || []),
             validationMessage,
             schema: field.schema || {},
             key: i,
             news: this.props.initialValues,
             error: hasError,
-            ...(field.type ? { type: field.type } : {})
+            ...(field.type ? {type: field.type} : {}),
         };
 
-        return <FormControl key={i} error={hasError}>
-            <FieldComponent {...fieldProps} />
-            { field.hint && <FormHelperText>{field.hint}</FormHelperText> }
-            { validationMessage && <FormHelperText error={hasError}>{validationMessage}</FormHelperText> }
-        </FormControl>;
+        return (
+            <FormControl key={i} error={hasError}>
+                <FieldComponent {...fieldProps} />
+                {field.hint && <FormHelperText>{field.hint}</FormHelperText>}
+                {validationMessage && (
+                    <FormHelperText error={hasError}>{validationMessage}</FormHelperText>
+                )}
+            </FormControl>
+        );
     };
 
     validateForm = () => {
-        const { langs, schema } = this.props;
-        const { lang: currentLang } = this.state;
+        const {langs, schema} = this.props;
+        const {lang: currentLang} = this.state;
         let validationMessages = {};
         let isValid = true;
         let isAnotherLangValid = true;
@@ -231,7 +239,7 @@ class Form extends Component {
 
                         return {
                             ...result,
-                            [`${lang}_${field.name}`]: validationMessage
+                            [`${lang}_${field.name}`]: validationMessage,
                         };
                     }
 
@@ -255,28 +263,36 @@ class Form extends Component {
 
             validationMessages = {
                 ...validationMessages,
-                ...newValidationMessages
+                ...newValidationMessages,
             };
         });
 
         this.setState({
-            validationMessages
+            validationMessages,
         });
 
-        return { isValid, isOnlyAnotherLangInvalid: !isAnotherLangValid && isCurrentLangValid };
+        return {
+            isValid,
+            isOnlyAnotherLangInvalid: !isAnotherLangValid && isCurrentLangValid,
+        };
     };
 
     validateField = (filedName) => {
-        const { values } = this.state;
+        const {values} = this.state;
         const validators = this.validators[filedName] || [];
         let validationMessage = '';
 
-        forEach(({ name, options }) => {
+        forEach(({name, options}) => {
             const validatorOptions = isObject(options) ? options : {};
             const validator = validatorsList[name];
 
             if (validator && !validationMessage) {
-                validationMessage = validator(values[filedName], validatorOptions, values, filedName);
+                validationMessage = validator(
+                    values[filedName],
+                    validatorOptions,
+                    values,
+                    filedName
+                );
             }
         }, validators);
 
@@ -286,17 +302,17 @@ class Form extends Component {
     handleFieldChange = (field, fieldName) => (value) => {
         const changes = {
             ...this.getAnotherLangsChanges(field, value),
-            [fieldName]: value
+            [fieldName]: value,
         };
-        const { values, validationMessages } = this.state;
+        const {values, validationMessages} = this.state;
         const newValues = {
             ...values,
-            ...changes
+            ...changes,
         };
 
         if ('lang' in changes) {
             this.setState({
-                lang: newValues.lang
+                lang: newValues.lang,
             });
         }
 
@@ -305,13 +321,13 @@ class Form extends Component {
             values: newValues,
             validationMessages: {
                 ...validationMessages,
-                [fieldName]: ''
-            }
+                [fieldName]: '',
+            },
         });
     };
 
     handleFieldBlur = (field) => () => {
-        const { validationMessages, lang } = this.state;
+        const {validationMessages, lang} = this.state;
 
         const fieldName = field.valueLangStructure ? `${lang}_${field.name}` : field.name;
         const validationMessage = this.validateField(fieldName);
@@ -319,12 +335,12 @@ class Form extends Component {
         this.setState({
             validationMessages: {
                 ...validationMessages,
-                [fieldName]: validationMessage
-            }
+                [fieldName]: validationMessage,
+            },
         });
     };
 
-    handleSubmit = async event => {
+    handleSubmit = async (event) => {
         event.preventDefault();
 
         if (this.state.isClickedSubmit) {
@@ -333,66 +349,77 @@ class Form extends Component {
 
         this.state.isClickedSubmit = true;
 
-        const { isValid, isOnlyAnotherLangInvalid } = this.validateForm();
+        const {isValid, isOnlyAnotherLangInvalid} = this.validateForm();
 
         if (isValid) {
             try {
                 await this.props.onSubmit(this.state.values);
             } catch (e) {
-                this.setState({ errorText: e.error });
+                this.setState({errorText: e.error});
                 this.state.isClickedSubmit = false;
             }
         } else {
             if (isOnlyAnotherLangInvalid) {
                 this.setState({
-                    errorText: 'Поправьте валидацию для других языков'
+                    errorText: 'Поправьте валидацию для других языков',
                 });
                 return;
             }
 
             this.setState({
-                errorText: 'Поправьте валидацию'
+                errorText: 'Поправьте валидацию',
             });
 
             this.state.isClickedSubmit = false;
         }
     };
 
+    handleKeyDown = (event) => {
+        if (this.props.onKeyDown) return this.props.onKeyDown(event);
+    };
+
     handleHideFailMessage = () => {
         this.setState({
-            errorText: ''
+            errorText: '',
         });
     };
 
-    render () {
-        const { schema, classes } = this.props;
-        const { errorText } = this.state;
+    render() {
+        const {schema, classes} = this.props;
+        const {errorText} = this.state;
 
-        return <div>
-            <form onSubmit={this.handleSubmit} className={classes.form}>
-                { schema.fields.map((field, i) => this.createField(field, i)) }
-            </form>
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                onClose={this.handleHideFailMessage}
-                open={!!errorText}
-                autoHideDuration={2000}
-            >
-                <SnackbarContent
-                    className={classNames(classes.error, classes.margin)}
-                    message={
-                        <span id='client-snackbar' className={classes.message}>
-                            <ErrorIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            { errorText }
-                        </span>
-                    }
-                />
-            </Snackbar>
-
-        </div>;
+        return (
+            <div>
+                <form
+                    onSubmit={this.handleSubmit}
+                    onKeyDown={this.handleKeyDown}
+                    className={classes.form}
+                >
+                    {schema.fields.map((field, i) => this.createField(field, i))}
+                </form>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={this.handleHideFailMessage}
+                    open={!!errorText}
+                    autoHideDuration={2000}
+                >
+                    <SnackbarContent
+                        className={classNames(classes.error, classes.margin)}
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon
+                                    className={classNames(classes.icon, classes.iconVariant)}
+                                />
+                                {errorText}
+                            </span>
+                        }
+                    />
+                </Snackbar>
+            </div>
+        );
     }
 }
 

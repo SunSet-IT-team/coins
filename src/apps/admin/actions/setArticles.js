@@ -1,8 +1,8 @@
-import { SET_ARTICLES } from '../types/types';
+import {SET_ARTICLES} from '../types/types';
 
-const setArticles = payload => ({
+const setArticles = (payload) => ({
     type: SET_ARTICLES,
-    payload
+    payload,
 });
 
 export default setArticles;

@@ -1,8 +1,8 @@
-import { SET_TIMING_SCALE } from '../types/types';
+import {SET_TIMING_SCALE} from '../types/types';
 
-const setTimingScale = payload => ({
+const setTimingScale = (payload) => ({
     type: SET_TIMING_SCALE,
-    payload
+    payload,
 });
 
 export default setTimingScale;

@@ -7,7 +7,7 @@ import FormFieldKeywords from '../Form/fields/FormFieldWords/FormFieldWords';
 import FormFieldDate from '../Form/fields/FormFieldDate/FormFieldDate';
 import FormFieldFiles from '../Form/fields/FormFieldFiles/FormFieldFiles';
 
-export default function ({ data: { title, dirName } = {} } = {}) {
+export default function ({data: {title, dirName} = {}} = {}) {
     return {
         fields: [
             {
@@ -15,101 +15,93 @@ export default function ({ data: { title, dirName } = {} } = {}) {
                 name: 'form-title',
                 schema: {
                     label: title,
-                    variant: 'h5'
-                }
+                    variant: 'h5',
+                },
             },
             {
                 component: FormFieldLangs,
                 name: 'lang',
                 schema: {
-                    langs: ['ru', 'ua']
+                    langs: ['ru', 'ua'],
                 },
                 validators: [
                     {
                         name: 'requiredLangFields',
                         options: {
                             text: 'Заполните форму для всех языков',
-                            fields: ['ru_name', 'ua_name']
-                        }
-                    }
-                ]
+                            fields: ['ru_name', 'ua_name'],
+                        },
+                    },
+                ],
             },
             {
                 component: FormFieldInput,
                 name: 'name',
                 valueLangStructure: 'depend',
                 schema: {
-                    label: 'Название'
+                    label: 'Название',
                 },
-                validators: [
-                    { name: 'required', options: { text: 'Заполните название статьи' } }
-                ]
+                validators: [{name: 'required', options: {text: 'Заполните название статьи'}}],
             },
             {
                 component: FormFieldInput,
                 name: 'alias',
                 schema: {
-                    label: 'Alias'
+                    label: 'Alias',
                 },
-                validators: [
-                    { name: 'required', options: { text: 'Заполните alias' } }
-                ]
+                validators: [{name: 'required', options: {text: 'Заполните alias'}}],
             },
             {
                 component: FormFieldInput,
                 name: 'preview',
                 valueLangStructure: 'depend',
                 schema: {
-                    label: 'Описание'
+                    label: 'Описание',
                 },
-                validators: [
-                    { name: 'required', options: { text: 'Заполните описание статьи' } }
-                ]
+                validators: [{name: 'required', options: {text: 'Заполните описание статьи'}}],
             },
             {
                 component: FormFieldTitle,
                 name: 'content-title',
                 schema: {
                     label: 'Контент',
-                    variant: 'h6'
-                }
+                    variant: 'h6',
+                },
             },
             {
                 component: FormFieldDate,
                 name: 'date',
                 schema: {
-                    label: 'Дата публикации'
+                    label: 'Дата публикации',
                 },
-                validators: [
-                    { name: 'required', options: { text: 'Выберите дату публикации' } }
-                ]
+                validators: [{name: 'required', options: {text: 'Выберите дату публикации'}}],
             },
             {
                 component: FormFieldTitle,
                 name: 'photo-title',
                 schema: {
                     label: 'Фотография',
-                    variant: 'h6'
-                }
+                    variant: 'h6',
+                },
             },
             {
                 component: FormFieldFiles,
                 name: 'photo',
                 schema: {
                     max: 1,
-                    dirName
+                    dirName,
                 },
                 validators: [
-                    { name: 'required', options: { text: 'Загрузите фотографию для статьи' } }
-                ]
+                    {name: 'required', options: {text: 'Загрузите фотографию для статьи'}},
+                ],
             },
             {
                 component: FormFieldTitle,
                 name: 'seoTitle',
                 schema: {
                     label: 'Сео',
-                    variant: 'h6'
-                }
+                    variant: 'h6',
+                },
             },
             {
                 component: FormFieldInput,
@@ -117,11 +109,9 @@ export default function ({ data: { title, dirName } = {} } = {}) {
                 valueLangStructure: 'depend',
                 schema: {
                     label: 'Тайтл',
-                    multiline: true
+                    multiline: true,
                 },
-                validators: [
-                    { name: 'required', options: { text: 'Заполните сео тайтл' } }
-                ]
+                validators: [{name: 'required', options: {text: 'Заполните сео тайтл'}}],
             },
             {
                 component: FormFieldInput,
@@ -129,11 +119,9 @@ export default function ({ data: { title, dirName } = {} } = {}) {
                 valueLangStructure: 'depend',
                 schema: {
                     label: 'Описание',
-                    multiline: true
+                    multiline: true,
                 },
-                validators: [
-                    { name: 'required', options: { text: 'Заполните сео описание' } }
-                ]
+                validators: [{name: 'required', options: {text: 'Заполните сео описание'}}],
             },
             {
                 component: FormFieldKeywords,
@@ -141,25 +129,25 @@ export default function ({ data: { title, dirName } = {} } = {}) {
                 valueLangStructure: 'depend',
                 schema: {
                     label: 'Ключевые слова',
-                    multiline: false
-                }
+                    multiline: false,
+                },
             },
             {
                 component: FormFieldCheckbox,
                 name: 'hidden',
                 schema: {
                     label: 'Скрыть статью',
-                    disabled: false
-                }
+                    disabled: false,
+                },
             },
             {
                 component: FormFieldButton,
                 name: 'submit',
                 schema: {
                     label: 'Сохранить',
-                    type: 'submit'
-                }
-            }
-        ]
+                    type: 'submit',
+                },
+            },
+        ],
     };
 }

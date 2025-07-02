@@ -6,7 +6,7 @@
 .tradeHistoryPopupContainer {
     width: 100%;
     max-width: 860px;
-    background: #1B2033;
+    background: #1b2033;
     height: 572px;
     overflow: hidden;
 
@@ -34,7 +34,7 @@
             width: 7px;
             height: 2px;
         }
-    
+
         &::-webkit-scrollbar-thumb {
             background: rgba(166, 177, 220, 0.5);
             border-radius: 10px;
@@ -58,7 +58,7 @@
             &:last-child {
                 border-bottom: none;
             }
-            
+
             .itemAsset {
                 display: flex;
                 flex-direction: column;
@@ -81,12 +81,14 @@
                 }
             }
 
-            .itemAmount, .itemPledge, .itemCommission {
-                color: #A6B1DC;
+            .itemAmount,
+            .itemPledge,
+            .itemCommission {
+                color: #a6b1dc;
             }
         }
 
-        @media(max-width: 768px) {
+        @media (max-width: 768px) {
             width: calc(100vw - 48px);
             height: calc(521px - 99px);
 
@@ -100,14 +102,14 @@
         }
     }
 
-    @media(max-width: 920px) {
+    @media (max-width: 920px) {
         width: calc(100vw - 60px);
         overflow: auto;
 
         .navbar {
             position: sticky;
             top: 0;
-            background: rgb(34,39,59);
+            background: rgb(34, 39, 59);
             width: fit-content;
         }
 
@@ -117,21 +119,31 @@
         }
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         width: calc(100vw - 48px);
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         width: calc(100vw - 32px);
     }
 
-    @media(max-width: 544px) {
+    @media (max-width: 544px) {
         height: 472px;
     }
 }
 
-.itemNum, .itemCreateDate , .itemCloseDate, .itemDate, .itemAsset, .itemAmount, .itemPledge, 
-.itemOpeningRate, .itemClosingRate, .itemProfit, .itemCommission, .itemClosingDate{
+.itemNum,
+.itemCreateDate,
+.itemCloseDate,
+.itemDate,
+.itemAsset,
+.itemAmount,
+.itemPledge,
+.itemOpeningRate,
+.itemClosingRate,
+.itemProfit,
+.itemCommission,
+.itemClosingDate {
     width: 100%;
     display: flex;
     align-items: center;
@@ -202,7 +214,7 @@
 }
 
 .processingColor {
-    color: #F6B93B !important;
+    color: #f6b93b !important;
 }
 
 .executedColor {

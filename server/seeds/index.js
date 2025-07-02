@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { Seeder } = require('mongo-seeding');
+const {Seeder} = require('mongo-seeding');
 const path = require('path');
 
 const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost/pl-finance';

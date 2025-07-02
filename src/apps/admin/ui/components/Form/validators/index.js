@@ -15,5 +15,5 @@ export default {
     max,
     min,
     requiredFiles,
-    isNumber
+    isNumber,
 };

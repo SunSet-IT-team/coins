@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import setMediaInfo from '../../../actions/setMediaInfo';
 
 import bp from './mediaBreakpoints';
@@ -14,32 +14,35 @@ const DEBOUNCE_DURATION = 300;
 
 const isLandscape = () => {
     if (window.orientation) {
-        return { matches: Math.abs(window.orientation) === 90 };
+        return {matches: Math.abs(window.orientation) === 90};
     }
 
-    return { matches: pathOr(['screen', 'orientation', 'type'], '', window)[0] === 'landscape' };
+    return {matches: pathOr(['screen', 'orientation', 'type'], '', window)[0] === 'landscape'};
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    setMediaInfo: payload => dispatch(setMediaInfo(payload))
+    setMediaInfo: (payload) => dispatch(setMediaInfo(payload)),
 });
 
-const media = WrappedComponent => {
+const media = (WrappedComponent) => {
     class Media extends PureComponent {
         static propTypes = {
-            setMediaInfo: PropTypes.func.isRequired
+            setMediaInfo: PropTypes.func.isRequired,
         };
 
-        constructor (...args) {
+        constructor(...args) {
             super(...args);
 
             if (typeof window !== 'undefined') {
                 this.updateMediaInfo();
             }
-            this.updateMediaInfoDebounced = debounce(() => this.props.setMediaInfo(this.getMediaInfo()), DEBOUNCE_DURATION);
+            this.updateMediaInfoDebounced = debounce(
+                () => this.props.setMediaInfo(this.getMediaInfo()),
+                DEBOUNCE_DURATION
+            );
         }
 
-        componentDidMount () {
+        componentDidMount() {
             if (typeof window === 'undefined') {
                 return;
             }
@@ -49,27 +52,25 @@ const media = WrappedComponent => {
             window.addEventListener('resize', this.updateMediaInfoDebounced);
         }
 
-        componentWillUnmount () {
+        componentWillUnmount() {
             window.removeEventListener('resize', this.updateMediaInfoDebounced);
         }
 
         updateMediaInfo = () => this.props.setMediaInfo(this.getMediaInfo());
 
         getMediaInfo = () => ({
-            ...map(value => {
+            ...map((value) => {
                 const query = window.matchMedia(value);
 
                 return query.matches;
             }, bp),
             landscape: isLandscape().matches,
             width: window.innerWidth,
-            height: window.innerHeight
+            height: window.innerHeight,
         });
 
-        render () {
-            return <WrappedComponent
-                {...this.props}
-            />;
+        render() {
+            return <WrappedComponent {...this.props} />;
         }
     }
 

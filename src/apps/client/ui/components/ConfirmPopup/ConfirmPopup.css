@@ -5,7 +5,7 @@
 .root {
     cursor: default;
 
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         position: relative;
         width: auto;
         height: auto;
@@ -16,8 +16,8 @@
     width: 215px;
     position: absolute;
     transform: translateY(31px);
-    background: rgb(56,63,87, .9);
-    transition: all .3s ease;
+    background: rgb(56, 63, 87, 0.9);
+    transition: all 0.3s ease;
     opacity: 0;
     pointer-events: none;
     padding: 20px 24px;
@@ -48,7 +48,7 @@
         }
     }
 
-    @media(max-width: 1024px) {
+    @media (max-width: 1024px) {
         position: relative;
         transform: translateY(0);
         display: none;
@@ -60,7 +60,7 @@
 }
 
 .isOpen {
-      margin-top: 35px;
+    margin-top: 35px;
     opacity: 1;
     pointer-events: auto;
     display: flex;
@@ -86,7 +86,7 @@
     }
 
     .price {
-        color: #A6B1DC;
+        color: #a6b1dc;
     }
 }
 
@@ -131,7 +131,7 @@
     align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: all .4s ease;
+    transition: all 0.4s ease;
     position: absolute;
 
     .title {
@@ -142,7 +142,7 @@
 
 .popupContainer {
     opacity: 0;
-    transition: all .4s ease;
+    transition: all 0.4s ease;
     position: absolute;
     pointer-events: none;
 }
@@ -171,7 +171,7 @@
 .failedPopup {
     display: flex;
     opacity: 0;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
     background: rgba(166, 177, 220, 0.25);
     backdrop-filter: blur(8px);
     transform: translateY(31px);
@@ -197,7 +197,7 @@
         line-height: 18px;
         text-align: center;
         letter-spacing: 0.012em;
-        color: #F8F8F8;
+        color: #f8f8f8;
         white-space: nowrap;
     }
 
@@ -205,7 +205,7 @@
         width: 16px;
     }
 
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         &::before {
             content: initial;
         }
@@ -258,7 +258,6 @@
     display: inline-block;
     background-color: white;
 }
-
 
 .imgAlone {
     height: 16px;

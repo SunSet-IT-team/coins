@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import Credentials from '../../components/Credentials/Credentials.jsx';
 
 export default class CredentialsPage extends Component {
-    render () {
+    render() {
         return <Credentials />;
     }
 }

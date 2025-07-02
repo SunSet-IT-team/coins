@@ -3,7 +3,7 @@
 
 .form {
     margin-top: 55px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
     .bottomLabel {
         position: absolute;
@@ -16,7 +16,7 @@
         color: rgba(166, 177, 220, 0.25);
         opacity: 0;
         pointer-events: none;
-        transition: all .3s ease;
+        transition: all 0.3s ease;
     }
 
     .bottomLabelActive {
@@ -48,13 +48,12 @@
     overflow: hidden;
     box-sizing: border-box;
     outline: none;
-    transition: .5s ease;
+    transition: 0.5s ease;
     width: 100%;
     border: none;
     box-shadow: 0 0 5px 1px lightBlueDingy;
 
-    
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         margin-top: -11px;
     }
 }
@@ -63,11 +62,12 @@
     opacity: 1;
 
     .content {
-        pointer-events: auto; 
+        pointer-events: auto;
     }
 }
 
-.emailContainerField, .passwordContainerField {
+.emailContainerField,
+.passwordContainerField {
     position: relative;
 
     img {
@@ -82,7 +82,7 @@
 .emailContainerField {
     margin-bottom: 62px;
 
-    @media(max-width: 450px) {
+    @media (max-width: 450px) {
         height: 36px;
     }
 }
@@ -110,7 +110,7 @@
     letter-spacing: 0.01em;
     color: rgba(235, 87, 87, 0.75);
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         margin-top: -11px;
     }
 }

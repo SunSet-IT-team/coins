@@ -11,19 +11,14 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/new')
-    .post(saveOrder);
+router.route('/new').post(saveOrder);
 
-router.route('/all')
-    .get(getOrders);
+router.route('/all').get(getOrders);
 
-router.route('/all-open')
-    .get(getAllOpenOrders);
+router.route('/all-open').get(getAllOpenOrders);
 
-router.route('/close/:id')
-    .get(closeOrder);
+router.route('/close/:id').get(closeOrder);
 
-router.route('/close-all/:id')
-    .get(closeOrder);
+router.route('/close-all/:id').get(closeOrder);
 
 export default router;

@@ -1,8 +1,8 @@
-import { SET_ACTIVE_USER } from '../types/types';
+import {SET_ACTIVE_USER} from '../types/types';
 
-const setUser = payload => ({
+const setUser = (payload) => ({
     type: SET_ACTIVE_USER,
-    payload
+    payload,
 });
 
 export default setUser;

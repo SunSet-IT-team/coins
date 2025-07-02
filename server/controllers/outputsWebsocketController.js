@@ -1,5 +1,5 @@
 import socketIo from 'socket.io';
-import { isMainThread } from 'worker_threads';
+import {isMainThread} from 'worker_threads';
 
 import verifyTokenAdmin from '../helpers/verifyTokenAdmin';
 import verifyTokenClient from '../helpers/verifyTokenClient';
@@ -12,55 +12,56 @@ import express from 'express';
 const credentials = {
     key: fs.readFileSync('server/https/private-new.key'),
     cert: fs.readFileSync('server/https/certificate.crt'),
-    ca: []
+    ca: [],
 };
 
 const verifyTokenFuncMap = {
     admin: verifyTokenAdmin,
-    client: verifyTokenClient
+    client: verifyTokenClient,
 };
 
 const connections = {};
 
 class OutputsWebsocketController {
-    constructor () {
+    constructor() {
         if (isMainThread) {
             const app = express();
-            const server = process.env.NODE_ENV === 'production' ? https.createServer(credentials, app) : http.createServer(app);
+            const server =
+                process.env.NODE_ENV === 'production'
+                    ? https.createServer(credentials, app)
+                    : http.createServer(app);
 
-            server.listen(6060, () => {
-            });
+            server.listen(6060, () => {});
 
             this.io = socketIo(server);
         }
     }
 
-    start () {
+    start() {
         this.io.on('connection', (client) => {
-            client.on('token', data => {
-                verifyTokenFuncMap[data.type](data.token)
-                    .then(user => {
-                        const clientId = data.type === 'admin' ? 'admin' : user.id;
+            client.on('token', (data) => {
+                verifyTokenFuncMap[data.type](data.token).then((user) => {
+                    const clientId = data.type === 'admin' ? 'admin' : user.id;
 
-                        if (!clientId) {
-                            return;
-                        }
+                    if (!clientId) {
+                        return;
+                    }
 
-                        if (!connections[clientId]) {
-                            connections[clientId] = new Map();
-                        }
+                    if (!connections[clientId]) {
+                        connections[clientId] = new Map();
+                    }
 
-                        connections[clientId].set(client, 1);
+                    connections[clientId].set(client, 1);
 
-                        client.on('disconnect', () => {
-                            connections[clientId].delete(client);
-                        });
+                    client.on('disconnect', () => {
+                        connections[clientId].delete(client);
                     });
+                });
             });
         });
     }
 
-    sendOutput (output) {
+    sendOutput(output) {
         const receiverId = 'admin';
 
         if (connections[receiverId]) {

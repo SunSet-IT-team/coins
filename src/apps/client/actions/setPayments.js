@@ -1,8 +1,8 @@
-import { SET_PAYMENTS } from '../types/types';
+import {SET_PAYMENTS} from '../types/types';
 
-const setPayments = payload => ({
+const setPayments = (payload) => ({
     type: SET_PAYMENTS,
-    payload
+    payload,
 });
 
 export default setPayments;

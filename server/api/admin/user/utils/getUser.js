@@ -1,4 +1,4 @@
-export default function getUser (body) {
+export default function getUser(body) {
     const {
         positionIndex,
         hidden,
@@ -18,7 +18,8 @@ export default function getUser (body) {
         docs,
         isActive,
         isVipStatus,
-        blocked
+        blocked,
+        isSwiftDepositAvailable, // Добавлено поле для пополнения баланса
     } = body;
 
     return {
@@ -40,6 +41,7 @@ export default function getUser (body) {
         docs,
         isActive,
         isVipStatus,
-        blocked
+        blocked,
+        isSwiftDepositAvailable, // Добавлено поле для пополнения баланса
     };
 }

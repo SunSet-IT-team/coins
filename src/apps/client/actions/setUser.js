@@ -1,8 +1,8 @@
-import { SET_USER } from '../types/types';
+import {SET_USER} from '../types/types';
 
-const setUser = payload => ({
+const setUser = (payload) => ({
     type: SET_USER,
-    payload
+    payload,
 });
 
 export default setUser;

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import format from 'date-fns/format';
 // import classNames from 'classnames';
 
@@ -13,22 +13,25 @@ import isObject from '@tinkoff/utils/is/object';
 import isArray from '@tinkoff/utils/is/array';
 
 import required from '../Form/validators/required';
+import classNames from 'classnames';
 
 import setAccountInfoPopup from '../../../actions/setAccountInfoPopup';
 import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
 import getClientMoneyOutput from '../../../services/client/getClientMoneyOutput';
+import getClientMoneyInput from '../../../services/client/gitClientMoneyInput';
 import outputWebsocketController from '../../../../admin/services/outputWebsocket';
 
 // import FormInput from '../FormInput/FormInput';
 import checkBalance from '../../../../../../server/api/admin/transaction/utils/checkBalance';
 
-const mapStateToProps = ({ application, data }) => {
+const mapStateToProps = ({application, data}) => {
     return {
         langMap: application.langMap,
         transactions: data.transactions,
         user: data.user,
         moneyOutput: data.moneyOutput,
+        moneyInput: data.moneyInput,
     };
 };
 
@@ -37,6 +40,7 @@ const mapDispatchToProps = (dispatch) => ({
     setAccountInfoPopup: (payload) => dispatch(setAccountInfoPopup(payload)),
     setWithdrawSuccessPopup: (payload) => dispatch(setWithdrawSuccessPopup(payload)),
     getClientMoneyOutput: (payload) => dispatch(getClientMoneyOutput(payload)),
+    getClientMoneyInput: (payload) => dispatch(getClientMoneyInput(payload)),
 });
 
 class TransactionInfoPopup extends Component {
@@ -64,37 +68,41 @@ class TransactionInfoPopup extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        // setTimeout(() => {
-        //     this.getData();
-        // }, 1000);
-        /* if (prevProps.isVisible !== this.props.isVisible && !this.props.isVisible) {
-            this.setState({
-                ...this.defaultState(),
-                error: ''
-            });
-        } */
+        if (this.props.user && prevProps.user === null) this.getData();
     }
 
     defaultState() {
         return {
-            amount: { value: '', focus: false, isValid: true },
-            outputByUsers: [],
+            amount: {value: '', focus: false, isValid: true},
+            outputByUser: [],
+            inputByUser: [],
+            activeTab: 1,
         };
     }
 
     getData = () => {
-        const { user } = this.props;
-        return this.props
-            .getClientMoneyOutput()
+        const {user} = this.props;
+        if (user === null) return;
+        return Promise.all([this.props.getClientMoneyOutput(), this.props.getClientMoneyInput()])
             .then(() => {
-                const userOutputs = this.props.moneyOutput.filter(
-                    (item) => item.userId === user.id,
-                );
-
                 this.setState({
-                    outputByUsers: userOutputs.map((item) => ({
+                    outputByUser: this.props.moneyOutput.map((item) => ({
                         status: item.status,
                         date: item.createdAt,
+                        type: 'withdraw',
+                        createdAt: item.createdAtDate,
+                        amount: item.amount,
+                        wallet: item.wallet,
+                        numberCard: item.numberCard,
+                        cardHolderName: item.cardHolderName,
+                        id: item.id,
+                        visited: item.visited,
+                        userId: user.id,
+                    })),
+                    inputByUser: this.props.moneyInput.map((item) => ({
+                        status: item.status,
+                        date: item.createdAt,
+                        type: 'deposit',
                         createdAt: item.createdAtDate,
                         amount: item.amount,
                         wallet: item.wallet,
@@ -112,6 +120,10 @@ class TransactionInfoPopup extends Component {
     };
 
     componentDidMount() {
+        ////////////////////////////////////////////////////////////
+        outputWebsocketController.connect();
+        ////////////////////////////////////////////////////////////
+
         outputWebsocketController.events.on('output', this.qwerty);
         this.getData();
     }
@@ -121,6 +133,12 @@ class TransactionInfoPopup extends Component {
     }
 
     qwerty = (output) => {
+        console.log(
+            output,
+            output.userId,
+            this.props.user.id,
+            output.userId === this.props.user.id
+        );
         if (output.userId === this.props.user.id) {
             this.getData();
         }
@@ -146,7 +164,7 @@ class TransactionInfoPopup extends Component {
     onFocus = (name) => (e) => {
         e.stopPropagation();
         this.setState({
-            [name]: { ...this.state[name], focus: !this.state[name].focus },
+            [name]: {...this.state[name], focus: !this.state[name].focus},
         });
     };
 
@@ -154,7 +172,11 @@ class TransactionInfoPopup extends Component {
         const currentState = this.handleCheckErrors([name]);
 
         this.setState({
-            [name]: { ...this.state[name], focus: false, isValid: currentState[name].isValid },
+            [name]: {
+                ...this.state[name],
+                focus: false,
+                isValid: currentState[name].isValid,
+            },
         });
     };
 
@@ -187,7 +209,7 @@ class TransactionInfoPopup extends Component {
                     isValid = false;
                 }
 
-                const newValue = { ...property, isValid };
+                const newValue = {...property, isValid};
                 thisState[name] = newValue;
 
                 this.setState({
@@ -203,10 +225,10 @@ class TransactionInfoPopup extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const { amount } = this.state;
+        const {amount} = this.state;
 
         const thisState = this.handleCheckErrors(Object.keys(this.state));
-        let isValid = required(amount.value, { text: false }) === undefined;
+        let isValid = required(amount.value, {text: false}) === undefined;
 
         for (let key in thisState) {
             if (!pathOr(['isValid'], true, thisState[key])) {
@@ -221,17 +243,23 @@ class TransactionInfoPopup extends Component {
                     amount: amount.value,
                 })
                 .then(() => {
-                    this.props.setWithdrawSuccessPopup({ visible: true, amount: amount.value });
+                    this.props.setWithdrawSuccessPopup({
+                        visible: true,
+                        amount: amount.value,
+                    });
                     setTimeout(() => this.closePopup(), 2000);
                 })
                 .catch((e) => {
-                    this.setState({ error: e.message });
+                    this.setState({error: e.message});
                 });
         }
     };
 
     closePopup = () => {
-        this.props.setWithdrawSuccessPopup({ visible: false, amount: this.state.amount.value });
+        this.props.setWithdrawSuccessPopup({
+            visible: false,
+            amount: this.state.amount.value,
+        });
         this.props.setAccountInfoPopup();
     };
 
@@ -240,115 +268,227 @@ class TransactionInfoPopup extends Component {
         return format(date, 'dd.MM.yyyy HH:mm');
     };
 
-    render() {
-        const { langMap, transactions } = this.props;
-        const { outputByUsers } = this.state;
+    transactionsBodyRef = React.createRef();
+    tabsRef = React.createRef();
 
-        const transactionList = [...outputByUsers, ...transactions];
+    handleTabClick = (index) => () => {
+        const width = this.tabsRef.current.offsetWidth;
+        let currentLeft = -(index - 1) * width;
+        this.transactionsBodyRef.current.style.marginLeft = currentLeft + 'px';
+
+        this.setState({
+            activeTab: index,
+        });
+    };
+
+    render() {
+        const {langMap, transactions} = this.props;
+        const {outputByUser, inputByUser, activeTab} = this.state;
+
+        const transactionList = [...outputByUser, ...transactions, ...inputByUser];
 
         const text = propOr('accountInfo', {}, langMap).transaction;
 
         return (
             <div className={styles.transactionPopupContainer}>
-                <div className={styles.navbar}>
-                    <div className={styles.itemNum}>#</div>
-                    <div className={styles.itemSum}>{text.summ}</div>
-                    <div className={styles.itemStatus}>{text.status}</div>
-                    <div className={styles.itemDate}>{text.date}</div>
+                <div className={styles.tabs} ref={this.tabsRef}>
+                    <div
+                        className={classNames(styles.tab, {
+                            [styles.activeButton]: activeTab === 1,
+                        })}
+                        onClick={this.handleTabClick(1)}
+                    >
+                        transactions
+                    </div>
+                    <div
+                        className={classNames(styles.tab, {
+                            [styles.activeButton]: activeTab === 2,
+                        })}
+                        onClick={this.handleTabClick(2)}
+                    >
+                        deposites
+                    </div>
                 </div>
-                <div className={styles.transactionsContainer}>
-                    {transactionList
-                        .sort((prev, next) => next.createdAt - prev.createdAt)
-                        .filter((item) => item.type !== 'deduction')
-                        .map((item, i) => (
-                            <div key={i} className={styles.transactionItem}>
-                                <div className={styles.itemNum}>{i + 1}</div>
-                                <div className={styles.itemSum}>$ {item.value || item.amount}</div>
-                                <div className={styles.itemStatus}>
-                                    {item.content || (
-                                        <div>
-                                            {item.status === 'Новая' && (
-                                                <p>
-                                                    {text.statusWithdraw}:{' '}
-                                                    <span className={styles.processingStatus}>
-                                                        {text.processing}
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {item.status === 'В обработке' && (
-                                                <p>
-                                                    {text.statusWithdraw}:{' '}
-                                                    <span className={styles.processingStatus}>
-                                                        {text.processing}
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {item.status === 'Успешно' && (
-                                                <p>
-                                                    {text.statusWithdraw}:{' '}
-                                                    <span className={styles.executedStatus}>
-                                                        {text.executed}
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {item.status === 'Отменена' && (
-                                                <p>
-                                                    {text.statusWithdraw}:{' '}
-                                                    <span className={styles.canceledStatus}>
-                                                        {text.canceled}
-                                                    </span>
-                                                </p>
-                                            )}
-                                            {item.wallet ? (
-                                                <p>
-                                                    {text.inputPlaceholderWallet}: {item.wallet}
-                                                </p>
-                                            ) : (
+                <div ref={this.transactionsBodyRef} className={styles.transactionPopupBody}>
+                    <div className={styles.bodyItem}>
+                        <div className={styles.navbar}>
+                            <div className={styles.itemNum}>#</div>
+                            <div className={styles.itemSum}>{text.transactionSumm}</div>
+                            <div className={styles.itemStatus}>{text.status}</div>
+                            <div className={styles.itemDate}>{text.date}</div>
+                        </div>
+                        <div className={styles.transactionsContainer}>
+                            {transactionList
+                                .sort((prev, next) => next.createdAt - prev.createdAt)
+                                .filter(
+                                    (item) => item.type !== 'deduction' && item.type !== 'deposit'
+                                )
+                                .map((item, i) => (
+                                    <div key={i} className={styles.transactionItem}>
+                                        <div className={styles.itemNum}>{i + 1}</div>
+                                        <div className={styles.itemSum}>
+                                            $ {item.value || item.amount}
+                                        </div>
+                                        <div className={styles.itemStatus}>
+                                            {item.content || (
                                                 <div>
-                                                    <p>
-                                                        {text.inputPlaceholderCard}:{' '}
-                                                        {item.numberCard}
-                                                    </p>
-                                                    <p>
-                                                        {text.inputPlaceholderName}:{' '}
-                                                        {item.cardHolderName}
-                                                    </p>
+                                                    {item.status === 'Новая' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span
+                                                                className={styles.processingStatus}
+                                                            >
+                                                                {text.processing}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.status === 'В обработке' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span
+                                                                className={styles.processingStatus}
+                                                            >
+                                                                {text.processing}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.status === 'Успешно' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span className={styles.executedStatus}>
+                                                                {text.executed}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.status === 'Отменена' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span className={styles.canceledStatus}>
+                                                                {text.canceled}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.wallet ? (
+                                                        <p>
+                                                            {text.inputPlaceholderWallet}:{' '}
+                                                            {item.wallet}
+                                                        </p>
+                                                    ) : (
+                                                        <div>
+                                                            <p>
+                                                                {text.inputPlaceholderCard}:{' '}
+                                                                {item.numberCard}
+                                                            </p>
+                                                            <p>
+                                                                {text.inputPlaceholderName}:{' '}
+                                                                {item.cardHolderName}
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                    {item.type && (
+                                                        <p>
+                                                            {text.type}:{' '}
+                                                            {item.type === 'withdraw'
+                                                                ? text.types.output
+                                                                : item.type === 'bonuses'
+                                                                  ? text.types.bonuses
+                                                                  : text.types.other}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
-                                    )}
-                                </div>
-                                <div className={styles.itemDate}>
-                                    {this.getDate(item.createdAt)}
-                                </div>
-                            </div>
-                        ))}
-                    {/*  {outputByUsers.length && outputByUsers
-                    .sort((prev, next) => next.createdAtDate - prev.createdAtDate)
-                    .map((item, i) => <div key={i} className={styles.transactionItem}>
-                        <div className={styles.itemNum}>{i + 1}</div>
-                        <div className={styles.itemSum}>$ {item.amount}</div>
-                        <div className={styles.itemStatus}>
-                            <p>Статус: {item.status}</p>
-                            <p>Карта: {item.numberCard}</p>
-                            <p>Владелец: {item.cardHolderName}</p>
+                                        <div className={styles.itemDate}>
+                                            {this.getDate(item.createdAt)}
+                                        </div>
+                                    </div>
+                                ))}
                         </div>
-                        <div className={styles.itemDate}>{this.getDate(item.createdAtDate)}</div>
-                    </div>)}
-                {outputByUsers.length && transactions
-                    .sort((prev, next) => next.createdAt - prev.createdAt)
-                    .map((item, i) => {
-                        if (item.type !== 'deduction') {
-                            return (<div key={i} className={styles.transactionItem}>
-                                <div className={styles.itemNum}>{outputByUsers.length + 1}</div>
-                                <div className={styles.itemSum}>$ {item.value}</div>
-                                <div className={styles.itemStatus}>
-                                    {item.content}
-                                </div>
-                                <div className={styles.itemDate}>{this.getDate(item.createdAt)}</div>
-                            </div>);
-                        }
-                    })} */}
+                    </div>
+                    <div className={styles.bodyItem}>
+                        <div className={styles.navbar}>
+                            <div className={styles.itemNum}>#</div>
+                            <div className={styles.itemSum}>{text.transactionSumm}</div>
+                            <div className={styles.itemStatus}>{text.status}</div>
+                            <div className={styles.itemDate}>{text.date}</div>
+                        </div>
+                        <div className={styles.transactionsContainer}>
+                            {transactionList
+                                .sort((prev, next) => next.createdAt - prev.createdAt)
+                                .filter((item) => item.type === 'deposit')
+                                .map((item, i) => (
+                                    <div key={i} className={styles.transactionItem}>
+                                        <div className={styles.itemNum}>{i + 1}</div>
+                                        <div className={styles.itemSum}>
+                                            $ {item.value || item.amount}
+                                        </div>
+                                        <div className={styles.itemStatus}>
+                                            {item.content || (
+                                                <div>
+                                                    {item.status === 'Новая' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span
+                                                                className={styles.processingStatus}
+                                                            >
+                                                                {text.processing}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.status === 'В обработке' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span
+                                                                className={styles.processingStatus}
+                                                            >
+                                                                {text.processing}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.status === 'Успешно' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span className={styles.executedStatus}>
+                                                                {text.executed}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.status === 'Отменена' && (
+                                                        <p>
+                                                            {text.statusWithdraw}:{' '}
+                                                            <span className={styles.canceledStatus}>
+                                                                {text.canceled}
+                                                            </span>
+                                                        </p>
+                                                    )}
+                                                    {item.wallet ? (
+                                                        <p>
+                                                            {text.inputPlaceholderWallet}:{' '}
+                                                            {item.wallet}
+                                                        </p>
+                                                    ) : (
+                                                        <div>
+                                                            <p>
+                                                                {text.inputPlaceholderCard}:{' '}
+                                                                {item.numberCard}
+                                                            </p>
+                                                            <p>
+                                                                {text.inputPlaceholderName}:{' '}
+                                                                {item.cardHolderName}
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                    <p>text.types.deposit</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={styles.itemDate}>
+                                            {this.getDate(item.createdAt)}
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
                 </div>
                 {/*   <div className={styles.footer}> */}
                 {/*  <div className={styles.funds}>{text.moneyWithdrawalTitle}</div> */}

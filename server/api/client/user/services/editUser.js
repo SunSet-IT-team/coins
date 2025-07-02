@@ -6,9 +6,9 @@ import editUserQuery from '../queries/editUser';
 import {
     BAD_REQUEST_STATUS_CODE,
     OKEY_STATUS_CODE,
-    SERVER_ERROR_STATUS_CODE
+    SERVER_ERROR_STATUS_CODE,
 } from '../../../../constants/constants';
-import { userFieldsValidatorsMap } from '../utils/fieldsAndValidation';
+import {userFieldsValidatorsMap} from '../utils/fieldsAndValidation';
 
 const validate = (fields, fieldsValidatorsMap) => {
     let isValid = true;
@@ -16,17 +16,18 @@ const validate = (fields, fieldsValidatorsMap) => {
     each((value, key) => {
         const validators = fieldsValidatorsMap[key];
 
-        validators && validators.forEach(validator => {
-            if (!validator(value)) {
-                isValid = false;
-            }
-        });
+        validators &&
+            validators.forEach((validator) => {
+                if (!validator(value)) {
+                    isValid = false;
+                }
+            });
     }, fields);
 
     return isValid;
 };
 
-export default function editUser (req, res) {
+export default function editUser(req, res) {
     try {
         const {
             name,
@@ -41,9 +42,9 @@ export default function editUser (req, res) {
             address,
             gender,
             country,
-            accountNumber
+            accountNumber,
         } = req.body;
-        const { id } = res.locals.user;
+        const {id} = res.locals.user;
         let personInfo = {
             name,
             surname,
@@ -58,12 +59,14 @@ export default function editUser (req, res) {
             country,
             accountNumber,
             id,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
         };
         const isUserValid = validate(personInfo, userFieldsValidatorsMap);
 
         if (!isUserValid) {
-            return res.status(BAD_REQUEST_STATUS_CODE).send({ error: 'Значения не являются допустимыми' });
+            return res
+                .status(BAD_REQUEST_STATUS_CODE)
+                .send({error: 'Значения не являются допустимыми'});
         }
 
         if (password) {

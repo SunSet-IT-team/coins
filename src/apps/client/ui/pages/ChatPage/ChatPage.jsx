@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import getMessageHistory from '../../../services/client/getMessageHistory';
 import editMessage from '../../../services/client/editMessage';
 import format from 'date-fns/format';
@@ -13,16 +13,16 @@ import messageWebsocketController from '../../../services/client/messageWebsocke
 
 import styles from './ChatPage.css';
 
-const mapStateToProps = ({ application, data }) => {
+const mapStateToProps = ({application, data}) => {
     return {
         langMap: application.langMap,
-        userId: data.user.id
+        userId: data.user.id,
     };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    getMessageHistory: payload => dispatch(getMessageHistory(payload)),
-    editMessage: payload => dispatch(editMessage(payload))
+    getMessageHistory: (payload) => dispatch(getMessageHistory(payload)),
+    editMessage: (payload) => dispatch(editMessage(payload)),
 });
 
 class ChatPage extends Component {
@@ -31,131 +31,164 @@ class ChatPage extends Component {
         getMessageHistory: PropTypes.func.isRequired,
         closeChatHandler: PropTypes.func.isRequired,
         editMessage: PropTypes.func.isRequired,
-        userId: PropTypes.string
+        userId: PropTypes.string,
     };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
 
         this.state = {
             value: '',
-            messages: []
+            messages: [],
         };
 
         this.messagesContainer = React.createRef();
     }
 
-    componentDidMount () {
+    componentDidMount() {
         messageWebsocketController.events.on('message', this.handleMessage);
 
-        this.props.getMessageHistory()
-            .then(messages => {
-                this.setState({
-                    messages: messages.sort((prev, next) => prev.createdAt - next.createdAt)
-                }, () => this.handleScrollToBottom());
-            });
-        this.props.editMessage({ id: this.props.userId });
+        this.props.getMessageHistory().then((messages) => {
+            this.setState(
+                {
+                    messages: messages.sort((prev, next) => prev.createdAt - next.createdAt),
+                },
+                () => this.handleScrollToBottom()
+            );
+        });
+        this.props.editMessage({id: this.props.userId});
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
         messageWebsocketController.events.removeListener('message', this.handleMessage);
     }
 
-    handleMessage = message => {
-        const { messages } = this.state;
+    handleMessage = (message) => {
+        const {messages} = this.state;
 
-        this.setState({
-            messages: [
-                ...messages,
-                message
-            ]
-        }, () => this.handleScrollToBottom());
+        this.setState(
+            {
+                messages: [...messages, message],
+            },
+            () => this.handleScrollToBottom()
+        );
     };
 
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
 
-        const { value } = this.state;
+        const {value} = this.state;
 
         messageWebsocketController.sendMessage({
-            text: value
+            text: value,
         });
 
         this.setState({
-            value: ''
+            value: '',
         });
     };
 
-    handleChange = event => {
+    handleChange = (event) => {
         this.setState({
-            value: event.target.value
+            value: event.target.value,
         });
     };
 
     closeChat = () => {
         this.props.closeChatHandler();
-    }
+    };
 
     handleScrollToBottom = () => {
         this.messagesContainer.current.classList.remove(styles.noScrollWrapper);
-        if (this.messagesContainer.current.scrollHeight <= this.messagesContainer.current.clientHeight) {
+        if (
+            this.messagesContainer.current.scrollHeight <=
+            this.messagesContainer.current.clientHeight
+        ) {
             this.messagesContainer.current.classList.add(styles.noScrollWrapper);
         } else {
             this.messagesContainer.current.scrollTop = this.messagesContainer.current.scrollHeight;
         }
     };
 
-    render () {
-        const { langMap } = this.props;
+    render() {
+        const {langMap} = this.props;
 
         const text = propOr('chat', {}, langMap);
-        const { value, messages } = this.state;
-        return <div className={styles.chatContainer} >
-            <div className={styles.titleContainer}>
-                <h4 className={styles.title}>{text.title}</h4>
-            </div>
-            <div ref={this.messagesContainer} className={styles.messagesContainer}>
-                <div className={styles.invisible} />
-                {messages.map((message, i) => {
-                    const isMyMessage = message.receiverId === 'admin';
+        const {value, messages} = this.state;
+        return (
+            <div className={styles.chatContainer}>
+                <div className={styles.titleContainer}>
+                    <h4 className={styles.title}>{text.title}</h4>
+                </div>
+                <div ref={this.messagesContainer} className={styles.messagesContainer}>
+                    <div className={styles.invisible} />
+                    {messages.map((message, i) => {
+                        const isMyMessage = message.receiverId === 'admin';
 
-                    return <div className={isMyMessage ? styles.messageContainer : styles.messageContainerAdmin} key={i}>
-                        <div className={isMyMessage ? styles.avatar : styles.avatarAdmin}>
-                            <img className={styles.image} src='/src/apps/client/ui/pages/ChatPage/images/Avatar.svg' alt="" />
-                        </div>
-                        <div className={isMyMessage ? styles.messageInfo : styles.messageInfoAdmin}>
-                            <div className={styles.senderTime}>
-                                <div className={styles.sender}>{isMyMessage ? text.say : text.admin}</div>
-                                <div className={styles.timeSent}>
-                                    {isToday(message.createdAt)
-                                        ? format(message.createdAt, 'HH:mm')
-                                        : isThisWeek(message.createdAt)
-                                            ? format(message.createdAt, 'EEEE')
-                                            : format(message.createdAt, 'P')
+                        return (
+                            <div
+                                className={
+                                    isMyMessage
+                                        ? styles.messageContainer
+                                        : styles.messageContainerAdmin
+                                }
+                                key={i}
+                            >
+                                <div className={isMyMessage ? styles.avatar : styles.avatarAdmin}>
+                                    <img
+                                        className={styles.image}
+                                        src="/src/apps/client/ui/pages/ChatPage/images/Avatar.svg"
+                                        alt=""
+                                    />
+                                </div>
+                                <div
+                                    className={
+                                        isMyMessage ? styles.messageInfo : styles.messageInfoAdmin
                                     }
+                                >
+                                    <div className={styles.senderTime}>
+                                        <div className={styles.sender}>
+                                            {isMyMessage ? text.say : text.admin}
+                                        </div>
+                                        <div className={styles.timeSent}>
+                                            {isToday(message.createdAt)
+                                                ? format(message.createdAt, 'HH:mm')
+                                                : isThisWeek(message.createdAt)
+                                                  ? format(message.createdAt, 'EEEE')
+                                                  : format(message.createdAt, 'P')}
+                                        </div>
+                                    </div>
+                                    <div className={styles.messageText}>{message.text}</div>
                                 </div>
                             </div>
-                            <div className={styles.messageText}>{message.text}</div>
+                        );
+                    })}
+                </div>
+                <div className={styles.inputContainer}>
+                    <form onSubmit={this.handleSubmit}>
+                        <div className={styles.inputWrapper}>
+                            <div className={styles.input}>
+                                <input
+                                    placeholder={text.inputPlaceholder}
+                                    value={value}
+                                    onChange={this.handleChange}
+                                    type="text"
+                                />
+                            </div>
+                            <div className={styles.button}>
+                                <button type="submit">
+                                    <img
+                                        src="/src/apps/client/ui/pages/ChatPage/images/Triangle.svg"
+                                        alt="Отправить"
+                                    />
+                                </button>
+                            </div>
                         </div>
-                    </div>;
-                })}
+                    </form>
+                </div>
+                <div className={styles.closeChat} onClick={this.closeChat} />
             </div>
-            <div className={styles.inputContainer}>
-                <form onSubmit={this.handleSubmit}>
-                    <div className={styles.inputWrapper}>
-                        <div className={styles.input}>
-                            <input placeholder={text.inputPlaceholder} value={value} onChange={this.handleChange} type="text" />
-                        </div>
-                        <div className={styles.button}>
-                            <button type='submit'>
-                                <img src='/src/apps/client/ui/pages/ChatPage/images/Triangle.svg' alt="Отправить" />
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div className={styles.closeChat} onClick={this.closeChat} />
-        </div>;
+        );
     }
 }
 

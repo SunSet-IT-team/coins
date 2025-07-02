@@ -1,8 +1,8 @@
-import { SET_UNVISITED_MESSAGE_HISTORY } from '../types/types';
+import {SET_UNVISITED_MESSAGE_HISTORY} from '../types/types';
 
-const setUnvisitedMessageHistory = payload => ({
+const setUnvisitedMessageHistory = (payload) => ({
     type: SET_UNVISITED_MESSAGE_HISTORY,
-    payload
+    payload,
 });
 
 export default setUnvisitedMessageHistory;

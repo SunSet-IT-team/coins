@@ -1,7 +1,12 @@
 import isNumber from '@tinkoff/utils/is/number';
 
-function rule (value, options) {
-    return !options || !isNumber(options.minValue) || isNaN(parseFloat(value)) || parseFloat(value) >= options.minValue;
+function rule(value, options) {
+    return (
+        !options ||
+        !isNumber(options.minValue) ||
+        isNaN(parseFloat(value)) ||
+        parseFloat(value) >= options.minValue
+    );
 }
 
 export default (value, options = {}) => {

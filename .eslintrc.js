@@ -1,11 +1,9 @@
 module.exports = {
-    'parser': 'babel-eslint',
-    'extends': 'standard',
-    'plugins': [
-        'react'
-    ],
-    'rules': {
-        'import/extensions': ['error', 'never', { 'css': 'always', 'json': 'always' }],
+    parser: 'babel-eslint',
+    extends: 'standard',
+    plugins: ['react'],
+    rules: {
+        'import/extensions': ['error', 'never', {css: 'always', json: 'always'}],
         'no-console': 0,
         'react/forbid-prop-types': 'off',
         'no-unused-vars': 'error',
@@ -16,15 +14,15 @@ module.exports = {
         'object-curly-spacing': ['error', 'always'],
         'react/jsx-curly-brace-presence': [1, 'never'],
         'max-len': [2, 160],
-        'semi': ["error", "always"],
-        "indent": ["error", 4],
-        "no-mixed-operators": 0,
-        "react/no-unused-prop-types": 1,
-        "react/prop-types": 2,
-        "no-unused-expressions": 0
+        semi: ['error', 'always'],
+        indent: ['error', 4],
+        'no-mixed-operators': 0,
+        'react/no-unused-prop-types': 1,
+        'react/prop-types': 2,
+        'no-unused-expressions': 0,
     },
-    'env': {
-        'browser': true,
-        'node': true
-    }
+    env: {
+        browser: true,
+        node: true,
+    },
 };

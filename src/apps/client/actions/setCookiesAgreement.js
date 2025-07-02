@@ -1,8 +1,8 @@
-import { SET_COOKIES_AGREEMENT } from '../types/types';
+import {SET_COOKIES_AGREEMENT} from '../types/types';
 
-const setCookiesAgreement = payload => ({
+const setCookiesAgreement = (payload) => ({
     type: SET_COOKIES_AGREEMENT,
-    payload
+    payload,
 });
 
 export default setCookiesAgreement;

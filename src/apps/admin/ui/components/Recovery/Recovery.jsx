@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import queryString from 'query-string';
@@ -6,9 +6,9 @@ import queryString from 'query-string';
 import RecoveryForm from '../RecoveryForm/RecoveryForm.jsx';
 import RecoveryResult from '../RecoveryResult/RecoveryResult.jsx';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 const materialStyles = {
     root: {
@@ -16,36 +16,44 @@ const materialStyles = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+    },
 };
 
 class Recovery extends Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        location: PropTypes.object
+        location: PropTypes.object,
     };
 
     static defaultProps = {
-        location: {}
+        location: {},
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { location: { search } } = this.props;
+        const {
+            location: {search},
+        } = this.props;
         const query = queryString.parse(search);
 
         this.recoveryToken = query['recovery-token'];
         this.email = query.email;
     }
 
-    render () {
-        const { classes } = this.props;
+    render() {
+        const {classes} = this.props;
 
-        return <div className={classes.root}>
-            {!this.recoveryToken ? <RecoveryForm /> : <RecoveryResult token={this.recoveryToken} email={this.email} />}
-        </div>;
+        return (
+            <div className={classes.root}>
+                {!this.recoveryToken ? (
+                    <RecoveryForm />
+                ) : (
+                    <RecoveryResult token={this.recoveryToken} email={this.email} />
+                )}
+            </div>
+        );
     }
 }
 

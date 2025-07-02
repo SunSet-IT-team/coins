@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import classNames from 'classnames';
 
@@ -10,7 +10,7 @@ import prop from '@tinkoff/utils/object/prop';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import ErrorIcon from '@material-ui/icons/Error';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import Form from '../Form/Form';
 import getSchema from './MoneyOutputFormSchema';
@@ -19,28 +19,28 @@ import saveTransaction from '../../../services/saveTransaction';
 import uniqid from 'uniqid';
 
 const mapDispatchToProps = (dispatch) => ({
-    editMoneyOutput: payload => dispatch(editMoneyOutput(payload)),
-    saveTransaction: payload => dispatch(saveTransaction(payload))
+    editMoneyOutput: (payload) => dispatch(editMoneyOutput(payload)),
+    saveTransaction: (payload) => dispatch(saveTransaction(payload)),
 });
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     error: {
-        backgroundColor: theme.palette.error.dark
+        backgroundColor: theme.palette.error.dark,
     },
     icon: {
-        fontSize: 20
+        fontSize: 20,
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing.unit,
     },
     message: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     margin: {
-        margin: theme.spacing.unit
-    }
+        margin: theme.spacing.unit,
+    },
 });
 
 class MoneyOutputForm extends Component {
@@ -50,18 +50,18 @@ class MoneyOutputForm extends Component {
         onDone: PropTypes.func,
         user: PropTypes.object,
         allInfoUser: PropTypes.object,
-        saveTransaction: PropTypes.func.isRequired
+        saveTransaction: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
         onDone: noop,
-        user: {}
+        user: {},
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { user, allInfoUser } = this.props;
+        const {user, allInfoUser} = this.props;
 
         this.dirName = user.dirName || uniqid();
         this.initialValues = {
@@ -71,28 +71,18 @@ class MoneyOutputForm extends Component {
             date: user.date || '',
             amount: user.amount || '',
             id: user.id || '',
-            userId: user.userId
+            userId: user.userId,
         };
 
         this.initialValuesUser = allInfoUser;
 
         this.id = prop('id', user);
         this.state = {
-            errorText: ''
+            errorText: '',
         };
     }
 
-    getOutputPayload = (
-        {
-            name,
-            surname,
-            status,
-            date,
-            amount,
-            id,
-            userId
-
-        }) => {
+    getOutputPayload = ({name, surname, status, date, amount, id, userId}) => {
         return {
             name,
             surname,
@@ -100,28 +90,21 @@ class MoneyOutputForm extends Component {
             date,
             amount,
             id,
-            userId
+            userId,
         };
     };
 
-   getUserPayload = (
-       {
-           content,
-           dirName,
-           type,
-           userId,
-           value
-       }) => {
-       return {
-           content,
-           dirName,
-           type,
-           userId,
-           value
-       };
-   };
+    getUserPayload = ({content, dirName, type, userId, value}) => {
+        return {
+            content,
+            dirName,
+            type,
+            userId,
+            value,
+        };
+    };
 
-    handleSubmit = values => {
+    handleSubmit = (values) => {
         const outputPayload = this.getOutputPayload({
             name: values.name,
             surname: values.surname,
@@ -129,7 +112,7 @@ class MoneyOutputForm extends Component {
             date: values.date,
             amount: values.amount,
             id: values.id,
-            userId: values.userId
+            userId: values.userId,
         });
         /*   const user = this.initialValuesUser.find((user) => { return outputPayload.userId === user.id; }); */
 
@@ -138,19 +121,21 @@ class MoneyOutputForm extends Component {
             dirName: this.dirName,
             type: 'deduction',
             userId: outputPayload.userId,
-            value: values.amount
+            value: values.amount,
         };
 
-        const { editMoneyOutput, onDone, saveTransaction } = this.props;
+        const {editMoneyOutput, onDone, saveTransaction} = this.props;
 
         if (values.status === 'Успешно') {
-            saveTransaction(userPayload).then(() => {
-                onDone();
-            }).catch(() => {
-                this.setState({
-                    errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова'
+            saveTransaction(userPayload)
+                .then(() => {
+                    onDone();
+                })
+                .catch(() => {
+                    this.setState({
+                        errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова',
+                    });
                 });
-            });
         }
 
         editMoneyOutput(outputPayload)
@@ -159,54 +144,58 @@ class MoneyOutputForm extends Component {
             })
             .catch(() => {
                 this.setState({
-                    errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова'
+                    errorText: 'Что-то пошло не так. Перезагрузите страницы и попробуйте снова',
                 });
             });
     };
 
     handleHideFailMessage = () => {
         this.setState({
-            errorText: ''
+            errorText: '',
         });
     };
 
-    render () {
-        const { classes, user } = this.props;
-        const { errorText } = this.state;
+    render() {
+        const {classes, user} = this.props;
+        const {errorText} = this.state;
 
-        return <div>
-            <Form
-                initialValues={this.initialValues}
-                schema={getSchema({
-                    data: {
-                        title: 'Запрос вывода средств',
-                        name: `${user.name} ${user.surname}`,
-                        date: user.date,
-                        amount: user.amount
-                    }
-                })}
-                onSubmit={this.handleSubmit}
-            />
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                }}
-                onClose={this.handleHideFailMessage}
-                open={!!errorText}
-                autoHideDuration={2000}
-            >
-                <SnackbarContent
-                    className={classNames(classes.error, classes.margin)}
-                    message={
-                        <span id='client-snackbar' className={classes.message}>
-                            <ErrorIcon className={classNames(classes.icon, classes.iconVariant)} />
-                            {errorText}
-                        </span>
-                    }
+        return (
+            <div>
+                <Form
+                    initialValues={this.initialValues}
+                    schema={getSchema({
+                        data: {
+                            title: 'Запрос вывода средств',
+                            name: `${user.name} ${user.surname}`,
+                            date: user.date,
+                            amount: user.amount,
+                        },
+                    })}
+                    onSubmit={this.handleSubmit}
                 />
-            </Snackbar>
-        </div>;
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={this.handleHideFailMessage}
+                    open={!!errorText}
+                    autoHideDuration={2000}
+                >
+                    <SnackbarContent
+                        className={classNames(classes.error, classes.margin)}
+                        message={
+                            <span id="client-snackbar" className={classes.message}>
+                                <ErrorIcon
+                                    className={classNames(classes.icon, classes.iconVariant)}
+                                />
+                                {errorText}
+                            </span>
+                        }
+                    />
+                </Snackbar>
+            </div>
+        );
     }
 }
 

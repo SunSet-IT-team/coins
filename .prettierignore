@@ -1,0 +1,7 @@
+node_modules
+public
+webpack
+.tmp
+docs
+logs
+*.min.js

@@ -14,9 +14,10 @@ const VALUES = [
     'type',
     'isClosed',
     'takeProfit',
-    'stopLoss'
+    'stopLoss',
+    'profit',
 ];
 
-export default function prepareOrder (body) {
+export default function prepareOrder(body) {
     return pick(VALUES, body);
 }

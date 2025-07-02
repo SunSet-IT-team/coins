@@ -1,4 +1,4 @@
-import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
+import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
 
 import md5 from 'md5';
 
@@ -6,7 +6,7 @@ import prepareUser from '../utils/prepareUser';
 
 import editUserQuery from '../../../client/user/queries/editUser';
 
-export default function editUser (req, res) {
+export default function editUser(req, res) {
     const user = prepareUser(req.body);
 
     if (user.password) {
@@ -14,7 +14,7 @@ export default function editUser (req, res) {
     }
 
     editUserQuery(user)
-        .then(user => {
+        .then((user) => {
             res.status(OKEY_STATUS_CODE).send(user);
         })
         .catch(() => {

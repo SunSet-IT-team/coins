@@ -8,10 +8,8 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/new')
-    .post(saveMoneyOutput);
+router.route('/new').post(saveMoneyOutput);
 
-router.route('/client')
-    .get(getClientMoneyOutput);
+router.route('/client').get(getClientMoneyOutput);
 
 export default router;

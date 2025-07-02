@@ -9,8 +9,8 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import compression from 'compression';
 import expressStaticGzip from 'express-static-gzip';
-import { renderToString } from 'react-dom/server';
-import { Worker, isMainThread, parentPort, workerData } from 'worker_threads';
+import {renderToString} from 'react-dom/server';
+import {Worker, isMainThread, parentPort, workerData} from 'worker_threads';
 
 import ordersController from './controllers/ordersController';
 import pricesController from './controllers/pricesController';
@@ -36,6 +36,7 @@ import adminMessageApi from './api/admin/message';
 import clientMessageApi from './api/client/message';
 import clientOrderApi from './api/client/order';
 import adminOrderApi from './api/admin/order';
+import changeChartValuesApi from './api/admin/charts'; //// this is charts api
 import clientDataApi from './api/client/data';
 import clientTransactionApi from './api/client/transaction';
 import adminTransactionApi from './api/admin/transaction';
@@ -43,20 +44,21 @@ import clientTempApi from './api/client/temp';
 import adminPaymentsApi from './api/admin/payments';
 import clientPaymentsApi from './api/client/payments';
 import adminMoneyOutputApi from './api/admin/moneyOutput';
+import clientMoneyInputApi from './api/client/moneyInput';
 import clientMoneyOutputApi from './api/client/moneyOutput';
 
-import { DATABASE_URL } from './constants/constants';
-import { ADMIN_PANEL_URL } from '../src/apps/admin/constants/constants';
+import {DATABASE_URL} from './constants/constants';
+import {ADMIN_PANEL_URL} from '../src/apps/admin/constants/constants';
 import backups from './helpers/backup/backups';
 import actions from './actions';
 import getStore from '../src/apps/client/store/getStore';
 import renderAppPage from '../src/apps/client/html';
 import renderAdminPage from '../src/apps/admin/html';
 
-import { httpsRedirect, startHttpsServer } from './httpsServer';
+import {httpsRedirect, startHttpsServer} from './httpsServer';
 
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router-dom';
+import {Provider} from 'react-redux';
+import {StaticRouter} from 'react-router-dom';
 import Helmet from 'react-helmet';
 import App from '../src/apps/client/App.jsx';
 
@@ -120,7 +122,7 @@ function createApp() {
             expressStaticGzip(rootPath, {
                 enableBrotli: true,
                 orderPreference: ['br'],
-            }),
+            })
         );
         app.use(compression());
         app.use((req, res, next) => {
@@ -134,8 +136,8 @@ function createApp() {
         app.use(express.static(rootPath));
 
         // helpers
-        app.use(bodyParser.urlencoded({ limit: '25mb', extended: true }));
-        app.use(bodyParser.json({ limit: '25mb', extended: true }));
+        app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
+        app.use(bodyParser.json({limit: '25mb', extended: true}));
         app.use(cookieParser());
 
         // api
@@ -143,7 +145,9 @@ function createApp() {
         app.use('/api/admin/payment', adminPaymentApi);
         app.use('/api/admin/article', adminArticleApi);
         app.use('/api/admin/files', adminFilesApi);
+
         app.use('/api/client/article', clientArticleApi);
+
         app.use('/api/admin/db', adminDbApi);
         app.use('/api/admin/user', adminUserApi);
         app.use('/api/admin/manager', adminManagerApi);
@@ -163,6 +167,8 @@ function createApp() {
         app.use('/api/client/payments', clientPaymentsApi);
         app.use('/api/admin/output', adminMoneyOutputApi);
         app.use('/api/client/output', clientMoneyOutputApi);
+        app.use('/api/client/input', clientMoneyInputApi);
+        app.use('/api/admin', changeChartValuesApi);
 
         // admin
         const adminUrlRegex = new RegExp(`^${ADMIN_PANEL_URL}`);
@@ -181,7 +187,7 @@ function createApp() {
             Promise.all(
                 map((actionFunc) => {
                     return actionFunc(req, res)(store.dispatch);
-                }, actions),
+                }, actions)
             ).then(() => {
                 const context = {};
                 const html = renderToString(
@@ -189,7 +195,7 @@ function createApp() {
                         <StaticRouter location={req.originalUrl} context={context}>
                             <App />
                         </StaticRouter>
-                    </Provider>,
+                    </Provider>
                 );
                 const helmet = Helmet.renderStatic();
                 const preloadedState = store.getState();
@@ -200,7 +206,7 @@ function createApp() {
         }
 
         app.listen(isMainThread ? PORT : workerData.port, '0.0.0.0', () => {
-            console.log('listening on port', isMainThread ? PORT : workerData.port); // eslint-disable-line no-console
+            console.log('listening on port', isMainThread ? PORT : workerData.port);
 
             if (isMainThread) {
                 pricesController.start();
@@ -228,12 +234,12 @@ async function startMain() {
 
     for (let i = 0; i < os.cpus().length - 1; i++) {
         port += i + 1;
-        console.log('thread', i + 1, 'port', port);
+        // console.log('thread', i + 1, 'port', port);
         await new Promise((resolve) => {
-            const worker = new Worker(pathToScript, { workerData: { port, env } });
+            const worker = new Worker(pathToScript, {workerData: {port, env}});
             worker.on('message', (data) => {
                 if (data.request === 'init') {
-                    console.log('init api worker', data.env, data.port);
+                    // console.log('init api worker', data.env, data.port);
 
                     resolve();
                 }

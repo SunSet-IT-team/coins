@@ -3,7 +3,7 @@ import FormFieldButton from '../Form/fields/FormFieldButton/FormFieldButton';
 import FormFieldRadios from '../Form/fields/FormFieldRadios/FormFieldRadios';
 import FormFieldDivider from '../Form/fields/FormFieldDivider/FormFieldDivider';
 
-export default function ({ data: { title, name, date, amount } = {} } = {}) {
+export default function ({data: {title, name, date, amount} = {}} = {}) {
     return {
         fields: [
             {
@@ -11,48 +11,48 @@ export default function ({ data: { title, name, date, amount } = {} } = {}) {
                 name: 'form-title',
                 schema: {
                     label: title,
-                    variant: 'h5'
-                }
+                    variant: 'h5',
+                },
             },
             {
                 component: FormFieldDivider,
-                name: 'divider'
+                name: 'divider',
             },
             {
                 component: FormFieldTitle,
                 name: 'name',
                 schema: {
                     label: `Имя: ${name}`,
-                    variant: 'body1'
-                }
+                    variant: 'body1',
+                },
             },
             {
                 component: FormFieldTitle,
                 name: 'date',
                 schema: {
                     label: `Дата запроса: ${date}`,
-                    variant: 'body1'
-                }
+                    variant: 'body1',
+                },
             },
             {
                 component: FormFieldTitle,
                 name: 'amount',
                 schema: {
                     label: `Сума запроса: ${amount}`,
-                    variant: 'body1'
-                }
+                    variant: 'body1',
+                },
             },
             {
                 component: FormFieldDivider,
-                name: 'divider'
+                name: 'divider',
             },
             {
                 component: FormFieldTitle,
                 name: 'titleType',
                 schema: {
                     label: 'Статус обработки',
-                    variant: 'h5'
-                }
+                    variant: 'h5',
+                },
             },
             {
                 component: FormFieldRadios,
@@ -60,21 +60,21 @@ export default function ({ data: { title, name, date, amount } = {} } = {}) {
                 schema: {
                     label: 'Статус',
                     options: [
-                        { label: 'Новая', value: 'Новая' },
-                        { label: 'В обработке', value: 'В обработке' },
-                        { label: 'Успешно', value: 'Успешно' },
-                        { label: 'Отменена', value: 'Отменена' }
-                    ]
-                }
+                        {label: 'Новая', value: 'Новая'},
+                        {label: 'В обработке', value: 'В обработке'},
+                        {label: 'Успешно', value: 'Успешно'},
+                        {label: 'Отменена', value: 'Отменена'},
+                    ],
+                },
             },
             {
                 component: FormFieldButton,
                 name: 'submit',
                 schema: {
                     label: 'Сохранить',
-                    type: 'submit'
-                }
-            }
-        ]
+                    type: 'submit',
+                },
+            },
+        ],
     };
 }

@@ -1,5 +1,5 @@
 import socketIo from 'socket.io';
-import { isMainThread } from 'worker_threads';
+import {isMainThread} from 'worker_threads';
 
 import isString from '@tinkoff/utils/is/string';
 import uniqid from 'uniqid';
@@ -13,40 +13,43 @@ import https from 'https';
 import http from 'http';
 import fs from 'fs';
 import express from 'express';
-import { pricesEvents } from './pricesController';
-import { AUTO_CLOSE_ORDER_EVENT, WS_MESSAGES_PORT } from '../constants/constants';
+import {pricesEvents} from './pricesController';
+import {AUTO_CLOSE_ORDER_EVENT, WS_MESSAGES_PORT} from '../constants/constants';
 
 const credentials = {
     key: fs.readFileSync('server/https/private-new.key'),
     cert: fs.readFileSync('server/https/certificate.crt'),
-    ca: []
+    ca: [],
 };
 
 const verifyTokenFuncMap = {
     admin: verifyTokenAdmin,
-    client: verifyTokenClient
+    client: verifyTokenClient,
 };
 
 const connections = {};
 
 class MessagesWebsocketController {
-    constructor () {
+    constructor() {
         if (isMainThread) {
             const app = express();
-            const server = process.env.NODE_ENV === 'production' ? https.createServer(credentials, app) : http.createServer(app);
+            const server =
+                process.env.NODE_ENV === 'production'
+                    ? https.createServer(credentials, app)
+                    : http.createServer(app);
 
-            server.listen(WS_MESSAGES_PORT, () => { });
+            server.listen(WS_MESSAGES_PORT, () => {});
 
             this.io = socketIo(server);
         }
     }
 
-    start () {
+    start() {
         this.io.on('connection', (client) => {
-            client.on('token', data => {
+            client.on('token', (data) => {
                 try {
                     verifyTokenFuncMap[data.type](data.token)
-                        .then(user => {
+                        .then((user) => {
                             const clientId = data.type === 'admin' ? 'admin' : user.id;
 
                             if (!clientId) {
@@ -63,12 +66,13 @@ class MessagesWebsocketController {
                                 connections[clientId].delete(client);
                             });
 
-                            client.on('message', ({ receiverId, text }) => {
+                            client.on('message', ({receiverId, text}) => {
                                 if (!text || !isString(text)) {
                                     return;
                                 }
 
-                                const resultReceiverId = data.type === 'admin' ? receiverId : 'admin';
+                                const resultReceiverId =
+                                    data.type === 'admin' ? receiverId : 'admin';
                                 const now = Date.now();
                                 const message = {
                                     id: uniqid(),
@@ -76,30 +80,32 @@ class MessagesWebsocketController {
                                     senderId: clientId,
                                     createdAt: now,
                                     text,
-                                    visited: false
+                                    visited: false,
                                 };
 
-                                saveMessage(message)
-                                    .then(() => {
-                                        client.emit('message', message);
+                                saveMessage(message).then(() => {
+                                    client.emit('message', message);
 
-                                        if (connections[resultReceiverId]) {
-                                            for (const [targetClient] of connections[resultReceiverId].entries()) {
-                                                targetClient.emit('message', message);
-                                            }
+                                    if (connections[resultReceiverId]) {
+                                        for (const [targetClient] of connections[
+                                            resultReceiverId
+                                        ].entries()) {
+                                            targetClient.emit('message', message);
                                         }
-                                    });
+                                    }
+                                });
                             });
 
-                            pricesEvents.on(AUTO_CLOSE_ORDER_EVENT, data => {
+                            pricesEvents.on(AUTO_CLOSE_ORDER_EVENT, (data) => {
                                 // console.log('outputs websocket AUTO_CLOSE_ORDER_EVENT', data.user.id, clientId);
                                 if (data.user.id === clientId) {
                                     client.emit(AUTO_CLOSE_ORDER_EVENT, data);
                                 }
                             });
-                        }).catch(e => {
-                            console.log(e);
-                            console.log(777);
+                        })
+                        .catch((e) => {
+                            // console.log(e);
+                            // console.log(777);
                         });
                 } catch (e) {
                     console.log(e);

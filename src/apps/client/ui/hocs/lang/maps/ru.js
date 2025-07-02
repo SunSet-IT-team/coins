@@ -3,7 +3,7 @@
 export default {
     content: {
         title: 'Контент',
-        langs: 'Выбор языка'
+        langs: 'Выбор языка',
     },
     footer: {
         operations: 'Операции',
@@ -16,17 +16,17 @@ export default {
         marginLevel: 'Уровень маржи:',
         facilities: 'Средства:',
         pledge: 'Залог:',
-        free: 'Свободные:'
+        free: 'Свободные:',
     },
     header: {
         timeFormat: 'UTC',
         buy: 'Купить',
         sell: 'Продать',
-        deposit: 'Депозит'
+        deposit: 'Депозит',
     },
     authorizationPanel: {
         signIn: 'Войти',
-        signUp: 'Регистрация'
+        signUp: 'Регистрация',
     },
     confirmPopup: {
         confirm: 'Подтвердите ',
@@ -45,7 +45,7 @@ export default {
         failedDay: 'Этот рынок не работает в выходные',
         takeProfit: 'Take profit',
         stopLoss: 'Stop loss',
-        inputsName: 'Take profit & Stop loss'
+        inputsName: 'Take profit & Stop loss',
     },
     menu: {
         actives: {
@@ -53,7 +53,7 @@ export default {
             currencies: 'Валюты',
             products: 'Товары',
             shares: 'Акции',
-            indices: 'Индексы'
+            indices: 'Индексы',
         },
         menuTitleOpen: 'Меню',
         menuTitleClose: 'Закрыть',
@@ -70,75 +70,75 @@ export default {
         assetsTitle: 'Активы',
         onMainPage: 'На главную',
         timingScaleValue: [
-            { id: 1, label: '1', value: '1' },
-            { id: 2, label: '5', value: '5' },
-            { id: 3, label: '15', value: '15' },
-            { id: 4, label: '30', value: '30' },
-            { id: 5, label: '1h', value: '60' },
-            { id: 6, label: '1d', value: 'D' },
-            { id: 7, label: '1w', value: 'W' },
-            { id: 8, label: '1m', value: 'M' }
+            {id: 1, label: '1', value: '1'},
+            {id: 2, label: '5', value: '5'},
+            {id: 3, label: '15', value: '15'},
+            {id: 4, label: '30', value: '30'},
+            {id: 5, label: '1h', value: '60'},
+            {id: 6, label: '1d', value: 'D'},
+            {id: 7, label: '1w', value: 'W'},
+            {id: 8, label: '1m', value: 'M'},
         ],
-        language: 'Язык'
+        language: 'Язык',
     },
     cookiesAgreement: {
         text: 'Наш сайт использует файлы cookie',
-        agree: 'Ок'
+        agree: 'Ок',
     },
     auth: {
         inputs: {
             email: {
                 placeholder: 'Почта',
-                validator: 'Введите Вашу почту'
+                validator: 'Введите Вашу почту',
             },
             password: {
                 placeholder: 'Пароль',
-                validator: 'Минимум 8 символов'
+                validator: 'Минимум 8 символов',
             },
             name: {
                 placeholder: 'Имя',
-                validator: 'Введите Ваше имя'
+                validator: 'Введите Ваше имя',
             },
             surname: {
                 placeholder: 'Фамилия',
-                validator: 'Введите Вашу фамилию'
+                validator: 'Введите Вашу фамилию',
             },
             phone: {
                 placeholder: 'Номер телефона',
-                validator: 'Введите Ваш номер телефона'
+                validator: 'Введите Ваш номер телефона',
             },
             date: {
                 placeholder: 'Дата рождения',
-                validator: 'Введите Вашу дату рождения'
+                validator: 'Введите Вашу дату рождения',
             },
             city: {
                 placeholder: 'Город',
-                validator: 'Введите Ваш город'
+                validator: 'Введите Ваш город',
             },
             address: {
                 placeholder: 'Адрес',
-                validator: 'Введите Ваш адрес'
+                validator: 'Введите Ваш адрес',
             },
             gender: {
                 placeholder: 'Пол',
-                validator: 'Выберите пол'
+                validator: 'Выберите пол',
             },
             country: {
                 placeholder: 'Страна',
-                validator: 'Выберите страну'
+                validator: 'Выберите страну',
             },
             accountNumber: {
                 placeholder: 'Номер счета',
-                validator: 'Введите номер счета'
+                validator: 'Введите номер счета',
             },
             newPassword: {
                 placeholder: 'Новый пароль',
-                validator: 'Минимум 8 символов'
+                validator: 'Минимум 8 символов',
             },
             confirmPassword: {
                 placeholder: 'Подтвердить пароль',
-                validator: 'Пароль не совпадает'
-            }
+                validator: 'Пароль не совпадает',
+            },
         },
         errorPromo: 'Неверный промокод',
         errorWrongPassOrLogin: 'Неправильное имя пользователя или пароль',
@@ -157,14 +157,14 @@ export default {
         clear: 'Очистить',
         save: 'Сохранить',
         titleReset: 'Ваш запрос на востановление пароля успешно выполнен',
-        disabled: 'Функция сменны данных временно отключена'
+        disabled: 'Функция сменны данных временно отключена',
     },
     accountInfo: {
         navbar: {
             privateData: 'Персональные данные',
             documents: 'Документы',
             transaction: 'Транзакции',
-            tradeHistory: 'Торговая история'
+            tradeHistory: 'Торговая история',
         },
         documents: {
             personality: 'Подтверждения личности',
@@ -173,7 +173,7 @@ export default {
             creditFrontSide: 'Кредитная карта (лицевая сторона)',
             creditBackSide: 'Кредитная карта (обратная сторона)',
             anotherDocuments: 'Другие документы',
-            loadButton: 'Загрузить'
+            loadButton: 'Загрузить',
         },
         transaction: {
             loadingData: 'Загрузка данных...',
@@ -181,28 +181,48 @@ export default {
             executed: 'Выполнен',
             canceled: 'Отменен',
             statusWithdraw: 'Статус',
+            withdraw: 'Вывод средств',
             moneyWithdrawal: 'Вывести',
-            inputPlaceholder: 'Вывод от $ 5.00',
+            moneyDeposit: 'Пополнить',
+            transactionSumm: 'Сумма транзакции',
+            withdrawSumm: 'Сумма',
+            depositSumm: 'Сумма',
+            inputPlaceholderWithdraw: 'Вывод от $ 5.00',
+            inputPlaceholderDeposit: 'Пополнение от $5.00',
             inputPlaceholderCard: 'Номер карты',
             inputPlaceholderName: 'Имя держателя',
             inputPlaceholderWallet: 'Номер кошелька',
-            summ: 'Сумма',
             status: 'Описание',
+            type: 'Тип транзакции',
+            types: {
+                output: 'Вывод средств',
+                deposit: 'Депозит',
+                bonuses: 'Бонусы',
+                other: 'Другое',
+            },
             date: 'Дата',
             moneyWithdrawalTitle: 'Вывод средств',
             withdrawOnCard: 'Visa/Mastercard',
             withdrawOnCrypto: 'USDT TRC-20',
             withdrawOnBank: 'Bank Transfer',
-            withdraw: 'Вывод средств',
             cardNumberTitle: 'Номер платёжной карты',
             cardHolderName: 'Имя держателя карты',
             wallet: 'Кошелёк',
-            bankTransferText: 'Для вывода средств с помощью банковского перевода, пожалуйста, обратитесь в чат поддержки.',
+            bankTransferText:
+                'Для вывода средств с помощью банковского перевода, пожалуйста, обратитесь в чат поддержки.',
+            cardExpiryTitle: 'Срок действия',
+            cvvTitle: 'CVV',
+            inputPlaceholderExpiry: 'MM/YY',
+            inputPlaceholderCVV: '123',
             error: {
                 failedBalance: 'Недостаточно средств',
                 failedMinValue: 'Некорректные данные',
-                failedMinValueNumber: 'Неккоректный номер'
-            }
+                failedMinValueNumber: 'Неккоректный номер',
+                failedNumberCard: 'Некорректный номер карты',
+                failedCardHolderName: 'Некорректное имя держателя',
+                failedDate: 'Неверная дата',
+                failedCVV: 'Некорректный CVV',
+            },
         },
         tradeHistory: {
             dateTitle: 'Дата создания',
@@ -216,13 +236,13 @@ export default {
             commissionTitle: 'Комиссия',
             takeProfit: 'Take profit',
             stopLoss: 'Stop loss',
-            closingDate: 'Время закрытия'
+            closingDate: 'Время закрытия',
         },
         dataInfo: {
             gender: {
                 male: 'Мужской',
-                female: 'Женский'
-            }
+                female: 'Женский',
+            },
         },
         countryInfo: {
             ru: 'Russia (Россия)',
@@ -284,26 +304,26 @@ export default {
             GB: 'United Kingdom',
             US: 'United States',
             VN: 'Vietnam',
-            by: 'Belarus (Беларусь)'
-        }
+            by: 'Belarus (Беларусь)',
+        },
     },
     payments: {
         qiwi: {
-            title: 'QIWI payment'
+            title: 'QIWI payment',
         },
         usdt: {
-            title: 'USDT TRC-20'
+            title: 'USDT TRC-20',
         },
         bitcoin: {
-            title: 'Bitcoin'
+            title: 'Bitcoin',
         },
         swift: {
             title: 'SWIFT',
-            text: 'Чтобы пополнить счет с помощью банковского перевода, обратитесь в чат поддержки.'
+            text: 'Чтобы пополнить счет с помощью банковского перевода, обратитесь в чат поддержки.',
         },
         visa: {
             title: 'Payment gateway',
-            subtitle: 'Visa/Mastercard'
+            subtitle: 'Visa/Mastercard',
         },
         replenishment: 'Выберите способ пополнения',
         info: {
@@ -313,14 +333,20 @@ export default {
             adressBottomTitle: 'После проведения транзакции свяжитесь с нашим менеджером',
             copied: 'Скопировано',
             qiwiTopTitle: 'Сумма пополнения',
-            failedIncorrect: 'Некорректные данные'
-        }
+            failedIncorrect: 'Некорректные данные',
+        },
     },
     withdrawSuccess: {
         topTitle: 'Ваш запрос на вывод $ ',
         success: 'успешно',
         sended: 'отправлен',
-        bottomTitle: 'Средства поступят на счет в течении 3-х дней'
+        bottomTitle: 'Средства поступят на счет в течении 3-х дней',
+    },
+    depositSuccess: {
+        topTitle: 'Ваш запрос на пополнение $ ',
+        success: 'успешно',
+        sended: 'отправлен',
+        bottomTitle: 'Средства поступят на счет в течении 3-х дней',
     },
     openedOrders: {
         createData: 'Дата создания',
@@ -334,18 +360,17 @@ export default {
         takeProfit: 'Зафиксировать прибыль',
         stopLoss: 'Остановить потери',
         closingDate: 'Дата закрытия',
-        closingTime: 'Время закрытия'
+        closingTime: 'Время закрытия',
     },
     openOrder: {
         accept: 'Подтвердить',
         some: 'Что то',
-        closeOrder: 'Закрыть сделку'
+        closeOrder: 'Закрыть сделку',
     },
     chat: {
         title: 'Чат',
         inputPlaceholder: 'Введите сообщение',
         say: 'Вы',
-        admin: 'Админ'
-    }
-
+        admin: 'Админ',
+    },
 };

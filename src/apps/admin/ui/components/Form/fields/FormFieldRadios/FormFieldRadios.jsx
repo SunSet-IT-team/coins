@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,24 +8,17 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-const styles = theme => ({
+const styles = (theme) => ({
     formControl: {
         margin: theme.spacing.unit,
-        width: '100%'
+        width: '100%',
     },
     formLabel: {
-        marginBottom: theme.spacing.unit
-    }
+        marginBottom: theme.spacing.unit,
+    },
 });
 
-const FormFieldRadios = ({
-    classes,
-    schema,
-    value,
-    validationMessage,
-    onChange,
-    error
-}) => {
+const FormFieldRadios = ({classes, schema, value, name, validationMessage, onChange, error}) => {
     const handleChange = (event) => {
         onChange(event.target.value);
     };
@@ -33,11 +26,7 @@ const FormFieldRadios = ({
     return (
         <div className={classes.formControl}>
             <FormLabel className={classes.formLabel}>{schema.label}</FormLabel>
-            <RadioGroup
-                value={value || ''}
-                onChange={handleChange}
-                name={schema.name}
-            >
+            <RadioGroup value={value || ''} onChange={handleChange} name={name}>
                 <FormGroup>
                     {(schema.options || []).map((option, i) => (
                         <FormControlLabel
@@ -49,7 +38,9 @@ const FormFieldRadios = ({
                     ))}
                 </FormGroup>
             </RadioGroup>
-            {validationMessage && <FormHelperText error={error}>{validationMessage}</FormHelperText>}
+            {validationMessage && (
+                <FormHelperText error={error}>{validationMessage}</FormHelperText>
+            )}
         </div>
     );
 };
@@ -59,24 +50,28 @@ FormFieldRadios.propTypes = {
     schema: PropTypes.shape({
         label: PropTypes.string,
         name: PropTypes.string,
-        options: PropTypes.arrayOf(PropTypes.shape({
-            label: PropTypes.string,
-            value: PropTypes.string
-        }))
+        options: PropTypes.arrayOf(
+            PropTypes.shape({
+                label: PropTypes.string,
+                value: PropTypes.string,
+            })
+        ),
     }),
     value: PropTypes.string,
+    name: PropTypes.string,
     validationMessage: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    error: PropTypes.bool
+    error: PropTypes.bool,
 };
 
 FormFieldRadios.defaultProps = {
     schema: {
-        options: []
+        options: [],
     },
     value: '',
+    name: '',
     validationMessage: '',
-    error: false
+    error: false,
 };
 
 export default withStyles(styles)(FormFieldRadios);

@@ -7,10 +7,10 @@ module.exports = function (api) {
             {
                 modules: 'commonjs',
                 targets: {
-                    node: 12
-                }
-            }
-        ]
+                    node: 12,
+                },
+            },
+        ],
     ];
     const plugins = [
         '@babel/transform-runtime',
@@ -23,13 +23,13 @@ module.exports = function (api) {
         [
             'module-resolver',
             {
-                root: ['./']
-            }
-        ]
+                root: ['./'],
+            },
+        ],
     ];
 
     return {
         presets,
-        plugins
+        plugins,
     };
 };

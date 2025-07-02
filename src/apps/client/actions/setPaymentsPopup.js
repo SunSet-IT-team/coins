@@ -1,8 +1,8 @@
-import { SET_PAYMENTS_POPUP } from '../types/types';
+import {SET_PAYMENTS_POPUP} from '../types/types';
 
-const setPaymentsPopup = payload => ({
+const setPaymentsPopup = (payload) => ({
     type: SET_PAYMENTS_POPUP,
-    payload
+    payload,
 });
 
 export default setPaymentsPopup;

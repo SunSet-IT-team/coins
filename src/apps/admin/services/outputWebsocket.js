@@ -1,15 +1,18 @@
 import io from 'socket.io-client';
 
-import { TOKEN_LOCAL_STORAGE_NAME } from '../constants/constants';
+import {TOKEN_LOCAL_STORAGE_NAME} from '../constants/constants';
 import EventEmitter from 'eventemitter3';
 
-const WEBSOCKET_URL = process.env.NODE_ENV === 'production' ? 'wss://coinwalletcapital.ru:6060' : 'ws://localhost:6060';
+const WEBSOCKET_URL =
+    process.env.NODE_ENV === 'production'
+        ? 'wss://coinwalletcapital.ru:6060'
+        : 'ws://localhost:6060';
 
 class OutputWebsocketController {
     events = new EventEmitter();
 
-    connect () {
-        const socket = io(WEBSOCKET_URL, { transports: ['websocket'] });
+    connect() {
+        const socket = io(WEBSOCKET_URL, {transports: ['websocket']});
 
         this.socket = socket;
 
@@ -18,16 +21,18 @@ class OutputWebsocketController {
 
             socket.emit('token', {
                 type: 'admin',
-                token
+                token,
             });
         });
 
-        socket.on('output', data => {
+        socket.on('output', (data) => {
+            console.log(1);
+
             this.events.emit('output', data);
         });
     }
 
-    disconnect () {
+    disconnect() {
         this.socket && this.socket.disconnect();
         this.socket = null;
     }

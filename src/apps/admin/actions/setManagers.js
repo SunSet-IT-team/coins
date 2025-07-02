@@ -1,8 +1,8 @@
-import { SET_MANAGERS } from '../types/types';
+import {SET_MANAGERS} from '../types/types';
 
-const setManagers = payload => ({
+const setManagers = (payload) => ({
     type: SET_MANAGERS,
-    payload
+    payload,
 });
 
 export default setManagers;

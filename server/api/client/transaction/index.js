@@ -9,13 +9,10 @@ const router = express.Router();
 
 router.use(verification);
 
-router.route('/')
-    .get(getAvailableTransaction);
+router.route('/').get(getAvailableTransaction);
 
-router.route('/all')
-    .get(getAvailableTransactions);
+router.route('/all').get(getAvailableTransactions);
 
-router.route('/by-ids')
-    .post(getAvailableTransactionsByIds);
+router.route('/by-ids').post(getAvailableTransactionsByIds);
 
 export default router;

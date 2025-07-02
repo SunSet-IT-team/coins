@@ -1,8 +1,8 @@
-import { SET_LANG } from '../types/types';
+import {SET_LANG} from '../types/types';
 
-const setLang = payload => ({
+const setLang = (payload) => ({
     type: SET_LANG,
-    payload
+    payload,
 });
 
 export default setLang;

@@ -7,6 +7,8 @@ export const SERVER_ERROR_STATUS_CODE = 500;
 export const MONGODB_DUPLICATE_CODE = 11000;
 export const APP_FORM_FILE_FIELD_NAME_REGEX = /app-form-file-/g;
 
+// export const DOMAIN = 'coinwalletcapital.ru';
+
 export const DOMAIN = 'coinwalletcapital.ru';
 
 export const DATABASE_URL =
@@ -48,10 +50,10 @@ export const MAIL_CREDENTIALS =
 export const DOC_NAMES = ['identity', 'residence', 'cardFront', 'cardBack', 'others'];
 
 export const AMOUNT = [
-    { id: 1, name: 'gold', value: 1000 },
-    { id: 2, name: 'platinum', value: 5000 },
-    { id: 3, name: 'diamond', value: 20000 },
-    { id: 4, name: 'vip' },
+    {id: 1, name: 'gold', value: 1000},
+    {id: 2, name: 'platinum', value: 5000},
+    {id: 3, name: 'diamond', value: 20000},
+    {id: 4, name: 'vip'},
 ];
 
 export const REQUIRED_DOC = ['identity', 'residence', 'cardFront', 'cardBack'];

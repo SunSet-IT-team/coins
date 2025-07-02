@@ -1,6 +1,8 @@
 const ASSET_HOST = process.env.ASSET_HOST || '';
 
 export default function (html, helmet, preloadedState = {}) {
+    console.log(preloadedState);
+
     return `
     <!doctype html>
     <html lang='ru'>
@@ -20,10 +22,10 @@ export default function (html, helmet, preloadedState = {}) {
                 // http://redux.js.org/recipes/ServerRendering.html#security-considerations
                 window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(
                     /</g,
-                    '\\\\\\\\\u003c',
+                    '\\\\\\\\\u003c'
                 )}
             </script>
-            <script src="//www.instagram.com/embed.js" defer='defer'></script>
+            <!-- <script src="//www.instagram.com/embed.js" defer='defer'></script> -->
             <script src='${ASSET_HOST}/public/vendors-client.chunk.js' defer='defer'></script>
             <script src='${ASSET_HOST}/public/client.chunk.js' defer='defer'></script>
         </body>

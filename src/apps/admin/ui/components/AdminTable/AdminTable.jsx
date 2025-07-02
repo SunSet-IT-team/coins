@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -35,7 +35,7 @@ import findIndex from '@tinkoff/utils/array/findIndex';
 import any from '@tinkoff/utils/array/any';
 import isUndefined from '@tinkoff/utils/is/undefined';
 
-const materialStyles = theme => ({
+const materialStyles = (theme) => ({
     paper: {
         margin: '30px 0 0 0',
         width: '100%',
@@ -43,37 +43,31 @@ const materialStyles = theme => ({
         paddingRight: theme.spacing.unit,
         '@media (max-width:1200px)': {
             paddingRight: '0',
-            display: 'block'
-        }
+            display: 'block',
+        },
     },
     table: {
-
-        '@media (max-width:1200px)': {
-        }
+        '@media (max-width:1200px)': {},
     },
-    tableWrapper: {
-
-    },
-    tableXxx: {
-
-    },
+    tableWrapper: {},
+    tableXxx: {},
     valueActions: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr',
         visibility: 'hidden',
         '@media (max-width:780px)': {
-            visibility: 'visible'
-        }
+            visibility: 'visible',
+        },
     },
     content: {
         flexGrow: 1,
         padding: '30px',
         '@media (max-width:600px)': {
-            padding: '15px'
+            padding: '15px',
         },
         '@media (max-width:400px)': {
-            padding: '15px 0'
-        }
+            padding: '15px 0',
+        },
     },
     tableCell: {
         color: 'rgba(0, 0, 0, 0.87)',
@@ -86,39 +80,39 @@ const materialStyles = theme => ({
         width: '438px',
         '@media (max-width:780px)': {
             width: 'auto',
-            padding: '0px'
-        }
+            padding: '0px',
+        },
     },
     tableCellActions: {
-        textAlign: 'right'
+        textAlign: 'right',
     },
     tableCellHead: {
         '@media (max-width:780px)': {
             width: 'auto',
-            padding: '4px 24px'
+            padding: '4px 24px',
         },
         '@media (max-width:500px)': {
             width: 'auto',
-            padding: '4px 12px'
-        }
+            padding: '4px 12px',
+        },
     },
     row: {
         backgroundColor: '#fff',
         width: '1912px',
         '&:hover $valueActions': {
-            visibility: 'visible'
-        }
+            visibility: 'visible',
+        },
     },
     rowVisited: {
         backgroundColor: '#cef2ec',
         width: '1912px',
         '&:hover $valueActions': {
-            visibility: 'visible'
+            visibility: 'visible',
         },
         '&:hover': {
-            backgroundColor: '#8ed9cd !important'
-        }
-    }
+            backgroundColor: '#8ed9cd !important',
+        },
+    },
 });
 
 const ROWS_PER_PAGE = 10;
@@ -138,7 +132,7 @@ class AdminTable extends React.Component {
         onFiltersOpen: PropTypes.func,
         filters: PropTypes.bool,
         isAddButton: PropTypes.bool,
-        isClosedButton: PropTypes.bool
+        isClosedButton: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -154,34 +148,34 @@ class AdminTable extends React.Component {
         onFiltersOpen: noop,
         filters: false,
         isAddButton: true,
-        isClosedButton: false
+        isClosedButton: false,
     };
 
-    constructor (...args) {
+    constructor(...args) {
         super(...args);
 
-        const { values } = this.props;
+        const {values} = this.props;
 
         this.state = {
             selected: [],
             page: 0,
-            rowsPerPage: values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : values.length,
-            checkboxIndeterminate: false
+            rowsPerPage: values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : 10,
+            checkboxIndeterminate: false,
         };
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.values !== this.props.values) {
             this.setState({
-                rowsPerPage: nextProps.values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : nextProps.values.length,
-                selected: []
+                rowsPerPage: nextProps.values.length > ROWS_PER_PAGE ? ROWS_PER_PAGE : 10,
+                selected: [],
             });
         }
     }
 
-    handleSelectAllClick = event => {
-        const { values } = this.props;
-        const { selected, rowsPerPage, page, checkboxIndeterminate } = this.state;
+    handleSelectAllClick = (event) => {
+        const {values} = this.props;
+        const {selected, rowsPerPage, page, checkboxIndeterminate} = this.state;
 
         if (event.target.checked && !checkboxIndeterminate) {
             const newSelected = compose(
@@ -192,7 +186,7 @@ class AdminTable extends React.Component {
 
             return this.setState({
                 selected: newSelected,
-                checkboxIndeterminate: true
+                checkboxIndeterminate: true,
             });
         }
 
@@ -203,20 +197,20 @@ class AdminTable extends React.Component {
 
         this.setState({
             selected: newSelected,
-            checkboxIndeterminate: false
+            checkboxIndeterminate: false,
         });
     };
 
     handleSelectedCloseClick = () => {
         this.setState({
             selected: [],
-            checkboxIndeterminate: false
+            checkboxIndeterminate: false,
         });
     };
 
-    handleClick = selectedValue => () => {
-        const { selected } = this.state;
-        const selectedIndex = findIndex(value => value.id === selectedValue.id, selected);
+    handleClick = (selectedValue) => () => {
+        const {selected} = this.state;
+        const selectedIndex = findIndex((value) => value.id === selectedValue.id, selected);
         let newSelected = [];
 
         if (selectedIndex === -1) {
@@ -232,68 +226,74 @@ class AdminTable extends React.Component {
             );
         }
 
-        const checkboxIndeterminate = this.checkCheckboxIndeterminate({ selected: newSelected });
+        const checkboxIndeterminate = this.checkCheckboxIndeterminate({selected: newSelected});
 
-        this.setState({ selected: newSelected, checkboxIndeterminate });
+        this.setState({selected: newSelected, checkboxIndeterminate});
     };
 
     handleChangePage = (event, page) => {
-        const checkboxIndeterminate = this.checkCheckboxIndeterminate({ page });
+        const checkboxIndeterminate = this.checkCheckboxIndeterminate({page});
 
-        this.setState({ page, checkboxIndeterminate });
+        this.setState({page, checkboxIndeterminate});
     };
 
-    handleChangeRowsPerPage = ({ target: { value } }) => {
-        const { values } = this.props;
-        const rowsPerPage = values.length > value ? value : values.length;
-        const checkboxIndeterminate = this.checkCheckboxIndeterminate({ rowsPerPage });
+    handleChangeRowsPerPage = ({target: {value}}) => {
+        const {values} = this.props;
+        const rowsPerPage = 10;
+        const checkboxIndeterminate = this.checkCheckboxIndeterminate({rowsPerPage});
 
-        this.setState({ rowsPerPage, checkboxIndeterminate });
+        this.setState({rowsPerPage, checkboxIndeterminate});
     };
 
-    handleDelete = value => () => {
+    handleDelete = (value) => () => {
         this.setState({
-            valueForDelete: value
+            valueForDelete: value,
         });
     };
 
     handleWarningDisagree = () => {
         this.setState({
-            valueForDelete: null
+            valueForDelete: null,
         });
     };
 
     handleWarningAgree = () => {
-        const { valueForDelete } = this.state;
+        const {valueForDelete} = this.state;
 
-        (this.props.onDelete([valueForDelete.id]))
-            .then(() => {
-                this.setState({
-                    valueForDelete: null
-                });
+        this.props.onDelete([valueForDelete.id]).then(() => {
+            this.setState({
+                valueForDelete: null,
             });
+        });
     };
 
-    checkCheckboxIndeterminate = (
-        {
-            rowsPerPage = this.state.rowsPerPage,
-            page = this.state.page,
-            selected = this.state.selected
-        } = {}
-    ) => {
-        const { values } = this.props;
-        const visibleValues = values
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    checkCheckboxIndeterminate = ({
+        rowsPerPage = this.state.rowsPerPage,
+        page = this.state.page,
+        selected = this.state.selected,
+    } = {}) => {
+        const {values} = this.props;
+        const visibleValues = values.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
         return !difference(visibleValues, selected).length;
     };
 
-    isSelected = id => any(value => value.id === id, this.state.selected);
+    isSelected = (id) => any((value) => value.id === id, this.state.selected);
 
-    render () {
-        const { classes, headerRows, tableCells, values, headerText,
-            deleteValueWarningTitle, deleteValuesWarningTitle, filters, isAddButton, isClosedButton } = this.props;
-        const { selected, rowsPerPage, page, checkboxIndeterminate, valueForDelete } = this.state;
+    render() {
+        const {
+            classes,
+            headerRows,
+            tableCells,
+            values,
+            headerText,
+            deleteValueWarningTitle,
+            deleteValuesWarningTitle,
+            filters,
+            isAddButton,
+            isClosedButton,
+        } = this.props;
+        const {selected, rowsPerPage, page, checkboxIndeterminate, valueForDelete} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, values.length - page * rowsPerPage);
 
         return (
@@ -310,24 +310,23 @@ class AdminTable extends React.Component {
                     isAddButton={isAddButton}
                 />
                 <div className={classes.tableWrapper}>
-                    <Table className={classes.table} aria-labelledby='tableTitle'>
+                    <Table className={classes.table} aria-labelledby="tableTitle">
                         <TableHead>
-                            <TableRow >
-                                <TableCell padding='checkbox'>
+                            <TableRow>
+                                <TableCell padding="checkbox">
                                     <Checkbox
+                                        name="fdkfdk"
                                         indeterminate={checkboxIndeterminate}
                                         checked={false}
                                         onChange={this.handleSelectAllClick}
                                     />
                                 </TableCell>
-                                {headerRows.map(
-                                    (row, i) => (
-                                        <TableCell key={i} className={classes.tableCellHead}>
-                                            {row.label}
-                                        </TableCell>
-                                    )
-                                )}
-                                <TableCell align='right' />
+                                {headerRows.map((row, i) => (
+                                    <TableCell key={i} className={classes.tableCellHead}>
+                                        {row.label}
+                                    </TableCell>
+                                ))}
+                                <TableCell align="right" />
                             </TableRow>
                         </TableHead>
                         <TableBody className={classes.tableXxx}>
@@ -338,27 +337,53 @@ class AdminTable extends React.Component {
                                     return (
                                         <TableRow
                                             hover
-                                            role='checkbox'
+                                            role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={i}
+                                            key={`table_row_${i}`}
                                             selected={isSelected}
-                                            className={classNames(classes.row, { [classes.rowVisited]: !isUndefined(value.visited) && !value.visited })}
+                                            className={classNames(classes.row, {
+                                                [classes.rowVisited]:
+                                                    !isUndefined(value.visited) && !value.visited,
+                                            })}
                                         >
-                                            <TableCell padding='checkbox' className={classes.tableCell}>
-                                                <Checkbox checked={isSelected} onClick={this.handleClick(value)} />
+                                            <TableCell
+                                                padding="checkbox"
+                                                className={classes.tableCell}
+                                            >
+                                                <Checkbox
+                                                    name="ababsb"
+                                                    checked={isSelected}
+                                                    onClick={this.handleClick(value)}
+                                                />
                                             </TableCell>
-                                            { tableCells.map((tableCell, i) =>
-                                                <TableCell key={i} className={classes.tableCell} >{tableCell.prop(value)}</TableCell>)}
-                                            <TableCell padding='checkbox' align='right' className={classNames(classes.tableCell, classes.tableCellActions)} >
+                                            {tableCells.map((tableCell, i) => (
+                                                <TableCell
+                                                    key={`table_cell_${i}`}
+                                                    className={classes.tableCell}
+                                                >
+                                                    {tableCell.prop(value)}
+                                                </TableCell>
+                                            ))}
+                                            <TableCell
+                                                padding="checkbox"
+                                                align="right"
+                                                className={classNames(
+                                                    classes.tableCell,
+                                                    classes.tableCellActions
+                                                )}
+                                            >
                                                 <div className={classes.valueActions}>
-                                                    {
-                                                        isClosedButton && !value.isClosed &&
-                                                        <IconButton onClick={this.props.onFormClose(value)}>
+                                                    {isClosedButton && !value.isClosed && (
+                                                        <IconButton
+                                                            onClick={this.props.onFormClose(value)}
+                                                        >
                                                             <CloseRoundedIcon />
                                                         </IconButton>
-                                                    }
-                                                    <IconButton onClick={this.props.onFormOpen(value)}>
+                                                    )}
+                                                    <IconButton
+                                                        onClick={this.props.onFormOpen(value)}
+                                                    >
                                                         <EditIcon />
                                                     </IconButton>
                                                     <IconButton onClick={this.handleDelete(value)}>
@@ -370,7 +395,7 @@ class AdminTable extends React.Component {
                                     );
                                 })}
                             {emptyRows > 0 && (
-                                <TableRow style={{ height: 49 * emptyRows }}>
+                                <TableRow style={{height: 49 * emptyRows}}>
                                     <TableCell colSpan={6} className={classes.tableCell} />
                                 </TableRow>
                             )}
@@ -379,26 +404,25 @@ class AdminTable extends React.Component {
                 </div>
                 <TablePagination
                     rowsPerPageOptions={[10, 20, 30]}
-                    component='div'
+                    component="div"
                     count={values.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-                <Dialog
-                    open={!!valueForDelete}
-                    onClose={this.handleWarningDisagree}
-                >
+                <Dialog open={!!valueForDelete} onClose={this.handleWarningDisagree}>
                     <DialogTitle>{deleteValueWarningTitle}</DialogTitle>
                     <DialogContent className={classes.warningContent}>
-                        <DialogContentText>{valueForDelete && valueForDelete.name}</DialogContentText>
+                        <DialogContentText>
+                            {valueForDelete && valueForDelete.name}
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleWarningDisagree} color='primary'>
+                        <Button onClick={this.handleWarningDisagree} color="primary">
                             Нет
                         </Button>
-                        <Button onClick={this.handleWarningAgree} color='primary' autoFocus>
+                        <Button onClick={this.handleWarningAgree} color="primary" autoFocus>
                             Да
                         </Button>
                     </DialogActions>
