@@ -20,7 +20,7 @@ import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
 import getClientMoneyOutput from '../../../services/client/getClientMoneyOutput';
 import getClientMoneyInput from '../../../services/client/gitClientMoneyInput';
-import outputWebsocketController from '../../../../admin/services/outputWebsocket';
+import transactionsWebsocketController from '../../../../admin/services/outputWebsocket';
 
 // import FormInput from '../FormInput/FormInput';
 import checkBalance from '../../../../../../server/api/admin/transaction/utils/checkBalance';
@@ -121,15 +121,15 @@ class TransactionInfoPopup extends Component {
 
     componentDidMount() {
         ////////////////////////////////////////////////////////////
-        outputWebsocketController.connect();
+        transactionsWebsocketController.connect();
         ////////////////////////////////////////////////////////////
 
-        outputWebsocketController.events.on('output', this.qwerty);
+        transactionsWebsocketController.events.on('output', this.qwerty);
         this.getData();
     }
 
     componentWillUnmount() {
-        outputWebsocketController.events.removeListener('output', this.qwerty);
+        transactionsWebsocketController.events.removeListener('output', this.qwerty);
     }
 
     qwerty = (output) => {

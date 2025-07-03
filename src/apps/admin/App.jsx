@@ -13,8 +13,8 @@ import getUnvisitedMessageHistory from './services/getUnvisitedMessageHistory';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {matchPath} from 'react-router';
 
-import messageWebsocketController from './services/messageWebsocket';
-import outputWebsocketController from './services/outputWebsocket';
+import messageWebsocketController from './services/websockets/messageWebsocket.js';
+import transactionsWebsocketController from './services/websockets/transactionsWebsocket.js';
 import assetPriceWebsocketController from '../client/services/client/assetPriceWebsocket.js';
 
 import QiwiPage from './ui/pages/QiwiPage/QiwiPage.jsx';
@@ -86,7 +86,7 @@ class App extends Component {
         getUnvisitedMoneyOutput();
         getUnvisitedMessageHistory();
 
-        outputWebsocketController.events.on('output', getUnvisitedMoneyOutput);
+        transactionsWebsocketController.events.on('output', getUnvisitedMoneyOutput);
 
         getPrices().then((prices) => {
             assetPriceWebsocketController.setPrices(prices);
@@ -116,10 +116,10 @@ class App extends Component {
     setMessageConnection = (authenticated) => {
         if (authenticated) {
             messageWebsocketController.connect();
-            //   outputWebsocketController.connect()
+            //   transactionsWebsocketController.connect()
         } else {
             messageWebsocketController.disconnect();
-            outputWebsocketController.disconnect();
+            transactionsWebsocketController.disconnect();
         }
     };
 

@@ -1,13 +1,12 @@
 import io from 'socket.io-client';
 
-import {TOKEN_LOCAL_STORAGE_NAME} from '../constants/constants';
+import {TOKEN_LOCAL_STORAGE_NAME} from '../../constants/constants';
 import EventEmitter from 'eventemitter3';
-import {WS_MESSAGES_PORT} from '../../../../server/constants/constants';
 
 const WEBSOCKET_URL =
     process.env.NODE_ENV === 'production'
-        ? `wss://coinwalletcapital.ru:${WS_MESSAGES_PORT}`
-        : `ws://localhost:${WS_MESSAGES_PORT}`;
+        ? `wss://coinwalletcapital.ru:2053`
+        : 'ws://localhost:2053';
 
 class MessageWebsocketController {
     events = new EventEmitter();

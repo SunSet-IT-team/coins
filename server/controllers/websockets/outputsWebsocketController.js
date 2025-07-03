@@ -1,8 +1,8 @@
 import socketIo from 'socket.io';
 import {isMainThread} from 'worker_threads';
 
-import verifyTokenAdmin from '../helpers/verifyTokenAdmin';
-import verifyTokenClient from '../helpers/verifyTokenClient';
+import verifyTokenAdmin from '../../helpers/verifyTokenAdmin';
+import verifyTokenClient from '../../helpers/verifyTokenClient';
 
 import https from 'https';
 import http from 'http';
@@ -40,23 +40,25 @@ class OutputsWebsocketController {
     start() {
         this.io.on('connection', (client) => {
             client.on('token', (data) => {
-                verifyTokenFuncMap[data.type](data.token).then((user) => {
-                    const clientId = data.type === 'admin' ? 'admin' : user.id;
+                verifyTokenFuncMap[data.type](data.token)
+                    .then((user) => {
+                        const clientId = data.type === 'admin' ? 'admin' : user.id;
 
-                    if (!clientId) {
-                        return;
-                    }
+                        if (!clientId) {
+                            return;
+                        }
 
-                    if (!connections[clientId]) {
-                        connections[clientId] = new Map();
-                    }
+                        if (!connections[clientId]) {
+                            connections[clientId] = new Map();
+                        }
 
-                    connections[clientId].set(client, 1);
+                        connections[clientId].set(client, 1);
 
-                    client.on('disconnect', () => {
-                        connections[clientId].delete(client);
-                    });
-                }).catch(()=>{});
+                        client.on('disconnect', () => {
+                            connections[clientId].delete(client);
+                        });
+                    })
+                    .catch(() => {});
             });
         });
     }

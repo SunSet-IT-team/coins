@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
-import {CHART_SYMBOL_GROUPS} from '../constants/symbols';
-import {pricesEvents} from './pricesController';
-import {SYMBOL_PRICE_CHANGE_EVENT} from '../constants/events';
+import {CHART_SYMBOL_GROUPS} from '../../constants/symbols';
+import {pricesEvents} from '../pricesController';
+import {SYMBOL_PRICE_CHANGE_EVENT} from '../../constants/events';
 
 const FINNHUB_WS = `wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY_PROD}`;
 const MAX_SUBS_PER_SECOND = 50;
