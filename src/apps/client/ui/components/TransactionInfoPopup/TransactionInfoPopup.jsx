@@ -20,7 +20,7 @@ import setWithdrawSuccessPopup from '../../../actions/setWithdrawSuccessPopup';
 import saveMoneyOutput from '../../../services/client/saveMoneyOutput';
 import getClientMoneyOutput from '../../../services/client/getClientMoneyOutput';
 import getClientMoneyInput from '../../../services/client/gitClientMoneyInput';
-import transactionsWebsocketController from '../../../../admin/services/outputWebsocket';
+import transactionsWebsocketController from '../../../../admin/services/websockets/transactionsWebsocket';
 
 // import FormInput from '../FormInput/FormInput';
 import checkBalance from '../../../../../../server/api/admin/transaction/utils/checkBalance';

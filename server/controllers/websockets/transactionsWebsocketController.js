@@ -22,7 +22,10 @@ const verifyTokenFuncMap = {
 
 const connections = {};
 
-class OutputsWebsocketController {
+/**
+ * Получать изменения по транзакциям
+ */
+class TransactionsWebsocketController {
     constructor() {
         if (isMainThread) {
             const app = express();
@@ -63,6 +66,9 @@ class OutputsWebsocketController {
         });
     }
 
+    /**
+     * Отправить вывод
+     */
     sendOutput(output) {
         const receiverId = 'admin';
 
@@ -72,8 +78,21 @@ class OutputsWebsocketController {
             }
         }
     }
+
+    /**
+     * Отправить депозит
+     */
+    sendInput(input) {
+        const receiverId = 'admin';
+
+        if (connections[receiverId]) {
+            for (const [targetClient] of connections[receiverId].entries()) {
+                targetClient.emit('input', input);
+            }
+        }
+    }
 }
 
-const outputsWebsocketController = new OutputsWebsocketController();
+const transactionsWebsocketController = new TransactionsWebsocketController();
 
-export default outputsWebsocketController;
+export default transactionsWebsocketController;

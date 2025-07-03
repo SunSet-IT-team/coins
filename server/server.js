@@ -14,9 +14,9 @@ import {Worker, isMainThread, parentPort, workerData} from 'worker_threads';
 
 import ordersController from './controllers/ordersController';
 import pricesController from './controllers/pricesController';
-import pricesWebsocketController from './controllers/pricesWebsocketController';
-import messagesWebsocketController from './controllers/messagesWebsocketController';
-import outputsWebsocketController from './controllers/outputsWebsocketController';
+import pricesWebsocketController from './controllers/websockets/pricesWebsocketController';
+import messagesWebsocketController from './controllers/websockets/messagesWebsocketController';
+import transactionsWebsocketController from './controllers/websockets/transactionsWebsocketController.js';
 
 import map from '@tinkoff/utils/array/map';
 
@@ -219,7 +219,7 @@ function createApp() {
                 ordersController.start();
                 pricesWebsocketController.start();
                 messagesWebsocketController.start();
-                outputsWebsocketController.start();
+                transactionsWebsocketController.start();
             }
 
             resolve();
