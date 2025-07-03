@@ -4,17 +4,17 @@ import {isMainThread} from 'worker_threads';
 import isString from '@tinkoff/utils/is/string';
 import uniqid from 'uniqid';
 
-import saveMessage from '../api/client/message/queries/saveMessage';
+import saveMessage from '../../api/client/message/queries/saveMessage';
 
-import verifyTokenAdmin from '../helpers/verifyTokenAdmin';
-import verifyTokenClient from '../helpers/verifyTokenClient';
+import verifyTokenAdmin from '../../helpers/verifyTokenAdmin';
+import verifyTokenClient from '../../helpers/verifyTokenClient';
 
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
 import express from 'express';
-import {pricesEvents} from './pricesController';
-import {AUTO_CLOSE_ORDER_EVENT} from '../constants/constants';
+import {pricesEvents} from '../pricesController';
+import {AUTO_CLOSE_ORDER_EVENT, WS_MESSAGES_PORT} from '../../constants/constants';
 
 const credentials = {
     key: fs.readFileSync('server/https/private-new.key'),
@@ -38,7 +38,7 @@ class MessagesWebsocketController {
                     ? https.createServer(credentials, app)
                     : http.createServer(app);
 
-            server.listen(5050, () => {});
+            server.listen(WS_MESSAGES_PORT, () => {});
 
             this.io = socketIo(server);
         }
@@ -108,7 +108,7 @@ class MessagesWebsocketController {
                             // console.log(777);
                         });
                 } catch (e) {
-                    // console.log(e);
+                    console.log(e);
                 }
             });
         });

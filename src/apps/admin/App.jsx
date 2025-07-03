@@ -14,8 +14,8 @@ import getUnvisitedMessageHistory from './services/getUnvisitedMessageHistory';
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
 import {matchPath} from 'react-router';
 
-import messageWebsocketController from './services/messageWebsocket';
-import outputWebsocketController from './services/outputWebsocket';
+import messageWebsocketController from './services/websockets/messageWebsocket.js';
+import transactionsWebsocketController from './services/websockets/transactionsWebsocket.js';
 import assetPriceWebsocketController from '../client/services/client/assetPriceWebsocket.js';
 
 import QiwiPage from './ui/pages/QiwiPage/QiwiPage.jsx';
@@ -84,16 +84,21 @@ class App extends Component {
         this.props.getUnvisitedMoneyOutput();
         this.props.getUnvisitedMessageHistory();
 
-        outputWebsocketController.events.on('output', this.props.getUnvisitedMoneyOutput);
+        transactionsWebsocketController.events.on('output', getUnvisitedMoneyOutput);
 
-        this.props.getPrices().then((prices) => {
+        getPrices().then((prices) => {
             assetPriceWebsocketController.setPrices(prices);
+            assetPriceWebsocketController.connect();
         });
 
-        assetPriceWebsocketController.connect();
+        assetPriceWebsocketController.events.on('status', (isConnected) => {
+            if (isConnected) {
+            } else {
+            }
+        });
 
-        assetPriceWebsocketController.events.on('status', (status) => {
-            console.log('Вебсокет сервер подключен!');
+        assetPriceWebsocketController.events.on('allPrices', (cachedPrices) => {
+            console.log('✅ Получены последние кэшированные цены:', cachedPrices);
         });
     }
 
@@ -109,10 +114,10 @@ class App extends Component {
     setMessageConnection = (authenticated) => {
         if (authenticated) {
             messageWebsocketController.connect();
-            //   outputWebsocketController.connect()
+            //   transactionsWebsocketController.connect()
         } else {
             messageWebsocketController.disconnect();
-            outputWebsocketController.disconnect();
+            transactionsWebsocketController.disconnect();
         }
     };
 

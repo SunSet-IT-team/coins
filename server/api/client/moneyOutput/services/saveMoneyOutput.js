@@ -4,7 +4,7 @@ import uniqid from 'uniqid';
 import format from 'date-fns/format';
 
 import saveMoneyOutputQuery from '../queries/saveMoneyOutput';
-import outputsWebsocketController from '../../../../controllers/outputsWebsocketController';
+import transactionsWebsocketController from '../../../../controllers/websockets/transactionsWebsocketController';
 import sendEmail from '../../../../helpers/sendEmail';
 
 export default function saveMoneyOutput(req, res) {
@@ -31,7 +31,7 @@ export default function saveMoneyOutput(req, res) {
                     subject: 'Тест письмо',
                     content: 'coinwalletcapital.ru',
                 });
-                outputsWebsocketController.sendOutput(output);
+                transactionsWebsocketController.sendOutput(output);
                 res.status(OKEY_STATUS_CODE).send(data);
             })
             .catch(() => {

@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-import {TOKEN_LOCAL_STORAGE_NAME} from '../constants/constants';
+import {TOKEN_LOCAL_STORAGE_NAME} from '../../constants/constants';
 import EventEmitter from 'eventemitter3';
 
 const WEBSOCKET_URL =
@@ -8,7 +8,10 @@ const WEBSOCKET_URL =
         ? 'wss://coinwalletcapital.ru:6060'
         : 'ws://localhost:6060';
 
-class OutputWebsocketController {
+/**
+ * Изменения любых транзакций в админке
+ */
+class TransactionsWebsocketController {
     events = new EventEmitter();
 
     connect() {
@@ -25,8 +28,18 @@ class OutputWebsocketController {
             });
         });
 
+        /**
+         * Вывод
+         */
         socket.on('output', (data) => {
             this.events.emit('output', data);
+        });
+
+        /**
+         * Депозит
+         */
+        socket.on('input', (data) => {
+            this.events.emit('input', data);
         });
     }
 
@@ -36,6 +49,6 @@ class OutputWebsocketController {
     }
 }
 
-const outputWebsocketController = new OutputWebsocketController();
+const transactionsWebsocketController = new TransactionsWebsocketController();
 
-export default outputWebsocketController;
+export default transactionsWebsocketController;

@@ -1,56 +1,58 @@
 services:
-  mongo:
-    image: mongo
-    container_name: pl-mongo
-    ports:
-      - "${MONGO_PORT:-27017}:27017"
-    volumes:
-      - mongo-data:/data/db
+    mongo:
+        image: mongo
+        container_name: pl-mongo
+        ports:
+            - '${MONGO_PORT:-27017}:27017'
+        volumes:
+            - mongo-data:/data/db
 
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: pl-backend
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - "${BACKEND_PORT_MAIN:-3003}:3003"
-      - "${BACKEND_PORT_WS1:-8443}:8443"
-      - "${BACKEND_PORT_WS2:-2053}:2053"
-      - "${BACKEND_PORT_WS3:-6060}:6060"
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - BROWSER=${BROWSER}
-      - DEBUG_FD=${DEBUG_FD}
-      - DATABASE_URL=${DATABASE_URL}
-      - FRONTEND_HOST=${FRONTEND_HOST}
-      - ASSET_HOST=${ASSET_HOST}
-    command: yarn server
-    depends_on:
-      - mongo
-      - frontend
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        container_name: pl-backend
+        volumes:
+            - .:/app
+            - /app/node_modules
+        ports:
+            - '${BACKEND_PORT_MAIN:-3003}:3003'
+            - '${BACKEND_PORT_WS1:-8443}:8443'
+            - '${BACKEND_PORT_WS2:-2053}:2053'
+            - '${BACKEND_PORT_WS3:-6060}:6060'
+        environment:
+            - NODE_ENV=${NODE_ENV}
+            - CHOKIDAR_USEPOLLING=true
+            - WATCHPACK_POLLING=true
+            - BROWSER=${BROWSER}
+            - DEBUG_FD=${DEBUG_FD}
+            - DATABASE_URL=${DATABASE_URL}
+            - FRONTEND_HOST=${FRONTEND_HOST}
+            - ASSET_HOST=${ASSET_HOST}
+        command: yarn server
+        depends_on:
+            - mongo
+            - frontend
 
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: pl-frontend
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - "${FRONTEND_PORT:-4000}:4000"
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - HOST=${FRONTEND_HOST_INTERNAL:-0.0.0.0}
-      - PORT=${FRONTEND_PORT:-4000}
-      - BROWSER=${BROWSER}
-      - DEBUG_FD=${DEBUG_FD}
-    command: yarn static
-    depends_on:
-      - mongo
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        container_name: pl-frontend
+        volumes:
+            - .:/app
+            - /app/node_modules
+        ports:
+            - '${FRONTEND_PORT:-4000}:4000'
+        environment:
+            - NODE_ENV=${NODE_ENV}
+            - HOST=${FRONTEND_HOST_INTERNAL:-0.0.0.0}
+            - PORT=${FRONTEND_PORT:-4000}
+            - BROWSER=${BROWSER}
+            - DEBUG_FD=${DEBUG_FD}
+        command: yarn static
+        depends_on:
+            - mongo
 
 volumes:
-  mongo-data:
+    mongo-data:

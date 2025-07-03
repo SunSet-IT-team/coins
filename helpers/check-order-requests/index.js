@@ -61,23 +61,3 @@ export class OrderCheckRequests {
 }
 
 const app = new OrderCheckRequests();
-
-// Open 500 orders
-
-// 13:36:47 start
-
-// 13:37:21 end
-
-// all time 34 sec
-
-// second test 16:37:21-16:38:27
-
-// --------------------------
-
-// Close 500 orders
-
-//  14:11:27
-
-//  14:11:58 end
-
-// all time 31 sec

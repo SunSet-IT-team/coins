@@ -16,7 +16,7 @@ import getUsers from '../../../services/getUsers';
 import getMoneyOutput from '../../../services/getMoneyOutput';
 import editMoneyOutput from '../../../services/editMoneyOutput';
 import deleteMoneyOutput from '../../../services/deleteOutputsByIds';
-import outputWebsocketController from '../../../services/outputWebsocket';
+import transactionsWebsocketController from '../../../services/websockets/transactionsWebsocket.js';
 import getUnvisitedMoneyOutput from '../../../services/getUnvisitedMoneyOutput';
 
 const headerRows = [
@@ -215,11 +215,11 @@ class TransactionsPage extends Component {
     componentDidMount() {
         console.log('TransactionsPage mounted');
         this.getData();
-        outputWebsocketController.events.on('output', this.qwerty);
+        transactionsWebsocketController.events.on('output', this.qwerty);
     }
 
     componentWillUnmount() {
-        outputWebsocketController.events.removeListener('output', this.qwerty);
+        transactionsWebsocketController.events.removeListener('output', this.qwerty);
     }
 
     qwerty = (output) => {

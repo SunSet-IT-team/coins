@@ -1,8 +1,8 @@
 import socketIo from 'socket.io';
 
-import {SYMBOL_PRICE_CHANGE_EVENT} from '../constants/constants';
+import {SYMBOL_PRICE_CHANGE_EVENT} from '../../constants/constants';
 
-import {pricesEvents} from '../controllers/pricesController';
+import {pricesEvents} from '../pricesController';
 
 import https from 'https';
 import http from 'http';

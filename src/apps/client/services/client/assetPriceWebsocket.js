@@ -1,10 +1,8 @@
 import io from 'socket.io-client';
-
 import EventEmitter from 'eventemitter3';
 import calcUserOrdersChanges from '../../utils/calcUserOrdersChanges';
 import formatPrice from '../../utils/formatPrice';
 import {CHART_SYMBOL_INFO_MAP} from '../../../../../server/constants/symbols';
-import {DOMAIN} from '../../../../../server/constants/constants';
 import calculateBuyingPrice from '../../utils/calculateBuyPrice';
 
 const WEBSOCKET_URL =
@@ -28,6 +26,7 @@ class AssetPriceWebsocketController {
     marginLevel = 0;
     orders = [];
     isConnected = false;
+    socket = null;
 
     setPrices(prices) {
         this.prices = prices;
@@ -43,26 +42,33 @@ class AssetPriceWebsocketController {
     }
 
     connect() {
-        if (this.socket) {
-            return;
-        }
-        const socket = io(WEBSOCKET_URL, {transports: ['websocket']});
+        if (this.socket) return;
 
-        this.socket = socket;
+        this.socket = io(WEBSOCKET_URL, {transports: ['websocket']});
 
-        socket.on('message', (data) => {
+        this.socket.on('connect', () => {
+            this.isConnected = true;
+            this.events.emit('status', true);
+
+            // отправка всех текущих цен при подключении
+            this.events.emit('allPrices', {...this.prices});
+
+            if (this.user) {
+                this.calcUpdatedOrders();
+            }
+        });
+
+        this.socket.on('message', (data) => {
             this.prices[data.name] = data.price;
             this.changes[data.name] = data.changes;
             this.events.emit('data', data);
-            this.user && this.handleMessage(data);
+
+            if (this.user && this.orders.some((order) => order.assetName === data.name)) {
+                this.calcUpdatedOrders();
+            }
         });
 
-        socket.on('connect', () => {
-            this.events.emit('status', true);
-            this.isConnected = true;
-        });
-
-        socket.on('disconnect', () => {
+        this.socket.on('disconnect', () => {
             this.isConnected = false;
             setTimeout(() => {
                 if (!this.isConnected) {
@@ -70,25 +76,16 @@ class AssetPriceWebsocketController {
                 }
             }, DISCONNECT_TIMEOUT);
         });
-    }
 
-    handleMessage(data) {
-        const {orders} = this;
-        if (!orders || !orders.length || !orders.some((order) => order.assetName === data.name)) {
-            return;
-        }
-
-        this.calcUpdatedOrders();
+        this.socket.on('connect_error', (err) => {
+            console.error('[WebSocket] ❌ Connection error:', err.message);
+        });
     }
 
     calcUpdatedOrders() {
-        const {user, orders} = this;
+        const {user, orders, prices} = this;
 
-        const {ordersInfo, balance} = calcUserOrdersChanges(
-            user,
-            orders,
-            assetPriceWebsocketController.prices
-        );
+        const {ordersInfo, balance} = calcUserOrdersChanges(user, orders, prices);
         const newOrders = orders.map((order) => {
             const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
             const updatedOrder = ordersInfo[order.id];
@@ -109,13 +106,11 @@ class AssetPriceWebsocketController {
         });
 
         const {pledge: totalPledge, profit: totalProfit} = newOrders.reduce(
-            (result, order) => {
-                return {
-                    pledge: result.pledge + order.pledge,
-                    profit: result.profit + order.profit,
-                    commission: result.commission + order.commission,
-                };
-            },
+            (result, order) => ({
+                pledge: result.pledge + order.pledge,
+                profit: result.profit + order.profit,
+                commission: result.commission + order.commission,
+            }),
             {pledge: 0, profit: 0, commission: 0}
         );
 
@@ -123,7 +118,7 @@ class AssetPriceWebsocketController {
         this.balance = balance;
         this.mainBalance = user.mainBalance;
         this.totalPledge = totalPledge;
-        this.freeBalance = balance - totalPledge; /* - totalCommission */
+        this.freeBalance = balance - totalPledge;
         this.orders = newOrders;
         this.totalProfit = totalProfit;
 
@@ -142,7 +137,6 @@ class AssetPriceWebsocketController {
         }
 
         this.balance = balanceToSend;
-
         this.marginLevel = (this.freeBalance / totalPledge) * 100;
 
         if (this.prevBalance !== this.balance) {
@@ -153,7 +147,7 @@ class AssetPriceWebsocketController {
                 orders: newOrders,
                 totalPledge,
                 totalProfit,
-                marginLevel: !isFinite(this.marginLevel) ? 0 : this.marginLevel,
+                marginLevel: Number.isFinite(this.marginLevel) ? this.marginLevel : 0,
                 bonuses: user.bonuses,
                 credFacilities: user.credFacilities,
             });
@@ -161,8 +155,10 @@ class AssetPriceWebsocketController {
     }
 
     disconnect() {
-        this.socket && this.socket.disconnect();
-        this.socket = null;
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+        }
     }
 }
 

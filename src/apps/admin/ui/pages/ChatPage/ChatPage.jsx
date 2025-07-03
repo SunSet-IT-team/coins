@@ -16,7 +16,7 @@ import format from 'date-fns/format';
 import isToday from 'date-fns/isToday';
 import isThisWeek from 'date-fns/isThisWeek';
 
-import messageWebsocketController from '../../../services/messageWebsocket';
+import messageWebsocketController from '../../../services/websockets/messageWebsocket';
 import getMessageHistory from '../../../services/getMessageHistory';
 import getUsers from '../../../services/getUsers';
 import editMessage from '../../../services/editMessage';

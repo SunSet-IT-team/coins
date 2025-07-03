@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import {WebSocketManager} from './webSocketManager';
+import {WebSocketManager} from './websockets/webSocketManager';
 import {OrderManager} from './orderManager';
 import {HeartbeatManager} from './heartbeatManager';
 import {apiService} from './apiService';

@@ -16,4 +16,6 @@ const Input = new Schema({
     visited: {type: Boolean, required: true},
 });
 
+Input.index({visited: 1, createdAt: -1});
+
 export default mongoose.model('Input', Input);
