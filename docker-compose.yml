@@ -14,6 +14,7 @@ services:
         container_name: pl-backend
         volumes:
             - .:/app
+            - /app/node_modules
         ports:
             - '${BACKEND_PORT_MAIN:-3003}:3003'
             - '${BACKEND_PORT_WS1:-8443}:8443'
@@ -21,6 +22,8 @@ services:
             - '${BACKEND_PORT_WS3:-6060}:6060'
         environment:
             - NODE_ENV=${NODE_ENV}
+            - CHOKIDAR_USEPOLLING=true
+            - WATCHPACK_POLLING=true
             - BROWSER=${BROWSER}
             - DEBUG_FD=${DEBUG_FD}
             - DATABASE_URL=${DATABASE_URL}
@@ -38,6 +41,7 @@ services:
         container_name: pl-frontend
         volumes:
             - .:/app
+            - /app/node_modules
         ports:
             - '${FRONTEND_PORT:-4000}:4000'
         environment:

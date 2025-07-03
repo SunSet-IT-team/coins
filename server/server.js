@@ -69,7 +69,6 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('UNHANDLED REJECTION at:', promise, 'REASON:', reason);
 });
 
-
 function createApp() {
     return new Promise((resolve) => {
         const app = express();
@@ -267,7 +266,7 @@ if (isMainThread) {
 } else {
     try {
         createApp().then(() =>
-            parentPort.postMessage({ request: 'init', env: process.env.NODE_ENV }),
+            parentPort.postMessage({request: 'init', env: process.env.NODE_ENV})
         );
     } catch (err) {
         console.error('Worker thread error:', err);

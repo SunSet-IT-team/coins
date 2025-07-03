@@ -31,10 +31,11 @@ const filename = path.resolve(config.output.path, `${Object.keys(config.entry)[0
 let child;
 
 compiler.hooks.watchRun.tap('DevServer', () => {
-    console.log('Rebuild...');
+    console.log('Rebuild...', new Date().toISOString());
 });
 
 compiler.hooks.done.tap('DevServer', (stats) => {
+    console.log('Build completed', new Date().toISOString());
     if (stats.hasErrors()) {
         console.error(stats.compilation.errors);
         return;
@@ -68,16 +69,35 @@ compiler.hooks.done.tap('DevServer', (stats) => {
     };
 
     if (child && !child.killed) {
-        // Из-за неотключенного удаленного отладчика процесс может закрываться не сразу
-        child.kill();
-        child.on('close', createChildProcess);
+        console.log('Stopping server...');
+        // Используем SIGTERM вместо kill() для более мягкого завершения
+        child.kill('SIGTERM');
+
+        // Уменьшаем таймаут ожидания
+        const timeout = setTimeout(() => {
+            console.log('Force killing server...');
+            child.kill('SIGKILL');
+        }, 2000); // 2 секунды вместо долгого ожидания
+
+        child.on('close', () => {
+            clearTimeout(timeout);
+            console.log('Server stopped, starting new instance...');
+            createChildProcess();
+        });
     } else {
         createChildProcess();
     }
 });
 
-compiler.watch({}, (err) => {
-    if (err) {
-        console.error(err);
+compiler.watch(
+    {
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: /node_modules/,
+    },
+    (err) => {
+        if (err) {
+            console.error(err);
+        }
     }
-});
+);
