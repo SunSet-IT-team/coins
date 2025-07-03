@@ -33,22 +33,22 @@ export class WebSocketManager {
                 .filter((s) => s && typeof s.name === 'string')
                 .map((s) => s.name);
 
-            // validSymbols.forEach((symbol, index) => {
-            //     setTimeout(
-            //         () => {
-            //             if (this.socket.readyState === WebSocket.OPEN) {
-            //                 const payload = {type: 'subscribe', symbol};
-            //                 this.socket.send(JSON.stringify(payload));
-            //                 console.log(`[Finnhub] ПОДПИСКА НА ${symbol}`);
-            //             } else {
-            //                 console.warn(
-            //                     `[Finnhub] ПОДПИСКА НА ${symbol} — СОКЕТ СОЕДИНЕНИЕ НЕ ОТКРЫТО!!!`
-            //                 );
-            //             }
-            //         },
-            //         Math.floor(index / MAX_SUBS_PER_SECOND) * 1000
-            //     );
-            // });
+            validSymbols.forEach((symbol, index) => {
+                setTimeout(
+                    () => {
+                        if (this.socket.readyState === WebSocket.OPEN) {
+                            const payload = {type: 'subscribe', symbol};
+                            this.socket.send(JSON.stringify(payload));
+                            console.log(`[Finnhub] ПОДПИСКА НА ${symbol}`);
+                        } else {
+                            console.warn(
+                                `[Finnhub] ПОДПИСКА НА ${symbol} — СОКЕТ СОЕДИНЕНИЕ НЕ ОТКРЫТО!!!`
+                            );
+                        }
+                    },
+                    Math.floor(index / MAX_SUBS_PER_SECOND) * 1000
+                );
+            });
         });
 
         this.socket.on('message', (raw) => {
