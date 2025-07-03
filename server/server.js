@@ -43,6 +43,7 @@ import adminTransactionApi from './api/admin/transaction';
 import clientTempApi from './api/client/temp';
 import adminPaymentsApi from './api/admin/payments';
 import clientPaymentsApi from './api/client/payments';
+import adminMoneyInputApi from './api/admin/moneyInput';
 import adminMoneyOutputApi from './api/admin/moneyOutput';
 import clientMoneyInputApi from './api/client/moneyInput';
 import clientMoneyOutputApi from './api/client/moneyOutput';
@@ -65,6 +66,7 @@ import App from '../src/apps/client/App.jsx';
 const rootPath = path.resolve(__dirname, '..');
 const PORT = 3003;
 
+// Критические ошибки, чтобы понять место
 process.on('unhandledRejection', (reason, promise) => {
     console.error('UNHANDLED REJECTION at:', promise, 'REASON:', reason);
 });
@@ -149,30 +151,30 @@ function createApp() {
         app.use('/api/admin/payment', adminPaymentApi);
         app.use('/api/admin/article', adminArticleApi);
         app.use('/api/admin/files', adminFilesApi);
-
-        app.use('/api/client/article', clientArticleApi);
-
         app.use('/api/admin/db', adminDbApi);
         app.use('/api/admin/user', adminUserApi);
         app.use('/api/admin/manager', adminManagerApi);
+        app.use('/api/admin/qiwi', adminQiwiApi);
+        app.use('/api/admin/message', adminMessageApi);
+        app.use('/api/admin/order', adminOrderApi);
+        app.use('/api/admin/transaction', adminTransactionApi);
+        app.use('/api/admin/payments', adminPaymentsApi);
+        app.use('/api/admin/input', adminMoneyInputApi);
+        app.use('/api/admin/output', adminMoneyOutputApi);
+        app.use('/api/admin', changeChartValuesApi);
+
+        app.use('/api/client/article', clientArticleApi);
         app.use('/api/client/user', clientUserApi);
         app.use('/api/client/authentication', clientAuthenticationApi);
-        app.use('/api/admin/qiwi', adminQiwiApi);
         app.use('/api/client/qiwi', clientQiwiApi);
-        app.use('/api/admin/message', adminMessageApi);
         app.use('/api/client/message', clientMessageApi);
         app.use('/api/client/order', clientOrderApi);
-        app.use('/api/admin/order', adminOrderApi);
         app.use('/api/client/transaction', clientTransactionApi);
-        app.use('/api/admin/transaction', adminTransactionApi);
         app.use('/api/client/data', clientDataApi);
         app.use('/api/client/temp', clientTempApi);
-        app.use('/api/admin/payments', adminPaymentsApi);
         app.use('/api/client/payments', clientPaymentsApi);
-        app.use('/api/admin/output', adminMoneyOutputApi);
         app.use('/api/client/output', clientMoneyOutputApi);
         app.use('/api/client/input', clientMoneyInputApi);
-        app.use('/api/admin', changeChartValuesApi);
 
         // admin
         const adminUrlRegex = new RegExp(`^${ADMIN_PANEL_URL}`);
