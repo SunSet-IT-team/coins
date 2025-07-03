@@ -36,9 +36,7 @@ class AssetPriceWebsocketController {
         this.user = user;
         this.orders = orders;
 
-        if (user) {
-            this.calcUpdatedOrders();
-        }
+        this.calcUpdatedOrders();
     }
 
     connect() {
@@ -53,9 +51,7 @@ class AssetPriceWebsocketController {
             // отправка всех текущих цен при подключении
             this.events.emit('allPrices', {...this.prices});
 
-            if (this.user) {
-                this.calcUpdatedOrders();
-            }
+            this.calcUpdatedOrders();
         });
 
         this.socket.on('message', (data) => {
@@ -63,7 +59,7 @@ class AssetPriceWebsocketController {
             this.changes[data.name] = data.changes;
             this.events.emit('data', data);
 
-            if (this.user && this.orders.some((order) => order.assetName === data.name)) {
+            if (this.orders.some((order) => order.assetName === data.name)) {
                 this.calcUpdatedOrders();
             }
         });
@@ -84,6 +80,8 @@ class AssetPriceWebsocketController {
 
     calcUpdatedOrders() {
         const {user, orders, prices} = this;
+
+        if (!user) return;
 
         const {ordersInfo, balance} = calcUserOrdersChanges(user, orders, prices);
         const newOrders = orders.map((order) => {

@@ -49,6 +49,12 @@ export class WebSocketManager {
                     Math.floor(index / MAX_SUBS_PER_SECOND) * 1000
                 );
             });
+
+            this.pingInterval = setInterval(() => {
+                if (this.socket.readyState === WebSocket.OPEN) {
+                    this.socket.ping();
+                }
+            }, 20000);
         });
 
         this.socket.on('message', (raw) => {
@@ -65,7 +71,9 @@ export class WebSocketManager {
             msg.data.forEach((trade) => this.handleTrade(trade));
         });
 
-        this.socket.on('close', () => {
+        this.socket.on('close', (code, reason) => {
+            this.pingInterval && clearInterval(this.pingInterval);
+            console.warn(`[Finnhub] ОТКЛЮЧЕНО: код ${code}, причина: ${reason}`);
             console.warn(`[Finnhub] ОТКЛЮЧЕНО ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ ${this.reconnectDelay}ms...`);
             setTimeout(() => {
                 this.reconnectDelay = Math.min(this.reconnectDelay * 2, RECONNECT_MAX_DELAY);

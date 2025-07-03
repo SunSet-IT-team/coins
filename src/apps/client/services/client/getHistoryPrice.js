@@ -1,7 +1,7 @@
 import request from 'superagent';
 import base from '../base';
 
-import {FINNHUB_API_KEY} from '../../../../../server/constants/constants';
+import {FINNHUB_API_KEY_REST} from '../../../../../server/constants/constants';
 
 const symbolApiMap = {
     currencies: 'https://finnhub.io/api/v1/forex/candle',
@@ -11,6 +11,10 @@ const symbolApiMap = {
     crypto: 'https://finnhub.io/api/v1/crypto/candle',
 };
 
+/**
+ * Получение истории
+ * @TODO сделать через сервер с кешированием и не палить ключ
+ */
 export default function getHistoryPrice({symbolGroup, symbol, from, to, resolution}) {
     return () => {
         return base(
@@ -19,7 +23,7 @@ export default function getHistoryPrice({symbolGroup, symbol, from, to, resoluti
                 resolution,
                 from,
                 to,
-                token: FINNHUB_API_KEY,
+                token: FINNHUB_API_KEY_REST,
             })
         );
     };

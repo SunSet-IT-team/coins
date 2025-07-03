@@ -23,10 +23,12 @@ export const FILES_FOLDER_PATH = 'src/apps/admin/files';
 // Важно создать разные аккаунты финхаб. Т.к. финхаб разрешает только 1 вебсокет подключение для конкретного ключа
 export const FINNHUB_API_KEY_DEV = 'cpkt1rhr01qulsvjo5m0cpkt1rhr01qulsvjo5mg';
 
-export const FINNHUB_API_KEY_PROD = 'cpkt1rhr01qulsvjo5m0cpkt1rhr01qulsvjo5mg';
+export const FINNHUB_API_KEY_PROD = 'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10';
 export const FINNHUB_API_KEY =
     process.env.NODE_ENV === 'production' ? FINNHUB_API_KEY_PROD : FINNHUB_API_KEY_DEV;
-// export const FINNHUB_API_KEY = FINNHUB_API_KEY_PROD;
+
+// REST API доступен только по платным ключам
+export const FINNHUB_API_KEY_REST = 'cpkt1rhr01qulsvjo5m0cpkt1rhr01qulsvjo5mg';
 
 export const SYMBOL_PRICE_CHANGE_EVENT = 'symbol_price_change';
 export const AUTO_CLOSE_ORDER_EVENT = 'AUTO_CLOSE_ORDER_EVENT';

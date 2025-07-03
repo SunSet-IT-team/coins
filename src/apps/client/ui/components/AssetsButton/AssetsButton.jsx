@@ -14,7 +14,7 @@ import {SCROLL_TOP_LOCKED_EVENT_NAME} from '../../../constants/constants';
 
 import styles from './AssetsButton.css';
 import BuyAndSellComponent from '../BuyAndSellComponent/BuyAndSellComponent';
-import formatPriceToString from '../../../utils/formatPriceToString';
+import {formatPriceObjToString} from '../../../utils/formatPriceToString';
 import outsideClick from '../../hocs/outsideClick.jsx';
 
 import isEmpty from '@tinkoff/utils/is/empty';
@@ -294,7 +294,7 @@ class AssetsButton extends Component {
                                                             ] === 'down',
                                                     })}
                                                 >
-                                                    {formatPriceToString(
+                                                    {formatPriceObjToString(
                                                         assetPriceWebsocketController.prices[
                                                             asset.name
                                                         ]

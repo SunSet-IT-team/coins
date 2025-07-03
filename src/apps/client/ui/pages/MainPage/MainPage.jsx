@@ -7,7 +7,7 @@ import assetPriceWebsocketController from '../../../services/client/assetPriceWe
 
 import getPeriodByTimeframe from './utils/getPeriodByTimeframe';
 import getChartDateByTimeframe from './utils/getChartDateByTimeframe';
-import formatPriceToString from '../../../utils/formatPriceToString';
+import {formatPriceObjToString} from '../../../utils/formatPriceToString';
 
 import last from '@tinkoff/utils/array/last';
 import min from 'lodash.min';
@@ -142,6 +142,13 @@ class MainPage extends Component {
                 nextProps.chartType.value
             );
         }
+    }
+
+    componentWillUnmount() {
+        assetPriceWebsocketController.events.off('data', this.handlePriceChange);
+        assetPriceWebsocketController.events.off('status');
+        window.removeEventListener('resize', this.resizeHandler);
+        if (this.chart) this.chart.remove();
     }
 
     getSeriesByType = (type) => {
@@ -556,11 +563,11 @@ class MainPage extends Component {
                         </div>
                         <div className={styles.purchasePrice}>
                             <img src="/src/apps/client/ui/pages/MainPage/images/up.svg" />
-                            <div>{formatPriceToString(asset.purchasePrice)}</div>
+                            <div>{formatPriceObjToString(asset.purchasePrice)}</div>
                         </div>
                         <div className={styles.sellingPrice}>
                             <img src="/src/apps/client/ui/pages/MainPage/images/down.svg" />
-                            <div>{formatPriceToString(asset.sellingPrice)}</div>
+                            <div>{formatPriceObjToString(asset.sellingPrice)}</div>
                         </div>
                     </div>
                 )}

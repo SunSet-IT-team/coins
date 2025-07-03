@@ -93,7 +93,10 @@ compiler.watch(
     {
         poll: 1000,
         aggregateTimeout: 300,
-        ignored: /node_modules/,
+        ignored: (path) => {
+            // Игнорируем всё, кроме папки /server
+            return !path.includes('/server/');
+        },
     },
     (err) => {
         if (err) {
