@@ -41,13 +41,10 @@ const validate = (fields, fieldsValidatorsMap) => {
 export default function saveOrder(req, res) {
     try {
         const {assetName, amount, type, takeProfit, stopLoss, autoClose, profit} = req.body;
-        const openingPrice = pricesController.prices[assetName];
+        const openingPrice = pricesController.prices[assetName].value || 0;
         const openingPriceReal =
             type === 'sell' ? openingPrice : calculateBuyingPrice(assetName, openingPrice);
         const asset = CHART_SYMBOL_INFO_MAP[assetName];
-
-        console.log('saveOrder asset');
-        console.log(asset);
 
         if (!asset) {
             return res.status(BAD_REQUEST_STATUS_CODE).end();
@@ -59,7 +56,7 @@ export default function saveOrder(req, res) {
         const orderObj = {
             assetName,
             amount,
-            openingPrice: openingPriceReal.value,
+            openingPrice: openingPriceReal,
             pledge,
             userId,
             type,
@@ -71,9 +68,6 @@ export default function saveOrder(req, res) {
             autoClose,
             profit: profit || 0,
         };
-
-        console.log('saveOrder orderObj');
-        console.log(orderObj);
 
         const isOrderValid = validate(orderObj, orderFieldsValidatorsMap);
 

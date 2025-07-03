@@ -91,13 +91,14 @@ export class WebSocketManager {
         const rawPrice = parseFloat(p);
         const timestamp = t;
 
+        const prev = this.prices[symbolName] ? this.prices[symbolName].value : 0;
+
         if (!this.prices[symbolName]) {
-            this.prices[symbolName] = {value: 0, offset: 0};
+            this.prices[symbolName] = {value: rawPrice, offset: 0};
         }
 
         const {offset = 0} = this.prices[symbolName];
         const newPrice = rawPrice + offset;
-        const prev = this.prices[symbolName].value;
 
         if (newPrice === prev) return;
 

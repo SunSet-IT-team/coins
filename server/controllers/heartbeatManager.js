@@ -22,10 +22,10 @@ export class HeartbeatManager {
                         prices: this.prices,
                         assetPriceChange: {
                             name: symbolName,
-                            price,
+                            price: price.value,
                             time: now,
                             changes: 'same',
-                            prevPrice: this.prevPrices[symbolName] || price,
+                            prevPrice: price.value,
                         },
                     });
                     this.lastUpdateMap[symbolName] = now;

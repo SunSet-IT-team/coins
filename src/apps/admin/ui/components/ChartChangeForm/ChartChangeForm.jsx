@@ -64,6 +64,7 @@ class ChartChangeForm extends Component {
     // WS-апдейт: обновляем currentPrice и нетронутые поля
     onWsData = ({name, price, offset}) => {
         if (name !== this.state.form.assetName) return;
+
         const {base, offset: off} = parseRaw({price, offset});
 
         this.setState(({form, editing, touched}) => {

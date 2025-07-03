@@ -13,7 +13,7 @@ export default function closeAllOrders(userId) {
                         id: order.id,
                         isClosed: true,
                         closedAt: Date.now(),
-                        closedPrice: pricesController.prices[order.assetName],
+                        closedPrice: pricesController.prices[order.assetName].value,
                     };
 
                     return editOrder(closedOrder);

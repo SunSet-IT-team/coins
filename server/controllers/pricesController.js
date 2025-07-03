@@ -20,6 +20,9 @@ class PricesController {
         });
     }
 
+    /**
+     * Смещение цены?
+     */
     async loadChartOffsets() {
         const charts = await Chart.aggregate([
             {$sort: {date: -1}},
@@ -28,8 +31,11 @@ class PricesController {
 
         charts.forEach((item) => {
             const name = item._id.toUpperCase();
-            if (!this.prices[name]) this.prices[name] = {value: 0, offset: item.offset};
-            else this.prices[name].offset = item.offset;
+            if (!this.prices[name]) {
+                this.prices[name] = {value: 0, offset: item.offset};
+            } else {
+                this.prices[name].offset = item.offset;
+            }
 
             console.log(`[offset loaded] ${name}: ${item.offset}`);
         });

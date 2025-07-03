@@ -18,8 +18,10 @@ export class OrderManager {
     async checkAndCloseOrders() {
         while (true) {
             for (const order of this.orders) {
-                const assetPrice = this.prices[order.assetName];
-                if (assetPrice === undefined) continue;
+                const assetPriceObj = this.prices[order.assetName];
+                if (assetPriceObj === undefined) continue;
+
+                const assetPrice = assetPriceObj.value;
 
                 const netProfit = calculateNetProfit(order, assetPrice);
 

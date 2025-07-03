@@ -113,7 +113,7 @@ export default function editOrder(req, res) {
                 const assetValues = getAssetValues(
                     symbolInfo,
                     {openingPrice: order.openingPrice, amount: order.amount, type: order.type},
-                    realSymbolPrice,
+                    realSymbolPrice.value,
                     user.balance,
                     COMMISSION
                 );

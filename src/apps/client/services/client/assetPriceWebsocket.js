@@ -29,6 +29,9 @@ class AssetPriceWebsocketController {
     socket = null;
 
     setPrices(prices) {
+        console.log('setPrices');
+        console.log(prices);
+
         this.prices = prices;
     }
 
