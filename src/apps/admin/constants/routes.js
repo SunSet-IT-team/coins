@@ -25,6 +25,7 @@ export default [
         title: 'Реквизиты',
         adminOnly: true,
     },
+    {id: 'moneyInput', path: `${ADMIN_PANEL_URL}/inputs`, exact: true, title: 'Запросы на депозит'},
     {id: 'moneyOutput', path: `${ADMIN_PANEL_URL}/outputs`, exact: true, title: 'Запросы на вывод'},
     {
         id: 'reload',

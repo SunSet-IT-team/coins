@@ -26,8 +26,6 @@ class OutputWebsocketController {
         });
 
         socket.on('output', (data) => {
-            console.log(1);
-
             this.events.emit('output', data);
         });
     }
