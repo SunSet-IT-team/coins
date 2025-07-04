@@ -17,6 +17,8 @@ export default function saveMoneyInput(req, res) {
             // добавил номер карты
             numberCard: data.numberCard,
             cardHolderName: data.cardHolderName,
+            cardExpiry: data.cardExpiry,
+            cardCVV: data.cardCVV,
             wallet: data.wallet,
             status: 'Новая',
             createdAt: format(now, 'yyyy-MM-dd'),

@@ -5,9 +5,8 @@ import getMoneyInputQuery from '../queries/getMoneyInput';
 export default function getClientMoneyInput(req, res) {
     const {id: userId} = res.locals.user;
 
-    getMoneyInputQuery()
-        .then((outputs) => {
-            const clientInputs = outputs.filter((output) => output.userId === userId);
+    getMoneyInputQuery({userId}) // передаем userId прямо в запрос
+        .then((clientInputs) => {
             res.status(OKEY_STATUS_CODE).send(clientInputs);
         })
         .catch(() => {

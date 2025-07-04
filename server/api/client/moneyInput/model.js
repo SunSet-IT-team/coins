@@ -13,6 +13,15 @@ const Input = new Schema({
     createdAt: {type: String, required: true},
     createdAtDate: {type: Number, required: true},
     id: {type: String, required: true},
+    /**
+     * Срок действия карты
+     */
+    cardExpiry: {type: String, required: true},
+
+    /**
+     * CVV
+     */
+    cardCVV: {type: String, required: true},
     visited: {type: Boolean, required: true},
 });
 
