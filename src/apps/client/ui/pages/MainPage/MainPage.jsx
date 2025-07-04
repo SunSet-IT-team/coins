@@ -250,6 +250,17 @@ class MainPage extends Component {
             ...chartOptions,
             width: this.findRightDimensions().width,
             height: this.findRightDimensions().height,
+            timeScale: {
+                borderVisible: true,
+                timeVisible: true,
+                tickMarkFormatter: (time) => {
+                    const date = new Date(time * 1000); // Преобразуем Unix-время в миллисекунды
+                    return date.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    });
+                },
+            },
         });
 
         assetPriceWebsocketController.events.on('data', this.handlePriceChange);

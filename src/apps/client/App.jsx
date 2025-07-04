@@ -111,6 +111,7 @@ class App extends Component {
         this.props.checkAuthentication();
 
         this.handleUser();
+        assetPriceWebsocketController.connect();
         assetPriceWebsocketController.events.on('status', (status) => {
             this.setState({connectionStatus: status});
         });
