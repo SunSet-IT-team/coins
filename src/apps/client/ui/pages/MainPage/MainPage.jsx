@@ -105,7 +105,6 @@ class MainPage extends Component {
     isLoading = false;
 
     componentDidMount() {
-        // console.log('componentDidMount');
         this.setChart();
         this.setNewTypeOrTimeChart(
             this.props.chartSymbolGroup.id,
@@ -129,7 +128,6 @@ class MainPage extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        // console.log('componentWillReceiveProps');
         if (
             this.props.chartSymbol !== nextProps.chartSymbol ||
             this.props.chartTimeframe !== nextProps.chartTimeframe ||
@@ -277,7 +275,6 @@ class MainPage extends Component {
     };
 
     onVisibleLogicalRangeChanged = (newVisibleLogicalRange) => {
-        // console.log('onVisibleLogicalRangeChanged');
         const {chartSymbolGroup, chartSymbol, chartTimeframe, chartType} = this.props;
 
         if (!newVisibleLogicalRange) {
@@ -299,7 +296,6 @@ class MainPage extends Component {
     };
 
     setNewDataChart = (symbolGroup, symbol, timeframe, type, from, to) => {
-        // console.log('setNewDataChart');
         this.isLoading = true;
         this.handleUnsubscribeVisibleLogicalRangeChange();
 

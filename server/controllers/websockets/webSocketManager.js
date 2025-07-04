@@ -1,12 +1,24 @@
 import WebSocket from 'ws';
+import {Worker} from 'worker_threads';
 import {CHART_SYMBOL_GROUPS} from '../../constants/symbols';
 import {pricesEvents} from '../pricesController';
 import {SYMBOL_PRICE_CHANGE_EVENT} from '../../constants/events';
+import {FINNHUB_API_KEY_REST} from '../../constants/constants';
+import path from 'path';
 
-const FINNHUB_WS = `wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY_PROD}`;
-const MAX_SUBS_PER_SECOND = 50;
-const RECONNECT_INITIAL_DELAY = 3000;
-const RECONNECT_MAX_DELAY = 60000;
+const FINNHUB_WS = `wss://ws.finnhub.io?token=d1jedm9r01qvg5gu10g0d1jedm9r01qvg5gu10gg`;
+// const FINNHUB_WS = `wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY_PROD}`;
+
+const FINNHUB_TOKENS = [
+    'd1jedm9r01qvg5gu10g0d1jedm9r01qvg5gu10gg',
+    'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10',
+    'd1jjlk1r01qvg5guv1q0d1jjlk1r01qvg5guv1qg',
+    'd1jjrc1r01qvg5gv023gd1jjrc1r01qvg5gv0240',
+    'd1jjro1r01qvg5gv0460d1jjro1r01qvg5gv046g',
+    'd1jjs41r01qvg5gv06d0d1jjs41r01qvg5gv06dg',
+    'd1jjsd1r01qvg5gv0810d1jjsd1r01qvg5gv081g',
+    'd1jjsphr01qvg5gv0ae0d1jjsphr01qvg5gv0aeg',
+];
 
 export class WebSocketManager {
     constructor(prices) {
@@ -14,80 +26,70 @@ export class WebSocketManager {
         this.socket = null;
         this.wss = new WebSocket.Server({port: 8080});
 
-        this.reconnectDelay = RECONNECT_INITIAL_DELAY;
-
         this.wss.on('connection', (client) => {
             this.sendCacheToClient(client);
         });
     }
 
     connect() {
-        this.socket = new WebSocket(FINNHUB_WS);
+        const allSymbols = CHART_SYMBOL_GROUPS.flatMap((group) => group.symbols)
+            .filter((s) => s && s.name)
+            .map((s) => s.name);
 
-        this.socket.on('open', () => {
-            console.log('[Finnhub] ПОДКЛЮЧЕНО');
-            this.reconnectDelay = RECONNECT_INITIAL_DELAY;
+        console.log('allSymbols - ');
+        console.log(allSymbols.length);
 
-            const allSymbols = CHART_SYMBOL_GROUPS.flatMap((group) => group.symbols);
-            const validSymbols = allSymbols
-                .filter((s) => s && typeof s.name === 'string')
-                .map((s) => s.name);
+        const MAX_PER_SOCKET = 25;
 
-            validSymbols.forEach((symbol, index) => {
-                setTimeout(
-                    () => {
-                        if (this.socket.readyState === WebSocket.OPEN) {
-                            const payload = {type: 'subscribe', symbol};
-                            this.socket.send(JSON.stringify(payload));
-                            console.log(`[Finnhub] ПОДПИСКА НА ${symbol}`);
-                        } else {
-                            console.warn(
-                                `[Finnhub] ПОДПИСКА НА ${symbol} — СОКЕТ СОЕДИНЕНИЕ НЕ ОТКРЫТО!!!`
-                            );
-                        }
-                    },
-                    Math.floor(index / MAX_SUBS_PER_SECOND) * 1000
-                );
+        for (let index = 0; index < FINNHUB_TOKENS.length; index++) {
+            const token = FINNHUB_TOKENS[index];
+            const symbolsChunk = allSymbols.slice(
+                index * MAX_PER_SOCKET,
+                (index + 1) * MAX_PER_SOCKET
+            );
+
+            if (symbolsChunk.length == 0) break;
+
+            const workerPath = path.resolve('./server/controllers/websockets/finnhubConnection.js');
+
+            const worker = new Worker(workerPath, {
+                workerData: {
+                    token,
+                    symbols: symbolsChunk,
+                    KEY_REST: FINNHUB_API_KEY_REST,
+                    tokenIndex: index,
+                },
             });
 
-            this.pingInterval = setInterval(() => {
-                if (this.socket.readyState === WebSocket.OPEN) {
-                    this.socket.ping();
+            worker.on('message', (msg) => {
+                switch (msg.type) {
+                    case 'initial':
+                        msg.payload.forEach((trade) => this.handleTrade(trade));
+                        break;
+                    case 'message':
+                        msg.payload.data.forEach((trade) => this.handleTrade(trade));
+                        break;
+                    case 'error':
+                        console.error('[MAIN] Ошибка из воркера:', msg.payload);
+                        break;
+                    default:
+                        console.warn('[MAIN] Неизвестный тип сообщения:', msg);
                 }
-            }, 20000);
-        });
+            });
 
-        this.socket.on('message', (raw) => {
-            let msg;
-            try {
-                msg = JSON.parse(raw);
-            } catch (e) {
-                console.error('[Finnhub]:', e.message);
-                return;
-            }
+            worker.on('error', (err) => {
+                console.error(`[Worker ${index}] Ошибка: ${err.message}`);
+            });
 
-            if (msg.type !== 'trade' || !Array.isArray(msg.data)) return;
-
-            msg.data.forEach((trade) => this.handleTrade(trade));
-        });
-
-        this.socket.on('close', (code, reason) => {
-            this.pingInterval && clearInterval(this.pingInterval);
-            console.warn(`[Finnhub] ОТКЛЮЧЕНО: код ${code}, причина: ${reason}`);
-            console.warn(`[Finnhub] ОТКЛЮЧЕНО ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ ${this.reconnectDelay}ms...`);
-            setTimeout(() => {
-                this.reconnectDelay = Math.min(this.reconnectDelay * 2, RECONNECT_MAX_DELAY);
-                this.connect();
-            }, this.reconnectDelay);
-        });
-
-        this.socket.on('error', (err) => {
-            console.error('[Finnhub] ОШИБКА:', err.message);
-        });
+            worker.on('exit', (code) => {
+                console.warn(`[Worker ${index}] Завершён с кодом ${code}`);
+            });
+        }
     }
 
     handleTrade({s, p, t}) {
-        const symbolName = s.includes(':') ? s : `FINNHUB:${s}`;
+        const symbolName = s;
+        // const symbolName = s.includes(':') ? s : `FINNHUB:${s}`;
         const rawPrice = parseFloat(p);
         const timestamp = t;
 
@@ -118,7 +120,7 @@ export class WebSocketManager {
             assetPriceChange: change,
         });
 
-        this.sendToClients(change);
+        // this.sendToClients(change);
     }
 
     sendToClients(data) {
@@ -144,12 +146,6 @@ export class WebSocketManager {
             );
 
             client.send(JSON.stringify({type: 'PRICE_CACHE', data: allCachedPrices}));
-        }
-    }
-
-    restart() {
-        if (this.socket) {
-            this.socket.close();
         }
     }
 

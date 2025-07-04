@@ -1841,30 +1841,30 @@ export const CHART_SYMBOL_GROUPS = [
         title: 'Криптовалюты',
         symbols: CRYPTO_CURRENCIES_SYMBOLS,
     },
-    // {
-    //     id: 'currencies',
-    //     img: '/src/apps/client/ui/components/AssetsButton/images/currencies.svg',
-    //     title: 'Валюты',
-    //     symbols: CURRENCIES_SYMBOLS,
-    // },
-    // {
-    //     id: 'products',
-    //     img: '/src/apps/client/ui/components/AssetsButton/images/production.svg',
-    //     title: 'Товары',
-    //     symbols: VALUES_SYMBOLS,
-    // },
-    // {
-    //     id: 'shares',
-    //     img: '/src/apps/client/ui/components/AssetsButton/images/shares.svg',
-    //     title: 'Акции',
-    //     symbols: COMPANY_SHARES_SYMBOLS,
-    // },
-    // {
-    //     id: 'indices',
-    //     img: '/src/apps/client/ui/components/AssetsButton/images/index.svg',
-    //     title: 'Индексы',
-    //     symbols: INDICES_SYMBOLS,
-    // },
+    {
+        id: 'currencies',
+        img: '/src/apps/client/ui/components/AssetsButton/images/currencies.svg',
+        title: 'Валюты',
+        symbols: CURRENCIES_SYMBOLS,
+    },
+    {
+        id: 'products',
+        img: '/src/apps/client/ui/components/AssetsButton/images/production.svg',
+        title: 'Товары',
+        symbols: VALUES_SYMBOLS,
+    },
+    {
+        id: 'shares',
+        img: '/src/apps/client/ui/components/AssetsButton/images/shares.svg',
+        title: 'Акции',
+        symbols: COMPANY_SHARES_SYMBOLS,
+    },
+    {
+        id: 'indices',
+        img: '/src/apps/client/ui/components/AssetsButton/images/index.svg',
+        title: 'Индексы',
+        symbols: INDICES_SYMBOLS,
+    },
 ];
 
 export const CHART_SYMBOL_INFO_MAP = {

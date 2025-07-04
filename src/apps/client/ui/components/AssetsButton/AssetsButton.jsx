@@ -160,10 +160,6 @@ class AssetsButton extends Component {
             this.state;
         const text = propOr('menu', {}, langMap);
 
-        console.log('filteredChartSymbolGroup');
-        console.log(assetPriceWebsocketController.changes);
-        console.log(assetPriceWebsocketController.prices);
-
         return (
             <div className={styles.root}>
                 <div

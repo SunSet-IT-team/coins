@@ -1,4 +1,5 @@
 import socketIo from 'socket.io';
+import WebSocket from 'ws';
 
 import {SYMBOL_PRICE_CHANGE_EVENT} from '../../constants/constants';
 
@@ -21,6 +22,16 @@ class PricesWebsocketController {
         if (isMainThread) {
             const app = express();
 
+            /**
+             * Буфер всех изменений
+             */
+            this.bufferMessages = [];
+
+            /**
+             * Буфер всех клиентов
+             */
+            this.clients = new Set();
+
             const server =
                 process.env.NODE_ENV === 'production'
                     ? https.createServer(credentials, app)
@@ -33,11 +44,25 @@ class PricesWebsocketController {
     }
 
     start() {
-        this.io.on('connection', (client) => {
-            pricesEvents.on(SYMBOL_PRICE_CHANGE_EVENT, (data) => {
-                client.emit('message', data.assetPriceChange);
-            });
+        pricesEvents.on(SYMBOL_PRICE_CHANGE_EVENT, (data) => {
+            this.bufferMessages.push(data.assetPriceChange);
         });
+
+        this.io.on('connection', (client) => {
+            this.clients.add(client);
+            client.on('close', () => clients.delete(client));
+        });
+
+        setInterval(() => {
+            if (this.bufferMessages.length > 0) {
+                this.clients.forEach((client) => {
+                    if (client.connected) {
+                        client.emit('message', this.bufferMessages);
+                    }
+                });
+                this.bufferMessages.length = 0;
+            }
+        }, 1500);
     }
 }
 

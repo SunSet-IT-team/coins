@@ -133,12 +133,6 @@ class TransactionInfoPopup extends Component {
     }
 
     qwerty = (output) => {
-        console.log(
-            output,
-            output.userId,
-            this.props.user.id,
-            output.userId === this.props.user.id
-        );
         if (output.userId === this.props.user.id) {
             this.getData();
         }

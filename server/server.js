@@ -238,7 +238,11 @@ async function startMain() {
     const pathToScript = `${__dirname}/compiled/server.js`;
     let port = PORT;
 
-    for (let i = 0; i < os.cpus().length - 1; i++) {
+    const totalCPUs = os.cpus().length;
+    const freeCPUs = 4;
+    const workersToCreate = Math.max(0, totalCPUs - freeCPUs);
+
+    for (let i = 0; i < workersToCreate; i++) {
         port += i + 1;
         // console.log('thread', i + 1, 'port', port);
         await new Promise((resolve) => {

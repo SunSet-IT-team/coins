@@ -29,9 +29,6 @@ class AssetPriceWebsocketController {
     socket = null;
 
     setPrices(prices) {
-        console.log('setPrices');
-        console.log(prices);
-
         this.prices = prices;
     }
 
@@ -57,14 +54,16 @@ class AssetPriceWebsocketController {
             this.calcUpdatedOrders();
         });
 
-        this.socket.on('message', (data) => {
-            this.prices[data.name] = data.price;
-            this.changes[data.name] = data.changes;
-            this.events.emit('data', data);
+        this.socket.on('message', (changes) => {
+            changes.map((data) => {
+                this.prices[data.name] = data.price;
+                this.changes[data.name] = data.changes;
+                this.events.emit('data', data);
 
-            if (this.orders.some((order) => order.assetName === data.name)) {
-                this.calcUpdatedOrders();
-            }
+                if (this.orders.some((order) => order.assetName === data.name)) {
+                    this.calcUpdatedOrders();
+                }
+            });
         });
 
         this.socket.on('disconnect', () => {

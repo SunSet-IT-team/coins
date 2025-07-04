@@ -63,9 +63,7 @@ class TransactionForm extends Component {
         };
     }
 
-    componentDidMount() {
-        console.log(this.props);
-    }
+    componentDidMount() {}
 
     getTransactionPayload = ({value, content, type}) => {
         const {activeUser} = this.props;

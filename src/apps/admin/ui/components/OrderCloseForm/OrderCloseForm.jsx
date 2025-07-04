@@ -67,7 +67,6 @@ class OrderCloseForm extends Component {
     handleSubmit = (values) => {
         const orderPayload = this.getOrderPayload(values);
         const {closeOrder, onDone} = this.props;
-        console.log(orderPayload);
 
         closeOrder({...orderPayload, id: this.id, isClosed: true}).then(() => {
             onDone();
