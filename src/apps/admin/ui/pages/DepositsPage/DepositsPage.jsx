@@ -13,12 +13,11 @@ import AdminTable from '../../components/AdminTable/AdminTable.jsx';
 import {connect} from 'react-redux';
 import getUsers from '../../../services/getUsers.js';
 import getMoneyInput from '../../../services/getMoneyInput.js';
-import editMoneyOutput from '../../../services/editMoneyOutput.js';
-import deleteMoneyOutput from '../../../services/deleteOutputsByIds.js';
-import outputWebsocketController from '../../../services/outputWebsocket.js';
-import getUnvisitedMoneyOutput from '../../../services/getUnvisitedMoneyOutput.js';
-import getMoneyOutput from '../../../services/getMoneyOutput.js';
+import deleteMoneyInput from '../../../services/deleteInputsByIds.js';
+import transactionsWebsocketController from '../../../services/websockets/transactionsWebsocket.js';
+import getUnvisitedMoneyInput from '../../../services/getUnvisitedMoneyInput.js';
 import MoneyInputForm from '../../components/MoneyInputForm/MoneyInputForm.jsx';
+import editMoneyInput from '../../../services/editMoneyInput.js';
 
 const headerRows = [
     {id: 'name', label: 'Имя'},
@@ -96,22 +95,20 @@ const mapStateToProps = ({data, application}) => {
 
 const mapDispatchToProps = (dispatch) => ({
     getUsers: (payload) => dispatch(getUsers(payload)),
-    // getMoneyInput: (payload) => dispatch(getMoneyInput(payload)),
-    getMoneyOutput: (payload) => dispatch(getMoneyOutput(payload)),
-    editMoneyOutput: (payload) => dispatch(editMoneyOutput(payload)),
-    deleteMoneyOutput: (payload) => dispatch(deleteMoneyOutput(payload)),
-    getUnvisitedMoneyOutput: (payload) => dispatch(getUnvisitedMoneyOutput(payload)),
+    getMoneyInput: (payload) => dispatch(getMoneyInput(payload)),
+    editMoneyInput: (payload) => dispatch(editMoneyInput(payload)),
+    deleteMoneyInput: (payload) => dispatch(deleteMoneyInput(payload)),
+    getUnvisitedMoneyInput: (payload) => dispatch(getUnvisitedMoneyInput(payload)),
 });
 
 class DepositsPage extends Component {
     static propTypes = {
         classes: PropTypes.object.isRequired,
         getUsers: PropTypes.func.isRequired,
-        // getMoneyInput: PropTypes.func.isRequired,
-        getMoneyOutput: PropTypes.func.isRequired,
-        editMoneyOutput: PropTypes.func.isRequired,
-        deleteMoneyOutput: PropTypes.func.isRequired,
-        getUnvisitedMoneyOutput: PropTypes.func.isRequired,
+        getMoneyInput: PropTypes.func.isRequired,
+        editMoneyInput: PropTypes.func.isRequired,
+        deleteMoneyInput: PropTypes.func.isRequired,
+        getUnvisitedMoneyInput: PropTypes.func.isRequired,
         currentAdmin: PropTypes.shape({
             id: PropTypes.string,
             email: PropTypes.string,
@@ -174,13 +171,13 @@ class DepositsPage extends Component {
     }
 
     getData = () => {
-        return Promise.all([this.props.getMoneyOutput(), this.props.getUsers(false)]).then(
+        return Promise.all([this.props.getMoneyInput(), this.props.getUsers(false)]).then(
             ([inputs, users]) => {
                 const {currentAdmin} = this.props;
 
                 const filteredUsers =
                     currentAdmin && currentAdmin.id === 'manager_id'
-                        ? users.payload.filter((user) => user.manager === currentAdmin.email)[0]
+                        ? users.payload.filter((user) => user.manager === currentAdmin.email)
                         : users.payload;
 
                 const filteredInputs = inputs.payload.reduce((acc, item) => {
@@ -218,17 +215,20 @@ class DepositsPage extends Component {
     componentDidMount() {
         console.log('DepositsPage mounted');
         this.getData();
-        outputWebsocketController.events.on('output', this.qwerty);
+        transactionsWebsocketController.connect()
+        transactionsWebsocketController.events.on('input', this.qwerty);
     }
 
     componentWillUnmount() {
-        outputWebsocketController.events.removeListener('output', this.qwerty);
+        transactionsWebsocketController.events.removeListener('input', this.qwerty);
     }
 
-    qwerty = (output) => {
+    qwerty = (input) => {
+        console.log(input);
+
         this.props.getUsers(false).then((users) => {
             const {currentAdmin} = this.props;
-            const user = users.payload.find((user) => user.id === output.userId);
+            const user = users.payload.find((user) => user.id === input.userId);
 
             if (
                 !user ||
@@ -243,17 +243,17 @@ class DepositsPage extends Component {
                 inputsByUsers: [
                     ...this.state.inputsByUsers,
                     {
-                        date: output.createdAt,
-                        createdAtDate: output.createdAtDate,
+                        date: input.createdAt,
+                        createdAtDate: input.createdAtDate,
                         name: user.name,
                         surname: user.surname,
-                        status: output.status,
-                        amount: output.amount,
-                        wallet: output.wallet,
-                        numberCard: output.numberCard,
-                        cardHolderName: output.cardHolderName,
-                        id: output.id,
-                        visited: output.visited,
+                        status: input.status,
+                        amount: input.amount,
+                        wallet: input.wallet,
+                        numberCard: input.numberCard,
+                        cardHolderName: input.cardHolderName,
+                        id: input.id,
+                        visited: input.visited,
                         balance: user.balance,
                         mainBalance: user.mainBalance,
                         userId: user.id,
@@ -273,12 +273,12 @@ class DepositsPage extends Component {
             editableUser: user,
         });
         this.props
-            .editMoneyOutput({
+            .editMoneyInput({
                 ...user,
                 visited: true,
             })
             .then(this.getData());
-        this.props.getUnvisitedMoneyOutput();
+        this.props.getUnvisitedMoneyInput();
     };
 
     handleCloseUserForm = () => {
@@ -288,17 +288,17 @@ class DepositsPage extends Component {
         });
     };
 
-    handleOutputDelete = (ids) => {
-        return this.props.deleteMoneyOutput(ids).then(() => {
+    handleInputDelete = (ids) => {
+        return this.props.deleteMoneyInput(ids).then(() => {
             this.getData();
-            this.props.getUnvisitedMoneyOutput();
+            this.props.getUnvisitedMoneyInput();
         });
     };
 
     render() {
         const {classes} = this.props;
         const {loading, editableUser, formShowed, inputsByUsers, allInfoUser} = this.state;
-        
+
         if (loading) {
             return (
                 <div className={classes.loader}>
@@ -318,7 +318,7 @@ class DepositsPage extends Component {
                     headerText="Запросы на депозит"
                     deleteValueWarningTitle="Вы точно хотите удалить запрос?"
                     deleteValuesWarningTitle="Вы точно хотите удалить запросы?"
-                    onDelete={this.handleOutputDelete}
+                    onDelete={this.handleInputDelete}
                     onFormOpen={this.handleFormOpen}
                     isAddButton={false}
                 />
@@ -331,7 +331,7 @@ class DepositsPage extends Component {
                     <Paper className={classes.modalContent}>
                         <MoneyInputForm
                             user={editableUser}
-                            allInfoUser={allInfoUser}
+                            allInfoUser={allInfoUser[0]}
                             onDone={this.handleFormDone}
                         />
                     </Paper>

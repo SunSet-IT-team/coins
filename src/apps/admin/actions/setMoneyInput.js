@@ -1,8 +1,8 @@
 import {SET_MONEY_INPUT} from '../types/types';
 
-const setMoneyOutput = (payload) => ({
+const setMoneyInput = (payload) => ({
     type: SET_MONEY_INPUT,
     payload,
 });
 
-export default setMoneyOutput;
+export default setMoneyInput;

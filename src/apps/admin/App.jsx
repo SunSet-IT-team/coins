@@ -86,7 +86,7 @@ class App extends Component {
 
         transactionsWebsocketController.events.on('output', getUnvisitedMoneyOutput);
 
-        getPrices().then((prices) => {
+        this.props.getPrices().then((prices) => {
             assetPriceWebsocketController.setPrices(prices);
             assetPriceWebsocketController.connect();
         });

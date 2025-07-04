@@ -14,12 +14,12 @@ import {withStyles} from '@material-ui/core/styles';
 
 import Form from '../Form/Form';
 import getSchema from './MoneyInputFormSchema';
-import editMoneyOutput from '../../../services/editMoneyOutput';
+import editMoneyInput from '../../../services/editMoneyInput';
 import saveTransaction from '../../../services/saveTransaction';
 import uniqid from 'uniqid';
 
 const mapDispatchToProps = (dispatch) => ({
-    editMoneyOutput: (payload) => dispatch(editMoneyOutput(payload)),
+    editMoneyInput: (payload) => dispatch(editMoneyInput(payload)),
     saveTransaction: (payload) => dispatch(saveTransaction(payload)),
 });
 
@@ -45,7 +45,7 @@ const materialStyles = (theme) => ({
 
 class MoneyInputForm extends Component {
     static propTypes = {
-        editMoneyOutput: PropTypes.func.isRequired,
+        editMoneyInput: PropTypes.func.isRequired,
         classes: PropTypes.object.isRequired,
         onDone: PropTypes.func,
         user: PropTypes.object,
@@ -82,30 +82,8 @@ class MoneyInputForm extends Component {
         };
     }
 
-    getOutputPayload = ({name, surname, status, date, amount, id, userId}) => {
-        return {
-            name,
-            surname,
-            status,
-            date,
-            amount,
-            id,
-            userId,
-        };
-    };
-
-    getUserPayload = ({content, dirName, type, userId, value}) => {
-        return {
-            content,
-            dirName,
-            type,
-            userId,
-            value,
-        };
-    };
-
     handleSubmit = (values) => {
-        const outputPayload = this.getOutputPayload({
+        const inputPayload = {
             name: values.name,
             surname: values.surname,
             status: values.status,
@@ -113,20 +91,20 @@ class MoneyInputForm extends Component {
             amount: values.amount,
             id: values.id,
             userId: values.userId,
-        });
-        /*   const user = this.initialValuesUser.find((user) => { return outputPayload.userId === user.id; }); */
+        };
+        /*   const user = this.initialValuesUser.find((user) => { return inputPayload.userId === user.id; }); */
 
         const userPayload = {
-            content: 'Withdraw',
+            content: 'Deposit',
             dirName: this.dirName,
-            type: 'deduction',
-            userId: outputPayload.userId,
+            type: 'deposit',
+            userId: inputPayload.userId,
             value: values.amount,
         };
 
-        const {editMoneyOutput, onDone, saveTransaction} = this.props;
+        const {editMoneyInput, onDone, saveTransaction} = this.props;
 
-        if (values.status === 'Успешно') {
+        if (values.status === 'Успешно' || values.status === 'Выполнена') {
             saveTransaction(userPayload)
                 .then(() => {
                     onDone();
@@ -138,7 +116,7 @@ class MoneyInputForm extends Component {
                 });
         }
 
-        editMoneyOutput(outputPayload)
+        editMoneyInput(inputPayload)
             .then(() => {
                 onDone();
             })

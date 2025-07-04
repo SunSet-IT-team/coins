@@ -217,10 +217,17 @@ export default {
         },
         transaction: {
             loadingData: 'Ładowanie danych...',
-            processing: 'W przetwórstwie',
-            executed: 'Zakończony',
-            canceled: 'Odwołany',
-            statusWithdraw: 'status',
+            withdrawStatuses: {
+                processing: 'W przetwarzaniu',
+                executed: 'Zakończony',
+                canceled: 'Odwołany',
+            },
+            depositStatuses: {
+                waiting: 'Czekanie',
+                executed: 'Zakończony',
+                canceled: 'Odwołany',
+            },
+            transactionStatus: 'Status',
             moneyWithdrawal: 'Wycofać',
             withdrawSumm: 'Wypłata kwoty',
             inputPlaceholderWithdraw: 'Wypłata od $5.00',
