@@ -7,6 +7,7 @@ import '../../css/main.css';
 import {connect} from 'react-redux';
 
 import checkAuthentication from './services/checkAuthentication';
+import getUnvisitedMoneyInput from './services/getUnvisitedMoneyInput';
 import getUnvisitedMoneyOutput from './services/getUnvisitedMoneyOutput';
 import getUnvisitedMessageHistory from './services/getUnvisitedMessageHistory';
 
@@ -27,6 +28,7 @@ import CredentialsPage from './ui/pages/CredentialsPage/CredentialsPage.jsx';
 import DatabasePage from './ui/pages/DatabasePage/DatabasePage.jsx';
 import UsersPage from './ui/pages/UsersPage/UsersPage.jsx';
 import PaymentsPage from './ui/pages/PaymentsPage/PaymentsPage.jsx';
+import DepositsPage from './ui/pages/DepositsPage/DepositsPage.jsx';
 import TransactionsPage from './ui/pages/TransactionsPage/TransactionsPage.jsx';
 import Reload from '../admin/ui/components/Reload/Reload.jsx';
 import isNull from '@tinkoff/utils/is/nil';
@@ -45,6 +47,7 @@ const mapStateToProps = ({application}) => ({
 const mapDispatchToProps = (dispatch) => ({
     checkAuthentication: (payload) => dispatch(checkAuthentication(payload)),
     getPrices: (payload) => dispatch(getPrices(payload)),
+    getUnvisitedMoneyInput: (payload) => dispatch(getUnvisitedMoneyInput(payload)),
     getUnvisitedMoneyOutput: (payload) => dispatch(getUnvisitedMoneyOutput(payload)),
     getUnvisitedMessageHistory: (payload) => dispatch(getUnvisitedMessageHistory(payload)),
 });
@@ -53,6 +56,7 @@ class App extends Component {
     static propTypes = {
         checkAuthentication: PropTypes.func.isRequired,
         getPrices: PropTypes.func.isRequired,
+        getUnvisitedMoneyInput: PropTypes.func.isRequired,
         getUnvisitedMoneyOutput: PropTypes.func.isRequired,
         getUnvisitedMessageHistory: PropTypes.func.isRequired,
         authenticated: PropTypes.bool,
@@ -75,20 +79,14 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const {
-            checkAuthentication,
-            getUnvisitedMoneyOutput,
-            getUnvisitedMessageHistory,
-            getPrices,
-        } = this.props;
-
-        checkAuthentication();
-        getUnvisitedMoneyOutput();
-        getUnvisitedMessageHistory();
+        this.props.checkAuthentication();
+        this.props.getUnvisitedMoneyInput();
+        this.props.getUnvisitedMoneyOutput();
+        this.props.getUnvisitedMessageHistory();
 
         transactionsWebsocketController.events.on('output', getUnvisitedMoneyOutput);
 
-        getPrices().then((prices) => {
+        this.props.getPrices().then((prices) => {
             assetPriceWebsocketController.setPrices(prices);
             assetPriceWebsocketController.connect();
         });
@@ -172,6 +170,7 @@ class App extends Component {
                         render={(props) => this.renderProtectedRoute(CredentialsPage, props)}
                     />
                     <Route exact path={`${ADMIN_PANEL_URL}/db`} component={DatabasePage} />
+                    <Route exact path={`${ADMIN_PANEL_URL}/inputs`} component={DepositsPage} />
                     <Route exact path={`${ADMIN_PANEL_URL}/outputs`} component={TransactionsPage} />
                     <Route
                         exact

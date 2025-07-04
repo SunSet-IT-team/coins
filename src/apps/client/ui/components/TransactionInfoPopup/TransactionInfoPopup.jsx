@@ -279,7 +279,7 @@ class TransactionInfoPopup extends Component {
         const {langMap, transactions} = this.props;
         const {outputByUser, inputByUser, activeTab} = this.state;
 
-        const transactionList = [...outputByUser, ...transactions, ...inputByUser];
+        const transactionList = [...outputByUser, ...inputByUser];
 
         const text = propOr('accountInfo', {}, langMap).transaction;
         const textTabs = propOr('accountInfo', {}, langMap).navbar.transactionTabs;
@@ -329,37 +329,37 @@ class TransactionInfoPopup extends Component {
                                                 <div>
                                                     {item.status === 'Новая' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span
                                                                 className={styles.processingStatus}
                                                             >
-                                                                {text.processing}
+                                                                {text.withdrawStatuses.processing}
                                                             </span>
                                                         </p>
                                                     )}
                                                     {item.status === 'В обработке' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span
                                                                 className={styles.processingStatus}
                                                             >
-                                                                {text.processing}
+                                                                {text.withdrawStatuses.processing}
                                                             </span>
                                                         </p>
                                                     )}
                                                     {item.status === 'Успешно' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span className={styles.executedStatus}>
-                                                                {text.executed}
+                                                                {text.withdrawStatuses.executed}
                                                             </span>
                                                         </p>
                                                     )}
                                                     {item.status === 'Отменена' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span className={styles.canceledStatus}>
-                                                                {text.canceled}
+                                                                {text.withdrawStatuses.canceled}
                                                             </span>
                                                         </p>
                                                     )}
@@ -410,7 +410,9 @@ class TransactionInfoPopup extends Component {
                         <div className={styles.transactionsContainer}>
                             {transactionList
                                 .sort((prev, next) => next.createdAt - prev.createdAt)
-                                .filter((item) => item.type === 'deposit')
+                                .filter(
+                                    (item) => item.type !== 'deduction' && item.type === 'deposit'
+                                )
                                 .map((item, i) => (
                                     <div key={i} className={styles.transactionItem}>
                                         <div className={styles.itemNum}>{i + 1}</div>
@@ -420,39 +422,29 @@ class TransactionInfoPopup extends Component {
                                         <div className={styles.itemStatus}>
                                             {item.content || (
                                                 <div>
-                                                    {item.status === 'Новая' && (
+                                                    {item.status === 'В ожидании' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span
                                                                 className={styles.processingStatus}
                                                             >
-                                                                {text.processing}
+                                                                {text.depositStatuses.waiting}
                                                             </span>
                                                         </p>
                                                     )}
-                                                    {item.status === 'В обработке' && (
+                                                    {item.status === 'Выполнена' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
-                                                            <span
-                                                                className={styles.processingStatus}
-                                                            >
-                                                                {text.processing}
-                                                            </span>
-                                                        </p>
-                                                    )}
-                                                    {item.status === 'Успешно' && (
-                                                        <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span className={styles.executedStatus}>
-                                                                {text.executed}
+                                                                {text.depositStatuses.executed}
                                                             </span>
                                                         </p>
                                                     )}
                                                     {item.status === 'Отменена' && (
                                                         <p>
-                                                            {text.statusWithdraw}:{' '}
+                                                            {text.transactionStatus}:{' '}
                                                             <span className={styles.canceledStatus}>
-                                                                {text.canceled}
+                                                                {text.depositStatuses.canceled}
                                                             </span>
                                                         </p>
                                                     )}

@@ -181,10 +181,17 @@ export default {
         },
         transaction: {
             loadingData: 'Загрузка данных...',
-            processing: 'В обработке',
-            executed: 'Выполнен',
-            canceled: 'Отменен',
-            statusWithdraw: 'Статус',
+            withdrawStatuses: {
+                processing: 'В обработке',
+                executed: 'Выполнен',
+                canceled: 'Отменен',
+            },
+            depositStatuses: {
+                waiting: 'В ожидании',
+                executed: 'Выполнен',
+                canceled: 'Отменен',
+            },
+            transactionStatus: 'Статус',
             withdraw: 'Вывод средств',
             moneyWithdrawal: 'Вывести',
             moneyDeposit: 'Пополнить',

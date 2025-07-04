@@ -57,6 +57,7 @@ const materialStyles = {
 
 const mapStateToProps = ({data, application}) => {
     return {
+        inputs: data.unvisitedInput.length,
         outputs: data.unvisitedOutput.length,
         messages: data.unvisitedMessages.length,
         currentAdmin: application.currentAdmin,
@@ -113,7 +114,7 @@ class Header extends Component {
     };
 
     render() {
-        const {classes, outputs, messages, currentAdmin} = this.props;
+        const {classes, inputs, outputs, messages, currentAdmin} = this.props;
         const {menuShowed} = this.state;
         const isManager = currentAdmin && currentAdmin.id === 'manager_id';
 
@@ -163,6 +164,11 @@ class Header extends Component {
                                                         to={route.path}
                                                     >
                                                         {route.title}
+                                                        {route.id === 'moneyInput' && inputs ? (
+                                                            <span className={classes.rate}>
+                                                                {inputs}
+                                                            </span>
+                                                        ) : undefined}
                                                         {route.id === 'moneyOutput' && outputs ? (
                                                             <span className={classes.rate}>
                                                                 {outputs}

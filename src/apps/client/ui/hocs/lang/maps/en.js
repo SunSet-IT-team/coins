@@ -217,10 +217,17 @@ export default {
         },
         transaction: {
             loadingData: 'Loading data...',
-            processing: 'In processing',
-            executed: 'Completed',
-            canceled: 'Canceled',
-            statusWithdraw: 'Status',
+            withdrawStatuses: {
+                processing: 'In processing',
+                executed: 'Completed',
+                canceled: 'Canceled',
+            },
+            depositStatuses: {
+                waiting: 'Waiting',
+                executed: 'Completed',
+                canceled: 'Canceled',
+            },
+            transactionStatus: 'Status',
             moneyWithdrawal: 'Withdraw',
             moneyDeposit: 'Deposit',
             transactionSumm: 'Transaction amount',
