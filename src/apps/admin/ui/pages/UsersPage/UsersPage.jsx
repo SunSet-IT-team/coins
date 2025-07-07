@@ -526,7 +526,7 @@ class UsersPage extends Component {
     };
 
     updateOrdersAssets() {
-        const updatedOrders = this.state.orders.map((order) => { 
+        const updatedOrders = this.state.orders.map((order) => {
             if (order.isClosed) return order;
 
             const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
@@ -577,11 +577,11 @@ class UsersPage extends Component {
             this.updateOrdersAssets();
         });
 
-        assetPriceWebsocketController.events.on('data', this.updateOrdersAssets);
+        assetPriceWebsocketController.events.on('AssetsNames:changed', this.updateOrdersAssets);
     }
 
     componentWillUnmount() {
-        assetPriceWebsocketController.events.off('data', this.updateOrdersAssets);
+        assetPriceWebsocketController.events.off('AssetsNames:changed', this.updateOrdersAssets);
     }
 
     componentDidUpdate(prevProps) {

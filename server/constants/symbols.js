@@ -1853,12 +1853,12 @@ export const CHART_SYMBOL_GROUPS = [
         title: 'Товары',
         symbols: VALUES_SYMBOLS,
     },
-    // {
-    //     id: 'shares',
-    //     img: '/src/apps/client/ui/components/AssetsButton/images/shares.svg',
-    //     title: 'Акции',
-    //     symbols: COMPANY_SHARES_SYMBOLS,
-    // },
+    {
+        id: 'shares',
+        img: '/src/apps/client/ui/components/AssetsButton/images/shares.svg',
+        title: 'Акции',
+        symbols: COMPANY_SHARES_SYMBOLS,
+    },
     {
         id: 'indices',
         img: '/src/apps/client/ui/components/AssetsButton/images/index.svg',

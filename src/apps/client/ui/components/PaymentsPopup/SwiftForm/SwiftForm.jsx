@@ -153,12 +153,13 @@ class SwiftForm extends Component {
                         !this.state[name].value
                     ) {
                         error = 'MinValue';
-                    } else if (
-                        !checkBalance(this.props.user.balance - this.state[name].value) &&
-                        !!this.state[name].value
-                    ) {
-                        error = 'Balance';
                     }
+                    // else if (
+                    //     !checkBalance(this.props.user.balance - this.state[name].value) &&
+                    //     !!this.state[name].value
+                    // ) {
+                    //     error = 'Balance';
+                    // }
                 } else {
                     error = '';
                 }

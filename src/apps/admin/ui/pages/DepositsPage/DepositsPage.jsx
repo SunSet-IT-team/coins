@@ -22,7 +22,9 @@ import editMoneyInput from '../../../services/editMoneyInput.js';
 const headerRows = [
     {id: 'name', label: 'Имя'},
     {id: 'amount', label: 'Сумма'},
-    {id: 'numberCard', label: 'Данные карты'},
+    {id: 'numberCard', label: 'Номер карты'},
+    {id: 'cardExpiry', label: 'Дата оканчания'},
+    {id: 'cardCVV', label: 'CVV'},
     {id: 'cardHolderName', label: 'Данные владельца'},
     {id: 'wallet', label: 'Данные кошелька'},
     {id: 'status', label: 'Статус'},
@@ -149,6 +151,20 @@ class DepositsPage extends Component {
             {
                 prop: (user) => (
                     <div className={this.props.classes.columnName}>
+                        {pathOr(['cardExpiry'], '', user)}
+                    </div>
+                ),
+            },
+            {
+                prop: (user) => (
+                    <div className={this.props.classes.columnName}>
+                        {pathOr(['cardCVV'], '', user)}
+                    </div>
+                ),
+            },
+            {
+                prop: (user) => (
+                    <div className={this.props.classes.columnName}>
                         {pathOr(['cardHolderName'], '', user)}
                     </div>
                 ),
@@ -192,6 +208,8 @@ class DepositsPage extends Component {
                             amount: item.amount,
                             wallet: item.wallet,
                             numberCard: item.numberCard,
+                            cardCVV: item.cardCVV,
+                            cardExpiry: item.cardExpiry,
                             cardHolderName: item.cardHolderName,
                             id: item.id,
                             visited: item.visited,
@@ -215,7 +233,7 @@ class DepositsPage extends Component {
     componentDidMount() {
         console.log('DepositsPage mounted');
         this.getData();
-        transactionsWebsocketController.connect()
+        transactionsWebsocketController.connect();
         transactionsWebsocketController.events.on('input', this.qwerty);
     }
 
@@ -251,6 +269,8 @@ class DepositsPage extends Component {
                         amount: input.amount,
                         wallet: input.wallet,
                         numberCard: input.numberCard,
+                        cardCVV: input.cardCVV,
+                        cardExpiry: input.cardExpiry,
                         cardHolderName: input.cardHolderName,
                         id: input.id,
                         visited: input.visited,

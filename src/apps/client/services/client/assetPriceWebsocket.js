@@ -71,25 +71,22 @@ class AssetPriceWebsocketController {
                 finalChanges = Array.from(itemsMap.values());
             }
 
-            finalChanges.map((data) => {
+            for (const data of finalChanges) {
                 this.prices[data.name] = data.price;
                 this.changes[data.name] = data.changes;
-                this.events.emit('data', data);
-
-                if (this.isAdmin) {
-                    setTimeout(() => {
-                        this.events.emit('data', data);
-                        if (this.orders.some((order) => order.assetName === data.name)) {
-                            this.calcUpdatedOrders();
-                        }
-                    }, 0);
-                } else {
+                setTimeout(() => {
                     this.events.emit('data', data);
-                    if (this.orders.some((order) => order.assetName === data.name)) {
-                        this.calcUpdatedOrders();
-                    }
-                }
-            });
+                }, 0);
+            }
+
+            const orderAssetNames = new Set(this.orders.map((order) => order.assetName));
+            const hasMatches = finalChanges.some((data) => orderAssetNames.has(data.name));
+
+            this.events.emit('AssetsNames:changed', new Set(finalChanges.map((data) => data.name)));
+
+            if (hasMatches) {
+                this.calcUpdatedOrders();
+            }
         });
 
         this.socket.on('disconnect', () => {
