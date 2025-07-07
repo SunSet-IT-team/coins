@@ -27,6 +27,12 @@ class AssetPriceWebsocketController {
     orders = [];
     isConnected = false;
     socket = null;
+    // Пробуем флаг для оптимизации
+    isAdmin = false;
+
+    setIsAdmin(isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 
     setPrices(prices) {
         this.prices = prices;
@@ -55,13 +61,33 @@ class AssetPriceWebsocketController {
         });
 
         this.socket.on('message', (changes) => {
-            changes.map((data) => {
+            let finalChanges = changes;
+
+            if (this.isAdmin) {
+                const itemsMap = new Map();
+                changes.forEach((item) => {
+                    itemsMap.set(item.name, item);
+                });
+                finalChanges = Array.from(itemsMap.values());
+            }
+
+            finalChanges.map((data) => {
                 this.prices[data.name] = data.price;
                 this.changes[data.name] = data.changes;
                 this.events.emit('data', data);
 
-                if (this.orders.some((order) => order.assetName === data.name)) {
-                    this.calcUpdatedOrders();
+                if (this.isAdmin) {
+                    setTimeout(() => {
+                        this.events.emit('data', data);
+                        if (this.orders.some((order) => order.assetName === data.name)) {
+                            this.calcUpdatedOrders();
+                        }
+                    }, 0);
+                } else {
+                    this.events.emit('data', data);
+                    if (this.orders.some((order) => order.assetName === data.name)) {
+                        this.calcUpdatedOrders();
+                    }
                 }
             });
         });

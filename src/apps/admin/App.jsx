@@ -88,6 +88,7 @@ class App extends Component {
 
         this.props.getPrices().then((prices) => {
             assetPriceWebsocketController.setPrices(prices);
+            assetPriceWebsocketController.setIsAdmin(true);
             assetPriceWebsocketController.connect();
         });
 
@@ -95,10 +96,6 @@ class App extends Component {
             if (isConnected) {
             } else {
             }
-        });
-
-        assetPriceWebsocketController.events.on('allPrices', (cachedPrices) => {
-            console.log('✅ Получены последние кэшированные цены:', cachedPrices);
         });
     }
 
@@ -123,7 +120,6 @@ class App extends Component {
 
     renderProtectedRoute = (Component, props) => {
         const {currentAdmin} = this.props;
-        console.log('currentAdmin', currentAdmin);
 
         if (!currentAdmin || currentAdmin.id !== 'admin_id') {
             return <Redirect to={ADMIN_PANEL_URL} />;

@@ -10,14 +10,14 @@ const FINNHUB_WS = `wss://ws.finnhub.io?token=d1jedm9r01qvg5gu10g0d1jedm9r01qvg5
 // const FINNHUB_WS = `wss://ws.finnhub.io?token=${process.env.FINNHUB_API_KEY_PROD}`;
 
 const FINNHUB_TOKENS = [
-    'd1jedm9r01qvg5gu10g0d1jedm9r01qvg5gu10gg',
-    'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10',
-    'd1jjlk1r01qvg5guv1q0d1jjlk1r01qvg5guv1qg',
-    'd1jjrc1r01qvg5gv023gd1jjrc1r01qvg5gv0240',
     'd1jjro1r01qvg5gv0460d1jjro1r01qvg5gv046g',
     'd1jjs41r01qvg5gv06d0d1jjs41r01qvg5gv06dg',
     'd1jjsd1r01qvg5gv0810d1jjsd1r01qvg5gv081g',
     'd1jjsphr01qvg5gv0ae0d1jjsphr01qvg5gv0aeg',
+    'd1jedm9r01qvg5gu10g0d1jedm9r01qvg5gu10gg',
+    'ct9hjspr01qusoq8am0gct9hjspr01qusoq8am10',
+    'd1jjlk1r01qvg5guv1q0d1jjlk1r01qvg5guv1qg',
+    'd1jjrc1r01qvg5gv023gd1jjrc1r01qvg5gv0240',
 ];
 
 export class WebSocketManager {
@@ -35,9 +35,6 @@ export class WebSocketManager {
         const allSymbols = CHART_SYMBOL_GROUPS.flatMap((group) => group.symbols)
             .filter((s) => s && s.name)
             .map((s) => s.name);
-
-        console.log('allSymbols - ');
-        console.log(allSymbols.length);
 
         const MAX_PER_SOCKET = 25;
 
