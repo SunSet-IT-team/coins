@@ -11,6 +11,9 @@ export default (user, orders, prices) => {
     orders.forEach((order) => {
         const symbolInfo = CHART_SYMBOL_INFO_MAP[order.assetName];
         const symbolPrice = prices[order.assetName];
+
+        if (!symbolPrice) return;
+
         const realSymbolPrice =
             order.type === 'buy' ? calculateBuyPrice(symbolInfo.name, symbolPrice) : symbolPrice;
         const assetValues = getAssetValues(
