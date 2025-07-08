@@ -4,6 +4,7 @@
 .root {
     position: relative;
     background-color: rgb(20, 26, 43);
+    height: 100%;
 }
 
 .rootChart {
@@ -25,6 +26,16 @@
 
     @media (max-height: 544px) {
         height: calc(100vh - 112px);
+    }
+}
+
+.rootChart.chartFullHeight {
+    height: 100%;
+}
+
+.rootChart.chartFullHeight :global(.tv-lightweight-charts) {
+    &, table {
+        height: 100% !important;
     }
 }
 

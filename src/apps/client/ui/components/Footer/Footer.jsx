@@ -6,7 +6,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import classNames from 'classnames';
 
 import propOr from '@tinkoff/utils/object/propOr';
-import isEmpty from '@tinkoff/utils/is/empty';
 
 import styles from './Footer.css';
 import AssetsButton from '../AssetsButton/AssetsButton';
@@ -189,7 +188,6 @@ class Footer extends Component {
             credFacilities,
         } = this.state;
         const text = propOr('footer', {}, langMap);
-        const isAuth = !isEmpty(user); // Авторизован ли пользователь
 
         return (
             <section>
@@ -255,20 +253,18 @@ class Footer extends Component {
                                     $ {formatNumberToString(totalProfit)}
                                 </span>
                             </div>
-                            {isAuth && (
-                                <div
-                                    className={classNames(
-                                        styles.middleContainerButton,
-                                        styles.facilities
-                                    )}
-                                >
-                                    {text.balance}
-                                    <br />
-                                    <span className={styles.buttonItem}>
-                                        $ {formatNumberToString(mainBalance)}
-                                    </span>
-                                </div>
-                            )}
+                            <div
+                                className={classNames(
+                                    styles.middleContainerButton,
+                                    styles.facilities
+                                )}
+                            >
+                                {text.balance}
+                                <br />
+                                <span className={styles.buttonItem}>
+                                    $ {formatNumberToString(mainBalance)}
+                                </span>
+                            </div>
                             <div
                                 className={classNames(
                                     styles.middleContainerButton,

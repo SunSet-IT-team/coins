@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import classNames from 'classnames';
 
 import getHistoryPrice from '../../../services/client/getHistoryPrice';
 import assetPriceWebsocketController from '../../../services/client/assetPriceWebsocket';
@@ -63,7 +64,7 @@ const chartOptions = {
     },
 };
 
-const mapStateToProps = ({application, charts}) => {
+const mapStateToProps = ({application, data, charts}) => {
     return {
         chartTimeframe: charts.chartTimeframe,
         chartType: charts.chartType,
@@ -71,6 +72,7 @@ const mapStateToProps = ({application, charts}) => {
         chartSymbol: charts.chartSymbol,
         mediaWidth: application.media.width,
         mediaHeight: application.media.height,
+        user: data.user,
     };
 };
 
@@ -558,11 +560,19 @@ class MainPage extends Component {
     };
 
     render() {
+        const {user} = this.props;
         const {asset} = this.state;
+        const isAuth = !isEmpty(user); // Авторизован ли пользователь
+        console.log(!isAuth);
 
         return (
             <section className={styles.root}>
-                <section className={styles.rootChart} ref={this.chartsContainer} />
+                <section
+                    className={classNames(styles.rootChart, {
+                        [styles.chartFullHeight]: !isAuth,
+                    })}
+                    ref={this.chartsContainer}
+                />
                 {!isEmpty(asset) && (
                     <div className={styles.assetContainer}>
                         <div className={styles.assetTitle}>

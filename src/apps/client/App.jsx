@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EventEmitter from 'eventemitter3';
 import classNames from 'classnames';
+import isEmpty from '@tinkoff/utils/is/empty';
 
 import '../../../client/vendor';
 import '../../css/main.css';
@@ -58,6 +59,7 @@ const mapStateToProps = ({application, data, charts}) => {
         depositPopup: data.depositPopup,
         chartSymbol: charts.chartSymbol,
         openOrders: data.openOrders,
+        user: data.user,
     };
 };
 
@@ -170,8 +172,10 @@ class App extends Component {
             transactionsPopup,
             withdrawPopup,
             depositPopup,
+            user,
         } = this.props;
         const {connectionStatus} = this.state;
+        const isAuth = !isEmpty(user); // Авторизован ли пользователь
 
         return (
             <main>
@@ -217,7 +221,7 @@ class App extends Component {
                                 withdrawPopup.visible,
                         })}
                     />
-                    <Footer events={events} />
+                    {isAuth && <Footer events={events} />}
                 </div>
             </main>
         );

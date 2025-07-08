@@ -3,8 +3,9 @@
     flex-direction: column;
     justify-content: space-between;
     height: 100vh; /* Fallback */
-    height: -webkit-fill-available; /* Для Safari */
-    min-height: -webkit-fill-available;
+    /* TODO: вот тут с 2мя нижними закомиченными строчками надо что-то придумать */
+    /* height: -webkit-fill-available; /* Для Safari */
+    /* min-height: -webkit-fill-available; */
     width: 100%;
     overflow: hidden;
 }
