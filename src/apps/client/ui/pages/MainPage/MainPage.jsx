@@ -563,7 +563,6 @@ class MainPage extends Component {
         const {user} = this.props;
         const {asset} = this.state;
         const isAuth = !isEmpty(user); // Авторизован ли пользователь
-        console.log(!isAuth);
 
         return (
             <section className={styles.root}>

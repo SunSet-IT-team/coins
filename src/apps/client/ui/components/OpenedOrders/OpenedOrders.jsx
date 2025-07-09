@@ -58,6 +58,8 @@ class OpenedOrders extends Component {
             'ordersAndBalance',
             this.handleOrdersAndBalanceChange
         );
+        assetPriceWebsocketController.calcUpdatedOrders(true);
+
         messageWebsocket.events.on(AUTO_CLOSE_ORDER_EVENT_CLIENT, (payload) => {
             this.handleAutoCloseOrder(payload);
         });

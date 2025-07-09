@@ -4,6 +4,7 @@ import calcUserOrdersChanges from '../../utils/calcUserOrdersChanges';
 import formatPrice from '../../utils/formatPrice';
 import {CHART_SYMBOL_INFO_MAP} from '../../../../../server/constants/symbols';
 import calculateBuyingPrice from '../../utils/calculateBuyPrice';
+import isEmpty from '@tinkoff/utils/is/empty';
 
 const WEBSOCKET_URL =
     process.env.NODE_ENV === 'production'
@@ -103,12 +104,15 @@ class AssetPriceWebsocketController {
         });
     }
 
-    calcUpdatedOrders() {
+    calcUpdatedOrders(isForceEmit = false) {
         const {user, orders, prices} = this;
 
-        if (!user) return;
+        if (isEmpty(user)) return;
 
         const {ordersInfo, balance} = calcUserOrdersChanges(user, orders, prices);
+
+        if (isEmpty(ordersInfo)) return;
+
         const newOrders = orders.map((order) => {
             const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
             const updatedOrder = ordersInfo[order.id];
@@ -162,7 +166,7 @@ class AssetPriceWebsocketController {
         this.balance = balanceToSend;
         this.marginLevel = (this.freeBalance / totalPledge) * 100;
 
-        if (this.prevBalance !== this.balance) {
+        if (this.prevBalance !== this.balance || isForceEmit) {
             this.events.emit('ordersAndBalance', {
                 mainBalance: this.mainBalance,
                 balance: balanceToSend,

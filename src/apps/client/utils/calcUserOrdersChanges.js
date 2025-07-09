@@ -19,7 +19,7 @@ export default (user, orders, prices) => {
         const assetValues = getAssetValues(
             symbolInfo,
             {openingPrice: order.openingPrice, amount: order.amount, type: order.type},
-            realSymbolPrice.value,
+            realSymbolPrice,
             userBalance,
             COMMISSION
         );
@@ -30,7 +30,7 @@ export default (user, orders, prices) => {
          * @TODO проверить сходятся ли price
          */
         ordersInfo[order.id] = {
-            price: symbolPrice.value,
+            price: symbolPrice,
             commission: assetValues.commissionValue,
             profit: assetValues.profit,
         };
