@@ -1,4 +1,5 @@
 const ASSET_HOST = process.env.ASSET_HOST || '';
+const isProd = process.env.NODE_ENV === 'production';
 
 export default function (html, helmet, preloadedState = {}) {
     return `
@@ -10,7 +11,7 @@ export default function (html, helmet, preloadedState = {}) {
             <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1'>
             ${helmet.title.toString()}
             ${helmet.meta.toString()}
-            <link rel='stylesheet' type='text/css' href='${ASSET_HOST}/public/client.chunk.css'>
+            ${isProd ? `<link rel='stylesheet' type='text/css' href='${ASSET_HOST}/public/client.chunk.css'>` : ''}
             <link rel='shortcut icon' href='/client/images/favicon.png' type='image/png'>
         </head>
         <body>

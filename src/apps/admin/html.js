@@ -1,4 +1,5 @@
 const ASSET_HOST = process.env.ASSET_HOST || '';
+const isProd = process.env.NODE_ENV === 'production';
 
 export default function () {
     return `
@@ -9,7 +10,7 @@ export default function () {
             <meta http-equiv='x-ua-compatible' content='ie=edge'>
             <meta name='viewport' content='width=device-width, initial-scale=1'>
             <title>Админ панель</title>
-            <link rel='stylesheet' type='text/css' href='${ASSET_HOST}/public/admin.chunk.css'>
+            ${isProd ? `<link rel='stylesheet' type='text/css' href='${ASSET_HOST}/public/admin.chunk.css'>` : ''}
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
             <link rel='shortcut icon' href='/client/images/favicon.png' type='image/png'>
