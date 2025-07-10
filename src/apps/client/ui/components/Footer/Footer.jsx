@@ -81,11 +81,7 @@ class Footer extends Component {
             this.handleOrdersAndBalanceChange
         );
 
-        // this.props.events.on('onCloseOrder', () => {
-        //     this.setState({
-        //         mainBalance: this.state.balance
-        //     });
-        // });
+        assetPriceWebsocketController.calcUpdatedOrders(true);
     }
 
     componentDidUpdate() {

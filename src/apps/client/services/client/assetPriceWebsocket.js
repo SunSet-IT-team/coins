@@ -42,8 +42,7 @@ class AssetPriceWebsocketController {
     setUser(user, orders) {
         this.user = user;
         this.orders = orders;
-
-        this.calcUpdatedOrders();
+        this.calcUpdatedOrders(true);
     }
 
     connect() {
@@ -110,8 +109,6 @@ class AssetPriceWebsocketController {
         if (isEmpty(user)) return;
 
         const {ordersInfo, balance} = calcUserOrdersChanges(user, orders, prices);
-
-        if (isEmpty(ordersInfo)) return;
 
         const newOrders = orders.map((order) => {
             const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
