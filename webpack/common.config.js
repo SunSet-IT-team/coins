@@ -13,22 +13,22 @@ const isSourceMapEnabled = !!process.env.SOURCE_MAP;
 const common = {
     entry: {
         app: './src/apps/client/AppProvider.jsx',
-        admin: './src/apps/admin/AppProvider.jsx'
+        admin: './src/apps/admin/AppProvider.jsx',
     },
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {
-            src: path.resolve(__dirname, 'src')
-        }
+            src: path.resolve(__dirname, 'src'),
+        },
     },
     mode: 'development',
     optimization: {
         minimize: false,
         splitChunks: {
             chunks: 'all',
-            automaticNameDelimiter: '-'
+            automaticNameDelimiter: '-',
         },
-        runtimeChunk: false
+        runtimeChunk: false,
     },
     module: {
         rules: [
@@ -37,53 +37,53 @@ const common = {
                 loader: 'url-loader',
                 options: {
                     limit: 1000,
-                    mimetype: 'application/octet-stream'
-                }
+                    mimetype: 'application/octet-stream',
+                },
             },
             {
                 test: /\.eot$/,
-                loader: 'file-loader'
+                loader: 'file-loader',
             },
             {
                 test: /\.svg$/,
-                loader: 'file-loader'
+                loader: 'file-loader',
             },
             {
                 test: /\.png$/,
                 loader: 'url-loader',
                 options: {
                     limit: 1000,
-                    mimetype: 'image/png'
-                }
+                    mimetype: 'image/png',
+                },
             },
             {
                 test: /\.gif$/,
                 loader: 'url-loader',
                 options: {
                     limit: 1000,
-                    mimetype: 'image/gif'
-                }
+                    mimetype: 'image/gif',
+                },
             },
             {
                 test: /\.jpg$/,
                 loader: 'url-loader',
                 options: {
                     limit: 1000,
-                    mimetype: 'image/jpg'
-                }
+                    mimetype: 'image/jpg',
+                },
             },
             {
                 test: /\.webp$/,
                 loader: 'url-loader',
                 options: {
                     limit: 1000,
-                    mimetype: 'image/webp'
-                }
+                    mimetype: 'image/webp',
+                },
             },
             {
                 test: /\.css?$/,
                 loaders: ['style-loader', 'css-loader'],
-                include: [/node_modules/]
+                include: [/node_modules/],
             },
             {
                 test: /\.css?$/,
@@ -92,34 +92,35 @@ const common = {
                     {
                         loader: 'cache-loader',
                         options: {
-                            cacheDirectory: path.resolve('.tmp/cache-loader')
-                        }
+                            cacheDirectory: path.resolve('.tmp/cache-loader'),
+                        },
                     },
                     {
                         loader: 'css-loader',
                         options: {
                             minimize: false,
-                            modules: true,
-                            localIdentName: cssLocalIdentName,
+                            modules: {
+                                localIdentName: cssLocalIdentName,
+                            },
                             sourceMap: isSourceMapEnabled,
-                            importLoaders: 1
-                        }
+                            importLoaders: 1,
+                        },
                     },
                     {
                         loader: 'postcss-loader',
                         options: {
                             plugins: postcssConfig,
-                            sourceMap: isSourceMapEnabled
-                        }
-                    }
+                            sourceMap: isSourceMapEnabled,
+                        },
+                    },
                 ],
-                exclude: [/node_modules/]
-            }
-        ]
+                exclude: [/node_modules/],
+            },
+        ],
     },
     plugins: [
         new CleanWebpackPlugin(['public'], {
-            root: path.join(__dirname, '..')
+            root: path.join(__dirname, '..'),
         }),
         // new webpack.NormalModuleReplacementPlugin(/babel-runtime\/core-js\/promise/, path.resolve(__dirname, '../utils/polyfill/promise')),
         new webpack.DefinePlugin({
@@ -128,24 +129,25 @@ const common = {
             'process.env.BROWSER': process.env.BROWSER || false,
             'process.env.SERVER': process.env.SERVER || false,
 
-            'process.env.ENABLE_DEVTOOLS': process.env.NODE_ENV === 'development'
+            'process.env.ENABLE_DEVTOOLS': process.env.NODE_ENV === 'development',
         }),
-        new Stylish()
-    ]
+        new Stylish(),
+    ],
 };
 const admin = {
     ...common,
     entry: {
-        admin: './src/apps/admin/AppProvider.jsx'
-    }
+        admin: './src/apps/admin/AppProvider.jsx',
+    },
 };
 const client = {
     ...common,
     entry: {
-        client: './src/apps/client/AppProvider.jsx'
-    }
+        client: './src/apps/client/AppProvider.jsx',
+    },
 };
 
 module.exports = {
-    admin, client
+    admin,
+    client,
 };

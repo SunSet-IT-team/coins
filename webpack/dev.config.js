@@ -21,42 +21,42 @@ common.admin.entry.admin = [
 
 const postcssConfig = require('./postcssPlugins.js');
 
-const cssLocalIdentName = '[name]__[local]_[hash:base64:5]'; 
+const cssLocalIdentName = '[name]__[local]_[hash:base64:5]';
 
 // Очищаем CSS/SCSS правила, которые были добавлены в common.config.js
 common.admin.module.rules = common.admin.module.rules.filter(
-  (rule) => !String(rule.test).includes('.css')
+    (rule) => !String(rule.test).includes('.css')
 );
 common.client.module.rules = common.client.module.rules.filter(
-  (rule) => !String(rule.test).includes('.css')
+    (rule) => !String(rule.test).includes('.css')
 );
 
 const styleRule = {
-  test: /\.s?css$/,
-  use: [
-    'style-loader',
-    {
-      loader: 'css-loader',
-      options: {
-        modules: true,
-        localIdentName: cssLocalIdentName,
-        sourceMap: true,
-        importLoaders: 1
-      }
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        postcssOptions: {
-          plugins: postcssConfig,
+    test: /\.s?css$/,
+    use: [
+        'style-loader',
+        {
+            loader: 'css-loader',
+            options: {
+                modules: {
+                    localIdentName: cssLocalIdentName,
+                },
+                sourceMap: true,
+                importLoaders: 1,
+            },
         },
-        sourceMap: true
-      }
-    },
-  ],
-  exclude: /node_modules/
+        {
+            loader: 'postcss-loader',
+            options: {
+                postcssOptions: {
+                    plugins: postcssConfig,
+                },
+                sourceMap: true,
+            },
+        },
+    ],
+    exclude: /node_modules/,
 };
-
 
 const config = {
     mode: 'development',
@@ -87,7 +87,7 @@ const config = {
                     },
                 ],
             },
-           styleRule,
+            styleRule,
             {
                 test: /\.css?$/,
                 use: ['style-loader', 'css-loader'],

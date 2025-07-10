@@ -45,6 +45,10 @@ class BuyAndSellComponent extends Component {
         assetPriceWebsocketController.events.on('data', this.handlePriceChange);
     }
 
+    componentWillUnmount() {
+        assetPriceWebsocketController.events.off('data', this.handlePriceChange);
+    }
+
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.chartSymbol !== this.props.chartSymbol) {
             this.setNewPriceBySymbol(nextProps.chartSymbol);

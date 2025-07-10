@@ -396,6 +396,11 @@
     }
 }
 
+.assetBlocked {
+    background: rgb(53, 56, 67);
+    cursor: not-allowed;
+}
+
 .contentCenter {
     justify-content: center;
     height: 48px;

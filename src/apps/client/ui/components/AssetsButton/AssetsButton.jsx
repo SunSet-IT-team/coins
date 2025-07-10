@@ -246,68 +246,96 @@ class AssetsButton extends Component {
                                     </svg>
                                 </div>
                                 <div className={styles.assetsContainer}>
-                                    {filteredChartSymbolGroup.map((asset, i) => (
-                                        <div
-                                            key={i}
-                                            className={classNames(
-                                                styles.assetItemContainer,
-                                                {[styles.assetItemContainerActive]: asset.isActive},
-                                                {[styles.contentCenter]: isEmpty(user)}
-                                            )}
-                                            onClick={this.handleSymbolSelect(asset)}
-                                        >
-                                            <div className={styles.assetItemDataContainer}>
-                                                {asset.imgAlone ? (
-                                                    <div className={styles.assetItemPair}>
-                                                        <img
-                                                            className={styles.imgAlone}
-                                                            src={asset.imgAlone}
-                                                            alt="asset"
-                                                        />
-                                                    </div>
-                                                ) : (
-                                                    <div className={styles.assetItemPair}>
-                                                        <img
-                                                            className={styles.imgUpper}
-                                                            src={asset.imgTop}
-                                                            alt="assets"
-                                                        />
-                                                        <img
-                                                            className={styles.imgLower}
-                                                            src={asset.imgBottom}
-                                                            alt="assets"
-                                                        />
-                                                    </div>
-                                                )}
-                                                <div className={styles.assetsName}>
-                                                    {asset.title}
-                                                </div>
+                                    {/* Фильтруем активы, убирая в конец списка элементы с пустыми ценами */}
+                                    {[...filteredChartSymbolGroup]
+                                        .sort((a, b) => {
+                                            const priceA =
+                                                assetPriceWebsocketController.prices[a.name];
+                                            const priceB =
+                                                assetPriceWebsocketController.prices[b.name];
+
+                                            if (priceA && !priceB) return -1;
+                                            if (!priceA && priceB) return 1;
+                                            return 0;
+                                        })
+                                        .map((asset, i) => {
+                                            const assetPrice =
+                                                assetPriceWebsocketController.prices[asset.name];
+
+                                            const isAssetNull = !assetPrice;
+
+                                            return (
                                                 <div
-                                                    className={classNames(styles.assetsPrice, {
-                                                        [styles.posPrice]:
-                                                            assetPriceWebsocketController.changes[
-                                                                asset.name
-                                                            ] === 'up',
-                                                        [styles.negPrice]:
-                                                            assetPriceWebsocketController.changes[
-                                                                asset.name
-                                                            ] === 'down',
-                                                    })}
+                                                    key={i}
+                                                    className={classNames(
+                                                        styles.assetItemContainer,
+                                                        {
+                                                            [styles.assetItemContainerActive]:
+                                                                asset.isActive,
+                                                        },
+                                                        {[styles.contentCenter]: isEmpty(user)},
+                                                        {
+                                                            [styles.assetBlocked]: isAssetNull,
+                                                        }
+                                                    )}
+                                                    {...(!isAssetNull
+                                                        ? {onClick: this.handleSymbolSelect(asset)}
+                                                        : {})}
                                                 >
-                                                    {formatPriceObjToString(
-                                                        assetPriceWebsocketController.prices[
-                                                            asset.name
-                                                        ]
+                                                    <div className={styles.assetItemDataContainer}>
+                                                        {asset.imgAlone ? (
+                                                            <div className={styles.assetItemPair}>
+                                                                <img
+                                                                    className={styles.imgAlone}
+                                                                    src={asset.imgAlone}
+                                                                    alt="asset"
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            <div className={styles.assetItemPair}>
+                                                                <img
+                                                                    className={styles.imgUpper}
+                                                                    src={asset.imgTop}
+                                                                    alt="assets"
+                                                                />
+                                                                <img
+                                                                    className={styles.imgLower}
+                                                                    src={asset.imgBottom}
+                                                                    alt="assets"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        <div className={styles.assetsName}>
+                                                            {asset.title}
+                                                        </div>
+                                                        <div
+                                                            className={classNames(
+                                                                styles.assetsPrice,
+                                                                {
+                                                                    [styles.posPrice]:
+                                                                        assetPriceWebsocketController
+                                                                            .changes[asset.name] ===
+                                                                        'up',
+                                                                    [styles.negPrice]:
+                                                                        assetPriceWebsocketController
+                                                                            .changes[asset.name] ===
+                                                                        'down',
+                                                                }
+                                                            )}
+                                                        >
+                                                            {formatPriceObjToString(assetPrice)}
+                                                        </div>
+                                                    </div>
+                                                    {asset.isActive && !isEmpty(user) && (
+                                                        <div className={styles.mobileBuyAndSell}>
+                                                            <BuyAndSellComponent
+                                                                activeAsset={asset}
+                                                            />
+                                                        </div>
                                                     )}
                                                 </div>
-                                            </div>
-                                            {asset.isActive && !isEmpty(user) && (
-                                                <div className={styles.mobileBuyAndSell}>
-                                                    <BuyAndSellComponent activeAsset={asset} />
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
+                                            );
+                                        })}
                                 </div>
                             </div>
                         </div>
