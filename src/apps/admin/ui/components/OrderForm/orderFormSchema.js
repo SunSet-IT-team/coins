@@ -154,6 +154,10 @@ export default function ({data: {title, isClosed, profitCheckboxProps, profitFre
                         name: 'required',
                         options: {text: 'Заполните цену закрытия'},
                     },
+                    {
+                        name: 'min',
+                        options: {minValue: 0, text: 'Не может быть отрицательной'},
+                    },
                 ],
             },
             {

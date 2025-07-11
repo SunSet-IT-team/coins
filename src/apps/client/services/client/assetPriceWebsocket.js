@@ -41,7 +41,12 @@ class AssetPriceWebsocketController {
 
     setUser(user, orders) {
         this.user = user;
-        this.orders = orders;
+        this.orders = orders.map((order) => ({
+            ...order,
+            // Сохраняем значение профита с бэка в другое поле, чтобы избежать проблеммы, когда значение не обновляется,
+            // из-за того, что берется всегда старое в функции calcUpdatedOrders (вот тут profit: order.savedProfit || updatedOrder.profit)
+            ...(order.profit ? {savedProfit: order.profit} : {}),
+        }));
 
         this.calcUpdatedOrders();
     }
@@ -128,7 +133,7 @@ class AssetPriceWebsocketController {
                 currentPrice: currentPriceReal,
                 commission: updatedOrder.commission,
                 diffPrice,
-                profit: order.profit || updatedOrder.profit,
+                profit: order.savedProfit || updatedOrder.profit,
             };
         });
 

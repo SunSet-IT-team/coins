@@ -275,6 +275,23 @@ class OrderForm extends Component {
         }));
     }
 
+    setProfitFreezeDebouce() {
+        this.setProfitFreeze({
+            userInput: true,
+            // userInput: Number(changeValue) !== 0, // Если надо, чтобы после удалении пользователем значения, возможно было обновление поля
+        });
+        // Убираем предыдущий timeout (если он есть)
+        if (this.state.profitInputTimeout) {
+            clearTimeout(this.state.profitInputTimeout);
+        }
+        // Запускаем новый таймаут для создания debounce обновления поля profit по событиям assetPriceWebsocket
+        const timeout = setTimeout(() => {
+            this.setProfitFreeze({userInput: false});
+        }, 1000);
+
+        this.setState({profitInputTimeout: timeout});
+    }
+
     handleChange = (values, changes) => {
         const changeKey = Object.keys(changes)[0];
         const changeValue = changes[changeKey];
@@ -318,20 +335,7 @@ class OrderForm extends Component {
                     updatedFormData.amount &&
                     updatedFormData.type
                 ) {
-                    this.setProfitFreeze({
-                        userInput: true,
-                        // userInput: Number(changeValue) !== 0, // Если надо, чтобы после удалении пользователем значении, возможно было обновление поля
-                    });
-                    // Убираем предыдущий timeout (если он есть)
-                    if (this.state.profitInputTimeout) {
-                        clearTimeout(this.state.profitInputTimeout);
-                    }
-                    // Запускаем новый таймаут для создания debounce обновления поля profit по событиям assetPriceWebsocket
-                    const timeout = setTimeout(() => {
-                        this.setProfitFreeze({userInput: false});
-                    }, 1000);
-
-                    this.setState({profitInputTimeout: timeout});
+                    this.setProfitFreezeDebouce()
                 }
                 break;
 
