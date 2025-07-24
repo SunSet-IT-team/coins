@@ -101,13 +101,13 @@ export class WebSocketManager {
 
     handleTrade({s, p, t}) {
         const symbolName = s;
-        // const symbolName = s.includes(':') ? s : `FINNHUB:${s}`;
         const rawPrice = parseFloat(p);
         const timestamp = t;
 
-        const prev = this.prices[symbolName] ? this.prices[symbolName].value : 0;
+        const existing = this.prices[symbolName];
+        const prev = existing ? existing.value : 0;
 
-        if (!this.prices[symbolName]) {
+        if (!existing) {
             this.prices[symbolName] = {value: rawPrice, offset: 0};
         }
 
@@ -116,7 +116,10 @@ export class WebSocketManager {
 
         if (newPrice === prev) return;
 
+        // Сохраняем новое значение
         this.prices[symbolName].value = newPrice;
+
+        const disabled = newPrice === 0;
 
         const change = {
             name: symbolName,
@@ -125,7 +128,12 @@ export class WebSocketManager {
             changes: newPrice > prev ? 'up' : 'down',
             prevPrice: prev,
             offset,
+            disabled,
         };
+
+        if (change.disabled) {
+            console.log(change);
+        }
 
         pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
             prices: this.prices,
