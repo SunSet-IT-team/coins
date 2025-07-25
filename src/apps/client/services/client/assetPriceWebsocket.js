@@ -48,14 +48,6 @@ class AssetPriceWebsocketController {
                 return [name, price];
             })
         );
-        setTimeout(() => {
-            const data = {
-                name: 'BINANCE:BTCUSDT',
-                disabled: true,
-            };
-            this.disabledPrices[data.name] = data.disabled;
-            this.events.emit('switchPrice', {name: data.name, disabled: data.disabled});
-        }, 5000);
     }
 
     setUser(user, orders) {
