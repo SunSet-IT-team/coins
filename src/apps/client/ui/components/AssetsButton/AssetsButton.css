@@ -316,6 +316,14 @@
     flex-direction: column;
     justify-content: center;
 
+    .assetDisabledMessage {
+        align-self: flex-start;
+        margin-top: -5px;
+        padding-bottom: 5px;
+        color: tomato;
+        opacity: .8;
+    }
+
     .assetItemImg {
         margin-right: 16px;
     }

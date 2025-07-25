@@ -31,6 +31,27 @@
     }
 }
 
+.assetBlocked {
+    opacity: 0.6;
+    .buy button,
+    .sell button {
+        cursor: not-allowed;
+    }
+}
+
+.buy,
+.sell {
+    button {
+        border: none;
+        cursor: pointer;
+        display: block;
+        background: transparent;
+        font-family: inherit;
+        color: inherit;
+        font-size: inherit;
+    }
+}
+
 .buy,
 .counterContainer,
 .sell {

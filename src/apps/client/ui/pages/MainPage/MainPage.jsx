@@ -92,6 +92,7 @@ class MainPage extends Component {
     state = {
         width: 0,
         height: 0,
+        isAssetBlocked: false,
         asset: {},
     };
 
@@ -127,6 +128,11 @@ class MainPage extends Component {
 
             this.status = status;
         });
+        this.setState({
+            isAssetBlocked:
+                assetPriceWebsocketController.disabledPrices[this.props.chartSymbol.name],
+        });
+        assetPriceWebsocketController.events.on('switchPrice', this.handleSwitchPrice);
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -142,14 +148,31 @@ class MainPage extends Component {
                 nextProps.chartType.value
             );
         }
+        if (this.props.chartSymbol !== nextProps.chartSymbol) {
+            if (
+                this.state.isAssetBlocked !==
+                assetPriceWebsocketController.disabledPrices[nextProps.chartSymbol.name]
+            ) {
+                this.setState({
+                    isAssetBlocked:
+                        assetPriceWebsocketController.disabledPrices[nextProps.chartSymbol.name],
+                });
+            }
+        }
     }
 
     componentWillUnmount() {
         assetPriceWebsocketController.events.off('data', this.handlePriceChange);
+        assetPriceWebsocketController.events.off('switchPrice', this.handleSwitchPrice);
         assetPriceWebsocketController.events.off('status');
         window.removeEventListener('resize', this.resizeHandler);
         if (this.chart) this.chart.remove();
     }
+
+    handleSwitchPrice = ({name, disabled}) => {
+        if (this.props.chartSymbol.name !== name || this.state.isAssetBlocked === disabled) return;
+        this.setState({isAssetBlocked: disabled});
+    };
 
     getSeriesByType = (type) => {
         switch (type) {
@@ -488,8 +511,9 @@ class MainPage extends Component {
             return;
         }
         const {chartTimeframe, chartType, chartSymbol} = this.props;
+        const {isAssetBlocked} = this.state;
 
-        if (data.name !== chartSymbol.name) {
+        if (data.name !== chartSymbol.name || isAssetBlocked) {
             return;
         }
 
@@ -561,7 +585,7 @@ class MainPage extends Component {
 
     render() {
         const {user} = this.props;
-        const {asset} = this.state;
+        const {asset, isAssetBlocked} = this.state;
         const isAuth = !isEmpty(user); // Авторизован ли пользователь
 
         return (
@@ -585,6 +609,11 @@ class MainPage extends Component {
                             <img src="/src/apps/client/ui/pages/MainPage/images/down.svg" />
                             <div>{formatPriceObjToString(asset.sellingPrice)}</div>
                         </div>
+                        {isAssetBlocked && (
+                            <div className={styles.alertMessage}>
+                                Торги по данному активу на время приостановлены!
+                            </div>
+                        )}
                     </div>
                 )}
             </section>

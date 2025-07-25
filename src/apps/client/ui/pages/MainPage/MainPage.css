@@ -34,7 +34,8 @@
 }
 
 .rootChart.chartFullHeight :global(.tv-lightweight-charts) {
-    &, table {
+    &,
+    table {
         height: 100% !important;
     }
 }
@@ -47,6 +48,7 @@
     color: whiteDingy;
     text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.5);
     z-index: 2;
+    max-width: 200px;
 
     .assetTitle {
         font-size: 24px;
@@ -74,6 +76,12 @@
         img {
             margin-right: 7px;
         }
+    }
+
+    .alertMessage {
+        padding-top: 10px;
+        line-height: 1;
+        color: tomato;
     }
 
     @media (max-width: 544px) {

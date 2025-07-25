@@ -58,6 +58,10 @@ class AssetsButton extends Component {
         this.props.events.on(SCROLL_TOP_LOCKED_EVENT_NAME, () =>
             this.setState({isAssetsOpen: false})
         );
+
+        assetPriceWebsocketController.events.on('switchPrice', ({name, disabled}) => {
+            this.forceUpdate();
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -246,22 +250,40 @@ class AssetsButton extends Component {
                                     </svg>
                                 </div>
                                 <div className={styles.assetsContainer}>
-                                    {/* Фильтруем активы, убирая в конец списка элементы с пустыми ценами */}
+                                    {/* Фильтруем активы, оставляя сверху активы с ценой, в середине активы, 
+                                    по которым прекратились торги, а элементы с пустыми ценами убираем в конец списка  */}
                                     {[...filteredChartSymbolGroup]
                                         .sort((a, b) => {
-                                            const priceA =
-                                                assetPriceWebsocketController.prices[a.name];
-                                            const priceB =
-                                                assetPriceWebsocketController.prices[b.name];
+                                            const prices = assetPriceWebsocketController.prices;
+                                            const disabled =
+                                                assetPriceWebsocketController.disabledPrices;
 
-                                            if (priceA && !priceB) return -1;
-                                            if (!priceA && priceB) return 1;
-                                            return 0;
+                                            const priceA = prices[a.name];
+                                            const priceB = prices[b.name];
+                                            const isDisabledA = disabled[a.name];
+                                            const isDisabledB = disabled[b.name];
+
+                                            const getPriority = (price, isDisabled) => {
+                                                if (!price) return 2;
+                                                if (isDisabled) return 1;
+                                                return 0;
+                                            };
+
+                                            const priorityA = getPriority(priceA, isDisabledA);
+                                            const priorityB = getPriority(priceB, isDisabledB);
+
+                                            return priorityA - priorityB;
                                         })
                                         .map((asset, i) => {
                                             const assetPrice =
-                                                assetPriceWebsocketController.prices[asset.name];
-
+                                                assetPriceWebsocketController.prices[asset.name] ||
+                                                assetPriceWebsocketController.prevPrices[
+                                                    asset.name
+                                                ];
+                                            const isAssetDisabled =
+                                                assetPriceWebsocketController.disabledPrices[
+                                                    asset.name
+                                                ];
                                             const isAssetNull = !assetPrice;
 
                                             return (
@@ -275,13 +297,24 @@ class AssetsButton extends Component {
                                                         },
                                                         {[styles.contentCenter]: isEmpty(user)},
                                                         {
-                                                            [styles.assetBlocked]: isAssetNull,
+                                                            [styles.assetBlocked]:
+                                                                isAssetNull || isAssetDisabled,
                                                         }
                                                     )}
-                                                    {...(!isAssetNull
-                                                        ? {onClick: this.handleSymbolSelect(asset)}
-                                                        : {})}
+                                                    {...(isAssetNull || isAssetDisabled
+                                                        ? {}
+                                                        : {
+                                                              onClick:
+                                                                  this.handleSymbolSelect(asset),
+                                                          })}
                                                 >
+                                                    {isAssetDisabled && (
+                                                        <div
+                                                            className={styles.assetDisabledMessage}
+                                                        >
+                                                            Торги временно приостановлены
+                                                        </div>
+                                                    )}
                                                     <div className={styles.assetItemDataContainer}>
                                                         {asset.imgAlone ? (
                                                             <div className={styles.assetItemPair}>

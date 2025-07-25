@@ -38,20 +38,36 @@ class BuyAndSellComponent extends Component {
         amount: MIN_AVAILABLE_PRICE,
         buyPrice: 0,
         sellPrice: 0,
+        isAssetBlocked: false,
     };
 
     componentDidMount() {
         this.setNewPriceBySymbol(this.props.chartSymbol);
         assetPriceWebsocketController.events.on('data', this.handlePriceChange);
+        this.setState({
+            isAssetBlocked:
+                assetPriceWebsocketController.disabledPrices[this.props.chartSymbol.name],
+        });
+        assetPriceWebsocketController.events.on('switchPrice', this.handleSwitchPrice);
     }
 
     componentWillUnmount() {
         assetPriceWebsocketController.events.off('data', this.handlePriceChange);
+        assetPriceWebsocketController.events.off('switchPrice', this.handleSwitchPrice);
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.chartSymbol !== this.props.chartSymbol) {
             this.setNewPriceBySymbol(nextProps.chartSymbol);
+            if (
+                this.state.isAssetBlocked !==
+                assetPriceWebsocketController.disabledPrices[nextProps.chartSymbol.name]
+            ) {
+                this.setState({
+                    isAssetBlocked:
+                        assetPriceWebsocketController.disabledPrices[nextProps.chartSymbol.name],
+                });
+            }
         }
     }
 
@@ -62,6 +78,12 @@ class BuyAndSellComponent extends Component {
             buyPrice: price,
             sellPrice: price,
         });
+    };
+
+    handleSwitchPrice = ({name, disabled}) => {
+        if (this.props.chartSymbol.name !== name || this.state.isAssetBlocked === disabled) return;
+        if (disabled) this.handleClose();
+        this.setState({isAssetBlocked: disabled});
     };
 
     handlePriceChange = (data) => {
@@ -116,17 +138,21 @@ class BuyAndSellComponent extends Component {
 
     render() {
         const {langMap} = this.props;
-        const {buyIsOpen, sellIsOpen, amount, buyPrice, sellPrice} = this.state;
+        const {buyIsOpen, sellIsOpen, amount, buyPrice, sellPrice, isAssetBlocked} = this.state;
         const text = propOr('header', {}, langMap);
 
         return (
-            <div className={styles.root}>
+            <div
+                className={classNames(styles.root, {
+                    [styles.assetBlocked]: isAssetBlocked,
+                })}
+            >
                 <div className={styles.buyAndSell}>
                     <div className={styles.buy}>
-                        <div onClick={this.handleBuyClick}>
+                        <button onClick={this.handleBuyClick} disabled={isAssetBlocked}>
                             <div className={styles.title}>{text.buy}</div>
                             <div className={styles.price}>{formatPriceToString(buyPrice)}</div>
-                        </div>
+                        </button>
                         <div
                             className={classNames(styles.confirmPopupContainer, {
                                 [styles.confirmPopupContainerActive]: buyIsOpen,
@@ -209,10 +235,10 @@ class BuyAndSellComponent extends Component {
                         />
                     </div>
                     <div className={styles.sell}>
-                        <div onClick={this.handleSellClick}>
+                        <button onClick={this.handleSellClick} disabled={isAssetBlocked}>
                             <div className={styles.title}>{text.sell}</div>
                             <div className={styles.price}>{formatPriceToString(sellPrice)}</div>
-                        </div>
+                        </button>
                         <div
                             className={classNames(styles.sellingPopupContainer, {
                                 [styles.confirmPopupContainerActive]: sellIsOpen,

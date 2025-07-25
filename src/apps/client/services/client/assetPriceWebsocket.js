@@ -16,6 +16,8 @@ const DISCONNECT_TIMEOUT = 2000;
 class AssetPriceWebsocketController {
     events = new EventEmitter();
     prices = {};
+    prevPrices = {};
+    disabledPrices = {};
     changes = {};
     user = null;
     prevBalance = 0;
@@ -36,7 +38,24 @@ class AssetPriceWebsocketController {
     }
 
     setPrices(prices) {
-        this.prices = prices;
+        this.prices = Object.fromEntries(
+            prices.data.map((data) => {
+                const {name, price, ...priceBody} = data;
+                if (priceBody.disabled) {
+                    this.disabledPrices[name] = true;
+                }
+
+                return [name, price];
+            })
+        );
+        setTimeout(() => {
+            const data = {
+                name: 'BINANCE:BTCUSDT',
+                disabled: true,
+            };
+            this.disabledPrices[data.name] = data.disabled;
+            this.events.emit('switchPrice', {name: data.name, disabled: data.disabled});
+        }, 5000);
     }
 
     setUser(user, orders) {
@@ -79,7 +98,12 @@ class AssetPriceWebsocketController {
 
             for (const data of finalChanges) {
                 this.prices[data.name] = data.price;
+                this.prevPrices[data.name] = data.prevPrice;
                 this.changes[data.name] = data.changes;
+                // if (this.disabledPrices[data.name] !== data.disabled) {
+                //     this.disabledPrices[data.name] = data.disabled;
+                //     this.events.emit('switchPrice', {name: data.name, disabled: data.disabled});
+                // }
                 setTimeout(() => {
                     this.events.emit('data', data);
                 }, 0);

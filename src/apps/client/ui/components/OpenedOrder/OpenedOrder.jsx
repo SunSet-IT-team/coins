@@ -16,6 +16,7 @@ import closeOrder from '../../../services/client/closeOrder';
 import formatPriceToString from '../../../utils/formatPriceToString';
 import formatNumberToString from '../../../utils/formatNumberToString';
 import numeral from 'numeral';
+import assetPriceWebsocketController from '../../../services/client/assetPriceWebsocket';
 
 const mapDispatchToProps = (dispatch) => ({
     closeOrder: (payload) => dispatch(closeOrder(payload)),
@@ -39,6 +40,29 @@ class OpenedOrder extends PureComponent {
         onCloseDecline: PropTypes.func.isRequired,
     };
 
+    state = {
+        isAssetBlocked: false,
+    };
+
+    componentDidMount() {
+        this.setState({
+            isAssetBlocked: assetPriceWebsocketController.disabledPrices[this.props.item.assetName],
+        });
+        assetPriceWebsocketController.events.on('switchPrice', this.handleSwitchPrice);
+    }
+
+    componentWillUnmount() {
+        assetPriceWebsocketController.events.off('switchPrice', this.handleSwitchPrice);
+    }
+
+    handleSwitchPrice = ({name, disabled}) => {
+        if (this.props.item.assetName !== name || this.state.isAssetBlocked === disabled) return;
+        if (disabled) {
+            this.props.onCloseDecline();
+        }
+        this.setState({isAssetBlocked: disabled});
+    };
+
     getDate = (currentDate) => {
         const date = new Date(currentDate);
 
@@ -48,6 +72,7 @@ class OpenedOrder extends PureComponent {
     render() {
         const {item, isConfirmDeal, isLoading, orderIndex, langMap} = this.props;
         const text = propOr('openOrder', {}, langMap);
+        const {isAssetBlocked} = this.state;
 
         return (
             <div
@@ -120,12 +145,23 @@ class OpenedOrder extends PureComponent {
                 </div>
                 <div
                     className={classNames(styles.itemProfit, styles.footerItems, {
-                        [styles.posValue]: item.profit > 0,
-                        [styles.negValue]: item.profit < 0,
+                        // Добавляем стили для профита, если торги на валюту не остановлены
+                        ...(!isAssetBlocked
+                            ? {
+                                  [styles.posValue]: item.profit > 0,
+                                  [styles.negValue]: item.profit < 0,
+                              }
+                            : {}),
                     })}
                 >
-                    {item.profit > 0 && '+'}
-                    {formatNumberToString(item.profit)}
+                    {!isAssetBlocked ? (
+                        <div>
+                            {item.profit > 0 && '+'}
+                            {formatNumberToString(item.profit)}
+                        </div>
+                    ) : (
+                        '-'
+                    )}
                 </div>
                 <div
                     className={classNames(styles.itemCommission, styles.footerItems, {
@@ -148,9 +184,13 @@ class OpenedOrder extends PureComponent {
                     {isConfirmDeal ? (
                         <div className={styles.closeDealButton}>{text.accept}</div>
                     ) : (
-                        <div className={styles.closeDealButton} onClick={this.props.onClose}>
+                        <button
+                            className={styles.closeDealButton}
+                            onClick={this.props.onClose}
+                            disabled={isAssetBlocked}
+                        >
                             {text.closeOrder}
-                        </div>
+                        </button>
                     )}
                     {isConfirmDeal &&
                         !isLoading.loading && [
