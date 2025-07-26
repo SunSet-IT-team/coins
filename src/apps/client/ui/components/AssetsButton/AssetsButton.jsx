@@ -312,7 +312,7 @@ class AssetsButton extends Component {
                                                         <div
                                                             className={styles.assetDisabledMessage}
                                                         >
-                                                            Торги временно приостановлены
+                                                            {text.actives.tradeStop}
                                                         </div>
                                                     )}
                                                     <div className={styles.assetItemDataContainer}>

@@ -92,11 +92,11 @@
 
 .confirmButton {
     @mixin removeDefaultButton;
-    background-color: greenLight;
+    background-color: greenLight !important;
     font-size: 14px;
     line-height: 18px;
     letter-spacing: 0.012em;
-    color: whiteDingy;
+    color: whiteDingy !important;
     padding: 3px 12px 5px;
     font-family: FuturaPT-Medium;
     cursor: pointer;
@@ -106,7 +106,7 @@
     @mixin removeDefaultButton;
     width: 60px;
     height: 26px;
-    border: 1px solid redLight;
+    border: 1px solid redLight !important;
     cursor: pointer;
     display: flex;
     align-items: center;
