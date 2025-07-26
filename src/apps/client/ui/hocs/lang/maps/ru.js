@@ -54,6 +54,7 @@ export default {
             products: 'Товары',
             shares: 'Акции',
             indices: 'Индексы',
+            tradeStop: 'Торги временно приостановлены'
         },
         menuTitleOpen: 'Меню',
         menuTitleClose: 'Закрыть',

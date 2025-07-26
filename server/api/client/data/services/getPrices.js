@@ -1,4 +1,4 @@
-import {OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE} from '../../../../constants/constants';
+import { OKEY_STATUS_CODE, SERVER_ERROR_STATUS_CODE } from '../../../../constants/constants';
 import pricesController from '../../../../controllers/pricesController';
 
 export default function getPrices(req, res) {
@@ -6,21 +6,24 @@ export default function getPrices(req, res) {
         const now = Date.now();
 
         const formattedPrices = Object.entries(pricesController.prices).map(
-            ([symbolName, {value, offset}]) => {
-                const disabled = value === 0;
+            ([symbolName, raw]) => {
+                const value = parseFloat(raw && raw.value);
+                const offset = parseFloat(raw && raw.offset);
+
+                const isValid = !isNaN(value) && !isNaN(offset);
+                const disabled = !isValid || value === 0;
+
                 return {
                     name: symbolName,
-                    price: value,
+                    price: isValid ? value : 0,
                     time: now,
                     changes: 'cached',
-                    prevPrice: value - offset,
-                    offset,
+                    prevPrice: isValid ? value - offset : 0,
+                    offset: isValid ? offset : 0,
                     disabled,
                 };
             }
         );
-
-        console.log(formattedPrices);
 
         res.status(OKEY_STATUS_CODE).send({
             type: 'PRICE_CACHE',

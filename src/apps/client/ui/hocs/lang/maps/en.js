@@ -54,6 +54,7 @@ export default {
             products: 'Products',
             shares: 'Stock',
             indices: 'Indices',
+            tradeStop: 'Trading is temporarily suspended'
         },
         menuTitleOpen: 'Menu',
         menuTitleClose: 'Close',

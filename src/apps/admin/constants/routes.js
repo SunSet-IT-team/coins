@@ -4,7 +4,7 @@ export default [
     {id: 'users', path: ADMIN_PANEL_URL, exact: true, title: 'Пользователи'},
     // { id: 'qiwi', path: `${ADMIN_PANEL_URL}/qiwi`, exact: true, title: 'Qiwi' },
     {
-        id: 'messages',
+        id: 'settings',
         path: `${ADMIN_PANEL_URL}/settings`,
         exact: true,
         title: 'Настройки',
