@@ -54,6 +54,7 @@ export default {
             products: 'Produkty',
             shares: 'Akcje',
             indices: 'Indeksy',
+            tradingStopped: 'Handel jest tymczasowo zawieszony',
         },
         menuTitleOpen: 'Menu',
         menuTitleClose: 'Zamknąć',

@@ -4,6 +4,8 @@ const path = require('path');
 
 const mediaBreakpoints = require('../src/apps/client/constants/media.js');
 
+console.log(path.join(__dirname, '..', 'src', 'css', 'mixins.css'));
+
 module.exports = () => {
     const plugins = [];
 

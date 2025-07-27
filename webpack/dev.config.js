@@ -48,9 +48,7 @@ const styleRule = {
         {
             loader: 'postcss-loader',
             options: {
-                postcssOptions: {
-                    plugins: postcssConfig,
-                },
+                plugins: postcssConfig,
                 sourceMap: true,
             },
         },
