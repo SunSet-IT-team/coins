@@ -99,49 +99,58 @@ export class WebSocketManager {
         }
     }
 
-    handleTrade({s, p, t}) {
-        const symbolName = s;
-        const rawPrice = parseFloat(p);
-        const timestamp = t;
+handleTrade({ s, p, t }) {
+    const symbolName = s;
+    const rawPrice = parseFloat(p);
+    const timestamp = t;
 
+    const isValidPrice = !isNaN(rawPrice) && isFinite(rawPrice) && rawPrice > 0;
+
+    let price = 0;
+    let offset = 0;
+    let prevPrice = 0;
+    let disabled = true;
+    let changes = 'invalid';
+
+    if (isValidPrice) {
         const existing = this.prices[symbolName];
-        const prev = existing ? existing.value : 0;
+        offset = existing && typeof existing.offset === 'number' ? existing.offset : 0;
+        prevPrice = existing && typeof existing.value === 'number' ? existing.value : 0;
 
-        if (!existing) {
-            this.prices[symbolName] = {value: rawPrice, offset: 0};
-        }
-
-        const {offset = 0} = this.prices[symbolName];
         const newPrice = rawPrice + offset;
 
-        if (newPrice === prev) return;
-
-        // Сохраняем новое значение
-        this.prices[symbolName].value = newPrice;
-
-        const disabled = newPrice === 0;
-
-        const change = {
-            name: symbolName,
-            price: newPrice,
-            time: timestamp,
-            changes: newPrice > prev ? 'up' : 'down',
-            prevPrice: prev,
-            offset,
-            disabled,
-        };
-
-        if (change.disabled) {
-            console.log(change);
+        if (!existing || newPrice !== prevPrice) {
+            this.prices[symbolName] = { value: newPrice, offset: offset };
         }
 
-        pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
-            prices: this.prices,
-            assetPriceChange: change,
-        });
-
-        // this.sendToClients(change);
+        price = newPrice;
+        disabled = newPrice === 0;
+        changes = newPrice > prevPrice ? 'up' : 'down';
+    } else {
+        console.warn(`[DISABLED] Невалидная цена для ${symbolName}:`, p);
     }
+
+    const change = {
+        name: symbolName,
+        price: price,
+        time: timestamp,
+        changes: changes,
+        prevPrice: prevPrice,
+        offset: offset,
+        disabled: disabled,
+    };
+
+    if (disabled) {
+        console.warn(`[DISABLED] Цена заблокирована для ${symbolName}`);
+    }
+
+    pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
+        prices: this.prices,
+        assetPriceChange: change,
+    });
+}
+
+
 
     sendToClients(data) {
         const payload = JSON.stringify({type: 'PRICE_UPDATE', data});
