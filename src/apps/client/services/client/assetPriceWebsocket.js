@@ -92,10 +92,10 @@ class AssetPriceWebsocketController {
                 this.prices[data.name] = data.price;
                 this.prevPrices[data.name] = data.prevPrice;
                 this.changes[data.name] = data.changes;
-                // if (this.disabledPrices[data.name] !== data.disabled) {
-                //     this.disabledPrices[data.name] = data.disabled;
-                //     this.events.emit('switchPrice', {name: data.name, disabled: data.disabled});
-                // }
+                if (this.disabledPrices[data.name] !== data.disabled) {
+                    this.disabledPrices[data.name] = data.disabled;
+                    this.events.emit('switchPrice', {name: data.name, disabled: data.disabled});
+                }
                 setTimeout(() => {
                     this.events.emit('data', data);
                 }, 0);
