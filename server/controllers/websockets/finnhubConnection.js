@@ -85,11 +85,27 @@ class WebSocketManager {
 
             // // Получаем текущие значения
             const currentRates = await getCurrentRates(symbols, KEY_REST);
-            const initialRates = currentRates.map((rate, index) => ({
-                s: symbols[index],
+
+            const initialRates = currentRates.map((rate, index) => {
+            const symbol = symbols[index];
+
+            if (!rate || typeof rate.c !== 'number') {
+                console.warn(`[Finnhub][Worker ${tokenIndex}] Нет данных для ${symbol}, ставим нули`);
+                return {
+                    s: symbol,
+                    p: 0,
+                    t: Date.now(),
+                };
+            }
+
+            return {
+                s: symbol,
                 p: rate.c,
-                t: rate.t,
-            }));
+                t: rate.t || Date.now(),
+            };
+        });
+
+
 
             parentPort.postMessage({
                 type: 'initial',

@@ -99,49 +99,39 @@ export class WebSocketManager {
         }
     }
 
-handleTrade({ s, p, t }) {
+    handleTrade({ s, p, t }) {
     const symbolName = s;
     const rawPrice = parseFloat(p);
     const timestamp = t;
 
-    const isValidPrice = !isNaN(rawPrice) && isFinite(rawPrice) && rawPrice > 0;
-
-    let price = 0;
-    let offset = 0;
-    let prevPrice = 0;
-    let disabled = true;
-    let changes = 'invalid';
-
-    if (isValidPrice) {
-        const existing = this.prices[symbolName];
-        offset = existing && typeof existing.offset === 'number' ? existing.offset : 0;
-        prevPrice = existing && typeof existing.value === 'number' ? existing.value : 0;
-
-        const newPrice = rawPrice + offset;
-
-        if (!existing || newPrice !== prevPrice) {
-            this.prices[symbolName] = { value: newPrice, offset: offset };
-        }
-
-        price = newPrice;
-        disabled = newPrice === 0;
-        changes = newPrice > prevPrice ? 'up' : 'down';
-    } else {
-        console.warn(`[DISABLED] Невалидная цена для ${symbolName}:`, p);
+    if (!this.prices[symbolName]) {
+        this.prices[symbolName] = { value: 0, offset: 0 };
     }
+
+    const offset = this.prices[symbolName].offset || 0;
+    const prev = this.prices[symbolName].value || 0;
+    const newPrice = rawPrice + offset;
+
+    // Пропускаем, если цена не изменилась
+    if (newPrice === prev) return;
+
+    // Сохраняем новое значение
+    this.prices[symbolName].value = newPrice;
+
+    const disabled = newPrice === 0;
 
     const change = {
         name: symbolName,
-        price: price,
+        price: newPrice,
         time: timestamp,
-        changes: changes,
-        prevPrice: prevPrice,
-        offset: offset,
-        disabled: disabled,
+        changes: newPrice > prev ? 'up' : 'down',
+        prevPrice: prev,
+        offset,
+        disabled,
     };
 
     if (disabled) {
-        console.warn(`[DISABLED] Цена заблокирована для ${symbolName}`);
+        console.log(`[DISABLED] Цена = 0 для ${symbolName}`, change);
     }
 
     pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
@@ -149,7 +139,6 @@ handleTrade({ s, p, t }) {
         assetPriceChange: change,
     });
 }
-
 
 
     sendToClients(data) {
