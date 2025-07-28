@@ -24,8 +24,9 @@ export class HeartbeatManager {
                             name: symbolName,
                             price: price.value,
                             time: now,
-                            changes: 'same',
+                            changes: price.changes || 'same',
                             prevPrice: price.value,
+                            disabled: price.value === 0
                         },
                     });
                     this.lastUpdateMap[symbolName] = now;
