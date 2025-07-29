@@ -264,8 +264,8 @@ class AssetsButton extends Component {
                                             const isDisabledB = disabled[b.name];
 
                                             const getPriority = (price, isDisabled) => {
-                                                if (!price) return 2;
                                                 if (isDisabled) return 1;
+                                                if (!price) return 2;
                                                 return 0;
                                             };
 
@@ -312,7 +312,7 @@ class AssetsButton extends Component {
                                                         <div
                                                             className={styles.assetDisabledMessage}
                                                         >
-                                                            {text.actives.tradeStop}
+                                                            {text.actives.tradingStopped}
                                                         </div>
                                                     )}
                                                     <div className={styles.assetItemDataContainer}>
