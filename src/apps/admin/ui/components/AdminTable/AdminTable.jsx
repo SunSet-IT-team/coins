@@ -113,6 +113,12 @@ const materialStyles = (theme) => ({
             backgroundColor: '#8ed9cd !important',
         },
     },
+    posValue: {
+        color: '#27ae60 !important',
+    },
+    negValue: {
+        color: 'rgba(235, 87, 87, 0.75) !important',
+    },
 });
 
 const ROWS_PER_PAGE = 10;
@@ -360,7 +366,12 @@ class AdminTable extends React.Component {
                                             {tableCells.map((tableCell, i) => (
                                                 <TableCell
                                                     key={`table_cell_${i}`}
-                                                    className={classes.tableCell}
+                                                    className={classNames(
+                                                        classes.tableCell,
+                                                        typeof tableCell.className === 'function'
+                                                            ? tableCell.className(classes, value)
+                                                            : {}
+                                                    )}
                                                 >
                                                     {tableCell.prop(value)}
                                                 </TableCell>

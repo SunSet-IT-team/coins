@@ -53,7 +53,7 @@ import OrderCloseForm from '../../components/OrderCloseForm/OrderCloseForm';
 import CloseFormDialog from '../../components/CloseFormDialog/CloseFormDialog';
 
 import arrayMove from '../../../utils/arrayMove';
-import {getProfit} from '../../../../client/utils/getAssetValues';
+import {getCommission, getProfit} from '../../../../client/utils/getAssetValues';
 import {CHART_SYMBOL_INFO_MAP} from '../../../../../../server/constants/symbols';
 import formatNumberToString from '../../../../client/utils/formatNumberToString';
 
@@ -79,6 +79,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import assetPriceWebsocketController from '../../../../client/services/client/assetPriceWebsocket.js';
 import calculateBuyingPrice from '../../../../client/utils/calculateBuyPrice.js';
 import ChartChangeForm from '../../components/ChartChangeForm/ChartChangeForm.jsx';
+import formatPrice from '../../../../client/utils/formatPrice.js';
+import {COMMISSION} from '../../../../client/constants/constants.js';
 
 const ORDERS_TYPE_TEXT = [
     {id: 1, type: 'buy', text: 'Покупка'},
@@ -176,6 +178,10 @@ const tableOrderCells = [
             const profitStr = formatNumberToString(orders.profit);
             return `${orders.profit > 0 ? `+${profitStr}` : profitStr}`;
         },
+        className: (styles, orders) => ({
+            [styles.posValue]: orders.diffPrice > 0,
+            [styles.negValue]: orders.diffPrice < 0,
+        }),
     },
     {prop: (orders) => format(new Date(orders.createdAt), 'dd.MM.yyyy HH:mm')},
     {
@@ -527,7 +533,28 @@ class UsersPage extends Component {
 
     updateOrdersAssets() {
         const updatedOrders = this.state.orders.map((order) => {
-            if (order.isClosed) return order;
+            if (order.isClosed) {
+                const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
+                const diffPrice =
+                    order.diffPrice || formatPrice(order.closedPrice - order.openingPrice);
+                const profit =
+                    order.profit ||
+                    getProfit(
+                        order.amount,
+                        order.openingPrice,
+                        order.closedPrice,
+                        order.type,
+                        asset
+                    );
+                const commission = order.commission || getCommission(order.pledge, COMMISSION);
+
+                return {
+                    ...order,
+                    diffPrice,
+                    profit,
+                    commission,
+                };
+            }
 
             const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
             const livePrice = assetPriceWebsocketController.prices[order.assetName];
@@ -544,9 +571,12 @@ class UsersPage extends Component {
                     asset
                 );
 
+                const diffPrice = formatPrice(realPrice - order.openingPrice);
+
                 return {
                     ...order,
-                    profit: profit,
+                    profit,
+                    diffPrice,
                 };
             } else {
                 return {
