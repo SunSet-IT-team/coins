@@ -7,8 +7,10 @@ const User = new Schema({
     surname: {type: String, required: true},
     id: {type: String, required: true, unique: true},
     email: {type: String, required: true, unique: true},
-    balance: {type: Number, required: false},
-    mainBalance: {type: Number, required: false},
+
+    balance: {type: Number, required: false}, // Баланс
+    mainBalance: {type: Number, required: false}, // Главный баланс
+
     password: {type: String, required: false},
     phone: {type: String, required: true},
     date: {type: Number, required: true},
@@ -25,8 +27,10 @@ const User = new Schema({
     isVipStatus: {type: Boolean, required: false},
     newPassword: {type: String},
     confirmPassword: {type: String},
-    bonuses: {type: Number, required: false},
-    credFacilities: {type: Number, required: false},
+
+    bonuses: {type: Number, required: false}, // Бонусы
+    credFacilities: {type: Number, required: false}, // Кредитные финансы
+
     manager: {type: String, required: false},
     createdAt: {type: Number, required: true},
     updatedAt: {type: Number},

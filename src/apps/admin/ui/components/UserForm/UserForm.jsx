@@ -147,24 +147,32 @@ class UserForm extends Component {
         this.id = prop('id', user);
         this.state = {
             errorText: '',
+            initialValues: this.initialValues,
         };
     }
 
     componentDidMount() {
         const {id} = this;
-        getUserFinancials(id).then((response) => {
-            this.setState({
-                initialValues: {
-                    ...this.initialValues,
-                    balance: response.mainBalance || '',
-                    bonuses: response.bonuses || '',
-                    creditFunds: response.credFacilities || '',
-                    freeBalance: response.freeBalance || '',
-                    deposit: response.deposit || '',
-                    marginLevel: response.marginLevel || '',
-                },
-            });
-        });
+        if (id) {
+            getUserFinancials(id)
+                .then((response) => {
+                    const updatedInitialValues = {
+                        ...this.state.initialValues,
+                        balance: response.mainBalance || '',
+                        bonuses: response.bonuses || '',
+                        creditFunds: response.credFacilities || '',
+                        freeBalance: response.freeBalance || '',
+                        deposit: response.deposit || '',
+                        marginLevel: response.marginLevel || '',
+                    };
+                    this.setState({
+                        initialValues: updatedInitialValues,
+                    });
+                })
+                .catch((error) => {
+                    console.error('Ошибка загрузки финансов пользователя:', error);
+                });
+        }
     }
 
     formatPhone = (phone, country) => {
@@ -257,16 +265,16 @@ class UserForm extends Component {
         };
     };
 
-    getUserFinancialsPayload({
-        id,
-        balance,
-        bonuses,
-        creditFunds,
-        freeBalance,
-        deposit,
-        marginLevel,
-    }) {
-        return {id, balance, bonuses, creditFunds, freeBalance, deposit, marginLevel};
+    getUserFinancialsPayload({balance, bonuses, creditFunds, freeBalance, deposit, marginLevel}) {
+        return {
+            id: this.id,
+            balance,
+            bonuses,
+            creditFunds,
+            freeBalance,
+            deposit,
+            marginLevel,
+        };
     }
 
     handleChange = (values, changes) => {
@@ -311,7 +319,7 @@ class UserForm extends Component {
         return (
             <div>
                 <Form
-                    initialValues={this.initialValues}
+                    initialValues={this.state.initialValues}
                     schema={getSchema({
                         data: {
                             title: this.id
