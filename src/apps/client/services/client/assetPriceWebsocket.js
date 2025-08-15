@@ -164,26 +164,39 @@ class AssetPriceWebsocketController {
         this.balance = balance;
         this.mainBalance = user.mainBalance;
         this.totalPledge = totalPledge;
-        this.freeBalance = balance - totalPledge;
         this.orders = newOrders;
         this.totalProfit = totalProfit;
 
+        // Используем значения из админки, если они установлены, иначе расчетные
+        let calculatedFreeBalance = balance - totalPledge;
         let balanceToSend = balance;
 
         if (user.bonuses > 0) {
             balanceToSend += user.bonuses;
-            this.freeBalance += user.bonuses;
+            calculatedFreeBalance += user.bonuses;
             this.mainBalance += user.bonuses;
         }
 
         if (user.credFacilities > 0) {
             balanceToSend += user.credFacilities;
-            this.freeBalance += user.credFacilities;
+            calculatedFreeBalance += user.credFacilities;
             this.mainBalance += user.credFacilities;
         }
 
         this.balance = balanceToSend;
-        this.marginLevel = (this.freeBalance / totalPledge) * 100;
+
+        // Приоритет админским значениям над расчетными
+        this.freeBalance =
+            user.adminFreeBalance !== undefined && user.adminFreeBalance !== null
+                ? user.adminFreeBalance
+                : calculatedFreeBalance;
+
+        this.marginLevel =
+            user.adminMarginLevel !== undefined && user.adminMarginLevel !== null
+                ? user.adminMarginLevel
+                : Number.isFinite((calculatedFreeBalance / totalPledge) * 100)
+                  ? (calculatedFreeBalance / totalPledge) * 100
+                  : 0;
 
         if (this.prevBalance !== this.balance || isForceEmit) {
             this.events.emit('ordersAndBalance', {
@@ -194,8 +207,14 @@ class AssetPriceWebsocketController {
                 totalPledge,
                 totalProfit,
                 marginLevel: Number.isFinite(this.marginLevel) ? this.marginLevel : 0,
-                bonuses: user.bonuses,
-                credFacilities: user.credFacilities,
+                bonuses:
+                    user.adminBonuses !== undefined && user.adminBonuses !== null
+                        ? user.adminBonuses
+                        : user.bonuses,
+                credFacilities:
+                    user.adminCredFacilities !== undefined && user.adminCredFacilities !== null
+                        ? user.adminCredFacilities
+                        : user.credFacilities,
             });
         }
     }

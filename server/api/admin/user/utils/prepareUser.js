@@ -21,7 +21,14 @@ const VALUES = [
     'isActive',
     'isVipStatus',
     'manager',
-    'isSwiftDepositAvailable', // Новое поле для пополнения баланса
+    'isSwiftDepositAvailable',
+
+    // Финансовые поля из админки (только для админки)
+    'bonuses',
+    'creditFunds',
+    'freeBalance',
+    'deposit',
+    'marginLevel',
 ];
 
 export default function prepareUser(body) {

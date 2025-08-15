@@ -86,7 +86,7 @@ class TransactionInfoPopup extends Component {
         return Promise.all([this.props.getClientMoneyOutput(), this.props.getClientMoneyInput()])
             .then(() => {
                 this.setState({
-                    outputByUser: this.props.moneyOutput.map((item) => ({
+                    outputByUser: (this.props.moneyOutput || []).map((item) => ({
                         status: item.status,
                         date: item.createdAt,
                         type: 'withdraw',
@@ -99,7 +99,7 @@ class TransactionInfoPopup extends Component {
                         visited: item.visited,
                         userId: user.id,
                     })),
-                    inputByUser: this.props.moneyInput.map((item) => ({
+                    inputByUser: (this.props.moneyInput || []).map((item) => ({
                         status: item.status,
                         date: item.createdAt,
                         type: 'deposit',

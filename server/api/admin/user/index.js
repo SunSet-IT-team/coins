@@ -8,6 +8,8 @@ import editUser from './services/editUser';
 import assignUser from './services/assignUser';
 import detachUser from './services/detachUser';
 import deleteByIds from './services/deleteByIds';
+import editFinancials from './services/editFinancials';
+import getFinancials from './services/getFinancials';
 
 const router = express.Router();
 
@@ -18,6 +20,9 @@ router.route('/all').get(getUsers);
 router.route('/save').post(saveUser);
 
 router.route('/edit').put(editUser);
+
+router.route('/financials').post(editFinancials);
+router.route('/financials').get(getFinancials);
 
 router.route('/assign').put(assignUser);
 

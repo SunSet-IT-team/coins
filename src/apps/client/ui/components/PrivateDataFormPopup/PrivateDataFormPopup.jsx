@@ -147,7 +147,8 @@ class PrivateDataFormPopup extends Component {
 
     handleChange = (name, value) => (e) => {
         if (e) e.stopPropagation();
-        const actualValue = isUndefined(value) || isNull(value) ? e.target.value : value;
+        const actualValue =
+            isUndefined(value) || isNull(value) ? (e && e.target ? e.target.value : '') : value;
 
         if (actualValue.length > this.state.maxLength) return;
 
