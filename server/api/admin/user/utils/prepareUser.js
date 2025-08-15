@@ -23,11 +23,12 @@ const VALUES = [
     'manager',
     'isSwiftDepositAvailable',
 
-    // Финансовые поля из админки (только для админки)
+    // Финансовые поля из админки
     'bonuses',
     'creditFunds',
+    'facilities',
     'freeBalance',
-    'deposit',
+    'pledge',
     'marginLevel',
 ];
 

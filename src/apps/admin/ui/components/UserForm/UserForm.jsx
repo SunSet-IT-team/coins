@@ -137,11 +137,12 @@ class UserForm extends Component {
                       }))
                     : [],
             balance: user.mainBalance || 0,
-            bonuses: '',
-            creditFunds: '',
-            freeBalance: '',
-            deposit: '',
-            marginLevel: '',
+            bonuses: user.bonuses || 0,
+            creditFunds: user.credFacilities || 0,
+            facilities: user.facilities || 0,
+            freeBalance: user.freeBalance || 0,
+            pledge: user.pledge || 0,
+            marginLevel: user.marginLevel || 0,
         };
 
         this.id = prop('id', user);
@@ -161,8 +162,9 @@ class UserForm extends Component {
                         balance: response.mainBalance || '',
                         bonuses: response.bonuses || '',
                         creditFunds: response.credFacilities || '',
+                        facilities: response.facilities || '',
                         freeBalance: response.freeBalance || '',
-                        deposit: response.deposit || '',
+                        pledge: response.pledge || '',
                         marginLevel: response.marginLevel || '',
                     };
                     this.setState({
@@ -265,14 +267,23 @@ class UserForm extends Component {
         };
     };
 
-    getUserFinancialsPayload({balance, bonuses, creditFunds, freeBalance, deposit, marginLevel}) {
+    getUserFinancialsPayload({
+        balance,
+        bonuses,
+        creditFunds,
+        facilities,
+        freeBalance,
+        pledge,
+        marginLevel,
+    }) {
         return {
             id: this.id,
             balance,
             bonuses,
             creditFunds,
+            facilities,
             freeBalance,
-            deposit,
+            pledge,
             marginLevel,
         };
     }

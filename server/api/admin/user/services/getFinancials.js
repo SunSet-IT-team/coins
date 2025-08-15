@@ -21,9 +21,10 @@ export default function getFinancials(req, res) {
                     mainBalance: user.mainBalance,
                     bonuses: user.bonuses,
                     credFacilities: user.credFacilities,
-                    freeBalance: user.adminFreeBalance,
-                    deposit: user.adminPledge,
-                    marginLevel: user.adminMarginLevel,
+                    facilities: user.facilities,
+                    freeBalance: user.freeBalance,
+                    pledge: user.pledge,
+                    marginLevel: user.marginLevel,
                 };
 
                 res.status(OKEY_STATUS_CODE).send(financials);

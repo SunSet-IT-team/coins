@@ -50,9 +50,9 @@ export default function ({data: {title, dirName, isManager, balance} = {}} = {})
             },
             {
                 component: FormFieldBalance,
-                name: 'balance',
+                name: 'userBalance',
                 schema: {
-                    label: 'Средства пользователя',
+                    label: 'Средства пользователя (только для отображения)',
                 },
                 value: balance,
             },

@@ -161,60 +161,62 @@ class AssetPriceWebsocketController {
         );
 
         this.prevBalance = this.balance;
-        this.balance = balance;
-        this.mainBalance = user.mainBalance;
-        this.totalPledge = totalPledge;
         this.orders = newOrders;
         this.totalProfit = totalProfit;
 
         // Используем значения из админки, если они установлены, иначе расчетные
+        let calculatedBalance = balance;
+        let calculatedMainBalance = user.mainBalance;
+        let calculatedTotalPledge = totalPledge;
         let calculatedFreeBalance = balance - totalPledge;
-        let balanceToSend = balance;
 
+        // Добавляем бонусы и кредитные средства к расчетным значениям
         if (user.bonuses > 0) {
-            balanceToSend += user.bonuses;
+            calculatedBalance += user.bonuses;
             calculatedFreeBalance += user.bonuses;
-            this.mainBalance += user.bonuses;
+            calculatedMainBalance += user.bonuses;
         }
 
         if (user.credFacilities > 0) {
-            balanceToSend += user.credFacilities;
+            calculatedBalance += user.credFacilities;
             calculatedFreeBalance += user.credFacilities;
-            this.mainBalance += user.credFacilities;
+            calculatedMainBalance += user.credFacilities;
         }
 
-        this.balance = balanceToSend;
+        // Применяем админские значения с приоритетом над расчетными
+        this.balance =
+            user.facilities !== undefined && user.facilities !== null
+                ? user.facilities
+                : calculatedBalance;
 
-        // Приоритет админским значениям над расчетными
+        this.mainBalance = calculatedMainBalance;
+
+        this.totalPledge =
+            user.pledge !== undefined && user.pledge !== null ? user.pledge : calculatedTotalPledge;
+
         this.freeBalance =
-            user.adminFreeBalance !== undefined && user.adminFreeBalance !== null
-                ? user.adminFreeBalance
+            user.freeBalance !== undefined && user.freeBalance !== null
+                ? user.freeBalance
                 : calculatedFreeBalance;
 
         this.marginLevel =
-            user.adminMarginLevel !== undefined && user.adminMarginLevel !== null
-                ? user.adminMarginLevel
-                : Number.isFinite((calculatedFreeBalance / totalPledge) * 100)
-                  ? (calculatedFreeBalance / totalPledge) * 100
+            user.marginLevel !== undefined && user.marginLevel !== null
+                ? user.marginLevel
+                : Number.isFinite((calculatedFreeBalance / calculatedTotalPledge) * 100)
+                  ? (calculatedFreeBalance / calculatedTotalPledge) * 100
                   : 0;
 
         if (this.prevBalance !== this.balance || isForceEmit) {
             this.events.emit('ordersAndBalance', {
                 mainBalance: this.mainBalance,
-                balance: balanceToSend,
+                balance: this.balance,
                 freeBalance: this.freeBalance,
                 orders: newOrders,
-                totalPledge,
+                totalPledge: this.totalPledge,
                 totalProfit,
                 marginLevel: Number.isFinite(this.marginLevel) ? this.marginLevel : 0,
-                bonuses:
-                    user.adminBonuses !== undefined && user.adminBonuses !== null
-                        ? user.adminBonuses
-                        : user.bonuses,
-                credFacilities:
-                    user.adminCredFacilities !== undefined && user.adminCredFacilities !== null
-                        ? user.adminCredFacilities
-                        : user.credFacilities,
+                bonuses: user.bonuses || 0,
+                credFacilities: user.credFacilities || 0,
             });
         }
     }
