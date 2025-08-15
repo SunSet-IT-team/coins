@@ -161,41 +161,62 @@ class AssetPriceWebsocketController {
         );
 
         this.prevBalance = this.balance;
-        this.balance = balance;
-        this.mainBalance = user.mainBalance;
-        this.totalPledge = totalPledge;
-        this.freeBalance = balance - totalPledge;
         this.orders = newOrders;
         this.totalProfit = totalProfit;
 
-        let balanceToSend = balance;
+        // Используем значения из админки, если они установлены, иначе расчетные
+        let calculatedBalance = balance;
+        let calculatedMainBalance = user.mainBalance;
+        let calculatedTotalPledge = totalPledge;
+        let calculatedFreeBalance = balance - totalPledge;
 
+        // Добавляем бонусы и кредитные средства к расчетным значениям
         if (user.bonuses > 0) {
-            balanceToSend += user.bonuses;
-            this.freeBalance += user.bonuses;
-            this.mainBalance += user.bonuses;
+            calculatedBalance += user.bonuses;
+            calculatedFreeBalance += user.bonuses;
+            calculatedMainBalance += user.bonuses;
         }
 
         if (user.credFacilities > 0) {
-            balanceToSend += user.credFacilities;
-            this.freeBalance += user.credFacilities;
-            this.mainBalance += user.credFacilities;
+            calculatedBalance += user.credFacilities;
+            calculatedFreeBalance += user.credFacilities;
+            calculatedMainBalance += user.credFacilities;
         }
 
-        this.balance = balanceToSend;
-        this.marginLevel = (this.freeBalance / totalPledge) * 100;
+        // Применяем админские значения с приоритетом над расчетными
+        this.balance =
+            user.facilities !== undefined && user.facilities !== null
+                ? user.facilities
+                : calculatedBalance;
+
+        this.mainBalance = calculatedMainBalance;
+
+        this.totalPledge =
+            user.pledge !== undefined && user.pledge !== null ? user.pledge : calculatedTotalPledge;
+
+        this.freeBalance =
+            user.freeBalance !== undefined && user.freeBalance !== null
+                ? user.freeBalance
+                : calculatedFreeBalance;
+
+        this.marginLevel =
+            user.marginLevel !== undefined && user.marginLevel !== null
+                ? user.marginLevel
+                : Number.isFinite((calculatedFreeBalance / calculatedTotalPledge) * 100)
+                  ? (calculatedFreeBalance / calculatedTotalPledge) * 100
+                  : 0;
 
         if (this.prevBalance !== this.balance || isForceEmit) {
             this.events.emit('ordersAndBalance', {
                 mainBalance: this.mainBalance,
-                balance: balanceToSend,
+                balance: this.balance,
                 freeBalance: this.freeBalance,
                 orders: newOrders,
-                totalPledge,
+                totalPledge: this.totalPledge,
                 totalProfit,
                 marginLevel: Number.isFinite(this.marginLevel) ? this.marginLevel : 0,
-                bonuses: user.bonuses,
-                credFacilities: user.credFacilities,
+                bonuses: user.bonuses || 0,
+                credFacilities: user.credFacilities || 0,
             });
         }
     }

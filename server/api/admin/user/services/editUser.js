@@ -9,6 +9,8 @@ import editUserQuery from '../../../client/user/queries/editUser';
 export default function editUser(req, res) {
     const user = prepareUser(req.body);
 
+    console.log(user);
+
     if (user.password) {
         user.password = md5(user.password);
     }

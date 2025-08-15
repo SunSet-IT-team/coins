@@ -50,9 +50,9 @@ export default function ({data: {title, dirName, isManager, balance} = {}} = {})
             },
             {
                 component: FormFieldBalance,
-                name: 'balance',
+                name: 'userBalance',
                 schema: {
-                    label: 'Средства пользователя',
+                    label: 'Средства пользователя (только для отображения)',
                 },
                 value: balance,
             },
@@ -172,6 +172,71 @@ export default function ({data: {title, dirName, isManager, balance} = {}} = {})
                 schema: {
                     label: 'Адресс',
                 },
+            },
+            {
+                component: FormFieldDivider,
+                name: 'divider',
+            },
+            {
+                component: FormFieldTitle,
+                name: 'titleType',
+                schema: {
+                    label: 'Средства пользователя',
+                    variant: 'h6',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'balance',
+                schema: {
+                    label: 'Баланс',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'facilities',
+                schema: {
+                    label: 'Средства',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'bonuses',
+                schema: {
+                    label: 'Бонусы',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'creditFunds',
+                schema: {
+                    label: 'Крд. средства',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'freeBalance',
+                schema: {
+                    label: 'Свободный баланс',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'pledge',
+                schema: {
+                    label: 'Залог',
+                },
+            },
+            {
+                component: FormFieldInput,
+                name: 'marginLevel',
+                schema: {
+                    label: 'Уровень маржи',
+                },
+            },
+            {
+                component: FormFieldDivider,
+                name: 'divider',
             },
             {
                 component: FormFieldTitle,

@@ -19,9 +19,12 @@ import getSchema from './userFormSchema';
 import editUser from '../../../services/editUser';
 import uniqid from 'uniqid';
 import getStatus from '../../../../../../server/helpers/getStatus';
+import getUserFinancials from '../../../services/getUserFinancials';
+import saveUserFinancials from '../../../services/saveUserFinancials';
 
 const mapDispatchToProps = (dispatch) => ({
     editUser: (payload) => dispatch(editUser(payload)),
+    saveUserFinancials: (payload) => dispatch(saveUserFinancials(payload)),
 });
 
 const materialStyles = (theme) => ({
@@ -134,12 +137,44 @@ class UserForm extends Component {
                       }))
                     : [],
             balance: user.mainBalance || 0,
+            bonuses: user.bonuses || 0,
+            creditFunds: user.credFacilities || 0,
+            facilities: user.facilities || 0,
+            freeBalance: user.freeBalance || 0,
+            pledge: user.pledge || 0,
+            marginLevel: user.marginLevel || 0,
         };
 
         this.id = prop('id', user);
         this.state = {
             errorText: '',
+            initialValues: this.initialValues,
         };
+    }
+
+    componentDidMount() {
+        const {id} = this;
+        if (id) {
+            getUserFinancials(id)
+                .then((response) => {
+                    const updatedInitialValues = {
+                        ...this.state.initialValues,
+                        balance: response.mainBalance || '',
+                        bonuses: response.bonuses || '',
+                        creditFunds: response.credFacilities || '',
+                        facilities: response.facilities || '',
+                        freeBalance: response.freeBalance || '',
+                        pledge: response.pledge || '',
+                        marginLevel: response.marginLevel || '',
+                    };
+                    this.setState({
+                        initialValues: updatedInitialValues,
+                    });
+                })
+                .catch((error) => {
+                    console.error('Ошибка загрузки финансов пользователя:', error);
+                });
+        }
     }
 
     formatPhone = (phone, country) => {
@@ -232,6 +267,27 @@ class UserForm extends Component {
         };
     };
 
+    getUserFinancialsPayload({
+        balance,
+        bonuses,
+        creditFunds,
+        facilities,
+        freeBalance,
+        pledge,
+        marginLevel,
+    }) {
+        return {
+            id: this.id,
+            balance,
+            bonuses,
+            creditFunds,
+            facilities,
+            freeBalance,
+            pledge,
+            marginLevel,
+        };
+    }
+
     handleChange = (values, changes) => {
         switch (Object.keys(changes)[0]) {
             case 'isVipStatus':
@@ -247,9 +303,10 @@ class UserForm extends Component {
 
     handleSubmit = (values) => {
         const userPayload = this.getUserPayload(values);
-        const {editUser, onDone} = this.props;
+        const userFinancialsPayload = this.getUserFinancialsPayload(values);
+        const {editUser, saveUserFinancials, onDone} = this.props;
 
-        editUser(userPayload)
+        Promise.all([editUser(userPayload), saveUserFinancials(userFinancialsPayload)])
             .then(() => {
                 onDone();
             })
@@ -273,7 +330,7 @@ class UserForm extends Component {
         return (
             <div>
                 <Form
-                    initialValues={this.initialValues}
+                    initialValues={this.state.initialValues}
                     schema={getSchema({
                         data: {
                             title: this.id
