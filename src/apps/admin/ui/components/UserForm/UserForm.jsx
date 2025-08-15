@@ -19,9 +19,12 @@ import getSchema from './userFormSchema';
 import editUser from '../../../services/editUser';
 import uniqid from 'uniqid';
 import getStatus from '../../../../../../server/helpers/getStatus';
+import getUserFinancials from '../../../services/getUserFinancials';
+import saveUserFinancials from '../../../services/saveUserFinancials';
 
 const mapDispatchToProps = (dispatch) => ({
     editUser: (payload) => dispatch(editUser(payload)),
+    saveUserFinancials: (payload) => dispatch(saveUserFinancials(payload)),
 });
 
 const materialStyles = (theme) => ({
@@ -134,12 +137,34 @@ class UserForm extends Component {
                       }))
                     : [],
             balance: user.mainBalance || 0,
+            bonuses: '',
+            creditFunds: '',
+            freeBalance: '',
+            deposit: '',
+            marginLevel: '',
         };
 
         this.id = prop('id', user);
         this.state = {
             errorText: '',
         };
+    }
+
+    componentDidMount() {
+        const {id} = this;
+        getUserFinancials(id).then((response) => {
+            this.setState({
+                initialValues: {
+                    ...this.initialValues,
+                    balance: response.mainBalance || '',
+                    bonuses: response.bonuses || '',
+                    creditFunds: response.credFacilities || '',
+                    freeBalance: response.freeBalance || '',
+                    deposit: response.deposit || '',
+                    marginLevel: response.marginLevel || '',
+                },
+            });
+        });
     }
 
     formatPhone = (phone, country) => {
@@ -232,6 +257,18 @@ class UserForm extends Component {
         };
     };
 
+    getUserFinancialsPayload({
+        id,
+        balance,
+        bonuses,
+        creditFunds,
+        freeBalance,
+        deposit,
+        marginLevel,
+    }) {
+        return {id, balance, bonuses, creditFunds, freeBalance, deposit, marginLevel};
+    }
+
     handleChange = (values, changes) => {
         switch (Object.keys(changes)[0]) {
             case 'isVipStatus':
@@ -247,9 +284,10 @@ class UserForm extends Component {
 
     handleSubmit = (values) => {
         const userPayload = this.getUserPayload(values);
-        const {editUser, onDone} = this.props;
+        const userFinancialsPayload = this.getUserFinancialsPayload(values);
+        const {editUser, saveUserFinancials, onDone} = this.props;
 
-        editUser(userPayload)
+        Promise.all([editUser(userPayload), saveUserFinancials(userFinancialsPayload)])
             .then(() => {
                 onDone();
             })
