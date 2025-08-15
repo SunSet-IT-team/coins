@@ -16,12 +16,11 @@ export default function editFinancials(req, res) {
         mainBalance: userData.balance,
         bonuses: userData.bonuses,
         credFacilities: userData.creditFunds,
-        adminFreeBalance: userData.freeBalance,
-        adminPledge: userData.deposit,
-        adminMarginLevel: userData.marginLevel,
+        facilities: userData.facilities,
+        freeBalance: userData.freeBalance,
+        pledge: userData.pledge,
+        marginLevel: userData.marginLevel,
     };
-
-    console.log('editFinancials data:', mappedData);
 
     editUserQuery(mappedData)
         .then((user) => {

@@ -31,6 +31,12 @@ const User = new Schema({
     bonuses: {type: Number, required: false}, // Бонусы
     credFacilities: {type: Number, required: false}, // Кредитные финансы
 
+    // Финансовые поля из админки
+    facilities: {type: Number, required: false}, // Средства
+    freeBalance: {type: Number, required: false}, // Свободный баланс
+    pledge: {type: Number, required: false}, // Залог
+    marginLevel: {type: Number, required: false}, // Уровень маржи
+
     manager: {type: String, required: false},
     createdAt: {type: Number, required: true},
     updatedAt: {type: Number},
