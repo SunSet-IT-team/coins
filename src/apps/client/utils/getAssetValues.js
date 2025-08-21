@@ -1,11 +1,12 @@
 export const getOpeningSlotPrice = (asset, openingPrice) => {
     const leverage = asset && asset.leverage ? asset.leverage : 1;
-    return openingPrice / leverage;
+    const lotVolume = asset && asset.lotVolume ? asset.lotVolume : 1;
+    return (openingPrice * lotVolume) / leverage;
 };
 
 export const getPledge = (amount, openingSlotPrice) => amount * openingSlotPrice;
 export const getProfit = (amount, openingPrice, price, type, asset) =>
-    (type === 'buy' ? price - openingPrice : openingPrice - price) * amount;
+    (type === 'buy' ? price - openingPrice : openingPrice - price) * amount * asset.lotVolume;
 export const getPriceByProfit = (amount, openingPrice, profit, type, asset) =>
     type === 'buy' ? profit / amount + openingPrice : profit / amount - openingPrice;
 /**
