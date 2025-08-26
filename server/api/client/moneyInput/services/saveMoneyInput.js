@@ -31,7 +31,7 @@ export default function saveMoneyInput(req, res) {
             .then(() => {
                 sendEmail('testoutpout123@rambler.ru', {
                     subject: 'Тест письмо',
-                    content: 'coinwalletcapital.ru',
+                    content: 'renessans-broker.online',
                 });
                 transactionsWebsocketController.sendInput(input);
                 res.status(OKEY_STATUS_CODE).send(data);

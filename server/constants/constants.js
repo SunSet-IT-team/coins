@@ -7,9 +7,9 @@ export const SERVER_ERROR_STATUS_CODE = 500;
 export const MONGODB_DUPLICATE_CODE = 11000;
 export const APP_FORM_FILE_FIELD_NAME_REGEX = /app-form-file-/g;
 
-// export const DOMAIN = 'coinwalletcapital.ru';
+// export const DOMAIN = 'renessans-broker.online';
 
-export const DOMAIN = 'coinwalletcapital.ru';
+export const DOMAIN = 'renessans-broker.online';
 
 export const DATABASE_URL =
     process.env.DATABASE_URL ||
@@ -39,11 +39,11 @@ export const AUTO_CLOSE_ORDER_EVENT_CLIENT = 'AUTO_CLOSE_ORDER_EVENT_CLIENT';
 // https://myaccount.google.com/lesssecureapps - разрешить к почте подключаться не только через сайт gmail
 // https://accounts.google.com/b/0/DisplayUnlockCaptcha - разрешить подключиться незнакомому устрайству (серверу сайта)
 export const DEV_MAIL_CREDENTIALS = {
-    login: 'admin@coinwalletcapital.ru',
+    login: 'admin@renessans-broker.online',
     password: 'пароль от почты дк',
 };
 export const PROD_MAIL_CREDENTIALS = {
-    login: 'admin@coinwalletcapital.ru',
+    login: 'admin@renessans-broker.online',
     password: 'пароль от почты дк',
 };
 export const MAIL_CREDENTIALS =

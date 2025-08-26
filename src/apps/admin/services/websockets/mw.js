@@ -5,7 +5,7 @@ import EventEmitter from 'eventemitter3';
 
 const WEBSOCKET_URL =
     process.env.NODE_ENV === 'production'
-        ? `wss://coinwalletcapital.ru:2053`
+        ? `wss://renessans-broker.online:2053`
         : 'ws://localhost:2053';
 
 class MessageWebsocketController {

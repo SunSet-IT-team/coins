@@ -8,7 +8,7 @@ import isEmpty from '@tinkoff/utils/is/empty';
 
 const WEBSOCKET_URL =
     process.env.NODE_ENV === 'production'
-        ? `wss://coinwalletcapital.ru:8443`
+        ? `wss://renessans-broker.online:8443`
         : 'ws://localhost:8443';
 
 const DISCONNECT_TIMEOUT = 2000;

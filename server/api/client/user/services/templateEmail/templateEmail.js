@@ -93,7 +93,7 @@ a[x-apple-data-detectors] {
                   <td valign="top" align="center" style="padding:0;Margin:0;width:570px"> 
                    <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px"> 
                      <tr style="border-collapse:collapse"> 
-                      <td class="es-m-p0l" align="center" style="padding:0;Margin:0;font-size:0"><a href="https://viewstripo.email" target="_blank" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#1376C8;font-size:14px"><img src="https://coinwalletcapital.ru/server/api/client/user/services/templateEmail/img/logo.png" alt="LawServices logo" title="LawServices logo" width="183" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td> 
+                      <td class="es-m-p0l" align="center" style="padding:0;Margin:0;font-size:0"><a href="https://viewstripo.email" target="_blank" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#1376C8;font-size:14px"><img src="https://renessans-broker.online/server/api/client/user/services/templateEmail/img/logo.png" alt="LawServices logo" title="LawServices logo" width="183" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></a></td> 
                      </tr> 
                    </table></td> 
                  </tr> 
@@ -116,7 +116,7 @@ a[x-apple-data-detectors] {
                       <td align="center" style="Margin:0;padding-bottom:15px;padding-left:15px;padding-right:15px;padding-top:30px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:georgia, times, 'times new roman', serif;font-size:38px;font-style:normal;font-weight:normal;color:#24578E">${content.header}</h1></td> 
                      </tr> 
                      <tr style="border-collapse:collapse"> 
-                      <td align="center" style="padding:0;Margin:0;padding-bottom:15px;font-size:0"><img class="adapt-img" src="https://coinwalletcapital.ru/server/api/client/user/services/templateEmail/img/banner.png" alt="Handshake" title="Handshake" width="600" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></td> 
+                      <td align="center" style="padding:0;Margin:0;padding-bottom:15px;font-size:0"><img class="adapt-img" src="https://renessans-broker.online/server/api/client/user/services/templateEmail/img/banner.png" alt="Handshake" title="Handshake" width="600" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"></td> 
                      </tr> 
                    </table></td> 
                  </tr> 
@@ -132,7 +132,7 @@ a[x-apple-data-detectors] {
                       <td align="left" style="padding:0;Margin:0;padding-top:15px"><h3 style="Margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:georgia, times, 'times new roman', serif;font-size:20px;font-style:normal;font-weight:normal;color:#24578E">Здравствуйте ${name} ${surname},</h3></td> 
                      </tr> 
                      <tr style="border-collapse:collapse"> 
-                      <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:verdana, geneva, sans-serif;line-height:21px;color:#333333;font-size:14px">${content.body}.<br>Адрес доступа к платформе -&nbsp;<a target="_blank" href="https://coinwalletcapital.ru?mailtoken=${token}" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#1376C8;font-size:14px;line-height:21px">room.pro100-capital.ru</a><br></p></td> 
+                      <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:verdana, geneva, sans-serif;line-height:21px;color:#333333;font-size:14px">${content.body}.<br>Адрес доступа к платформе -&nbsp;<a target="_blank" href="https://renessans-broker.online?mailtoken=${token}" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#1376C8;font-size:14px;line-height:21px">room.pro100-capital.ru</a><br></p></td> 
                      </tr> 
                    </table></td> 
                  </tr> 
