@@ -140,7 +140,10 @@ class AssetPriceWebsocketController {
                 order.type === 'buy'
                     ? calculateBuyingPrice(asset.name, currentPrice)
                     : currentPrice;
-            const diffPrice = formatPrice(currentPriceReal - order.openingPrice);
+            const diffPrice = formatPrice(
+                (order.profitFreeze ? order.closedPrice : order.currentPriceReal) -
+                    order.openingPrice
+            );
 
             return {
                 ...order,

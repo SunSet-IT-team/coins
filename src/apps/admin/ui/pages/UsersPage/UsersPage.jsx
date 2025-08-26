@@ -560,6 +560,14 @@ class UsersPage extends Component {
             const livePrice = assetPriceWebsocketController.prices[order.assetName];
 
             if (order.amount && order.openingPrice && livePrice && order.type && asset) {
+                if (order.profitFreeze) {
+                    const diffPrice = formatPrice(order.closedPrice - order.openingPrice);
+                    return {
+                        ...order,
+                        diffPrice,
+                    };
+                }
+
                 const realPrice =
                     order.type === 'buy' ? calculateBuyingPrice(asset.name, livePrice) : livePrice;
 
@@ -884,7 +892,6 @@ class UsersPage extends Component {
     };
 
     handleAssignUser = () => {
-        console.log('Прикрепляю пользователя');
         const {currentAdmin} = this.props;
         const {newUserEmail} = this.state;
 

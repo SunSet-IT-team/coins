@@ -65,7 +65,7 @@ class WebSocketManager {
         this.socket = new WebSocket(FINNHUB_WS);
 
         this.socket.on('open', async () => {
-            console.log(`[Finnhub][Worker ${tokenIndex}] ПОДКЛЮЧЕНО`);
+            // console.log(`[Finnhub][Worker ${tokenIndex}] ПОДКЛЮЧЕНО`);
 
             this.reconnectDelay = RECONNECT_INITIAL_DELAY;
 
@@ -74,11 +74,11 @@ class WebSocketManager {
                     if (this.socket.readyState === WebSocket.OPEN) {
                         const payload = {type: 'subscribe', symbol};
                         this.socket.send(JSON.stringify(payload));
-                        console.log(`[Finnhub][Worker ${tokenIndex}] ПОДПИСКА НА ${symbol}`);
+                        // console.log(`[Finnhub][Worker ${tokenIndex}] ПОДПИСКА НА ${symbol}`);
                     } else {
-                        console.warn(
-                            `[Finnhub][Worker ${tokenIndex}] ПОДПИСКА НА ${symbol} — СОКЕТ СОЕДИНЕНИЕ НЕ ОТКРЫТО!!!`
-                        );
+                        // console.warn(
+                        //     `[Finnhub][Worker ${tokenIndex}] ПОДПИСКА НА ${symbol} — СОКЕТ СОЕДИНЕНИЕ НЕ ОТКРЫТО!!!`
+                        // );
                     }
                 }, index * 400);
             });
@@ -87,25 +87,23 @@ class WebSocketManager {
             const currentRates = await getCurrentRates(symbols, KEY_REST);
 
             const initialRates = currentRates.map((rate, index) => {
-            const symbol = symbols[index];
+                const symbol = symbols[index];
 
-            if (!rate || typeof rate.c !== 'number') {
-                console.warn(`[Finnhub][Worker ${tokenIndex}] Нет данных для ${symbol}, ставим нули`);
+                if (!rate || typeof rate.c !== 'number') {
+                    // console.warn(`[Finnhub][Worker ${tokenIndex}] Нет данных для ${symbol}, ставим нули`);
+                    return {
+                        s: symbol,
+                        p: 0,
+                        t: Date.now(),
+                    };
+                }
+
                 return {
                     s: symbol,
-                    p: 0,
-                    t: Date.now(),
+                    p: rate.c,
+                    t: rate.t || Date.now(),
                 };
-            }
-
-            return {
-                s: symbol,
-                p: rate.c,
-                t: rate.t || Date.now(),
-            };
-        });
-
-
+            });
 
             parentPort.postMessage({
                 type: 'initial',
@@ -124,7 +122,7 @@ class WebSocketManager {
             try {
                 msg = JSON.parse(raw);
             } catch (e) {
-                console.error('[Finnhub]:', e.message);
+                // console.error('[Finnhub]:', e.message);
                 return;
             }
 
@@ -138,12 +136,12 @@ class WebSocketManager {
 
         this.socket.on('close', (code, reason) => {
             this.pingInterval && clearInterval(this.pingInterval);
-            console.warn(
-                `[Finnhub][Worker ${tokenIndex}] ОТКЛЮЧЕНО: код ${code}, причина: ${reason}`
-            );
-            console.warn(
-                `[Finnhub][Worker ${tokenIndex}] ОТКЛЮЧЕНО ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ ${this.reconnectDelay}ms...`
-            );
+            // console.warn(
+            //     `[Finnhub][Worker ${tokenIndex}] ОТКЛЮЧЕНО: код ${code}, причина: ${reason}`
+            // );
+            // console.warn(
+            //     `[Finnhub][Worker ${tokenIndex}] ОТКЛЮЧЕНО ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ ${this.reconnectDelay}ms...`
+            // );
             setTimeout(() => {
                 this.reconnectDelay = Math.min(this.reconnectDelay * 2, RECONNECT_MAX_DELAY);
                 this.connect();
@@ -151,7 +149,7 @@ class WebSocketManager {
         });
 
         this.socket.on('error', (err) => {
-            console.error(`[Finnhub][Worker ${tokenIndex}] ОШИБКА:`, err.message);
+            // console.error(`[Finnhub][Worker ${tokenIndex}] ОШИБКА:`, err.message);
         });
     }
 }

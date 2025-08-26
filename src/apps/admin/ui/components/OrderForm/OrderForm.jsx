@@ -178,6 +178,7 @@ class OrderForm extends Component {
             ...pick(ORDERS_VALUES, order),
             takeProfit: order.takeProfit || '',
             stopLoss: order.stopLoss || '',
+            profitFreeze: order.profitFreeze ? !!order.profitFreeze : false,
         };
 
         const asset = CHART_SYMBOL_INFO_MAP[this.initialValues.assetName];
@@ -207,7 +208,7 @@ class OrderForm extends Component {
             profitBase: null,
             profitInputTimeout: null,
             profitFreeze: {
-                checkbox: false,
+                checkbox: order.profitFreeze ? !!order.profitFreeze : false,
                 userInput: false,
             },
         };
@@ -227,6 +228,7 @@ class OrderForm extends Component {
         profit,
         takeProfit,
         stopLoss,
+        profitFreeze,
     }) => {
         const {activeUser} = this.props;
         return {
@@ -244,6 +246,7 @@ class OrderForm extends Component {
             profit: Number(profit),
             takeProfit: takeProfit ? Number(takeProfit) : 0,
             stopLoss: stopLoss ? Number(stopLoss) : 0,
+            profitFreeze: profitFreeze ? !!profitFreeze : false,
         };
     };
 
@@ -335,7 +338,7 @@ class OrderForm extends Component {
                     updatedFormData.amount &&
                     updatedFormData.type
                 ) {
-                    this.setProfitFreezeDebouce()
+                    this.setProfitFreezeDebouce();
                 }
                 break;
 
@@ -345,10 +348,13 @@ class OrderForm extends Component {
                         userInput: false,
                         checkbox: false,
                     });
+                    updatedFormData.profitFreeze = false;
                 } else {
                     this.setProfitFreeze({
                         checkbox: !this.state.profitFreeze.checkbox,
                     });
+                    const nextFreeze = !this.state.profitFreeze.checkbox;
+                    updatedFormData.profitFreeze = nextFreeze;
                 }
                 break;
 
@@ -519,6 +525,9 @@ class OrderForm extends Component {
                             dirName: this.dirName,
                             isClosed: this.isClosed,
                             profitCheckboxProps: {
+                                checked:
+                                    this.state.profitFreeze.checkbox ||
+                                    this.state.profitFreeze.userInput,
                                 value:
                                     this.state.profitFreeze.checkbox ||
                                     this.state.profitFreeze.userInput,

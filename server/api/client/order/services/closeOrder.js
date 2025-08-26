@@ -57,33 +57,49 @@ export default function closeOrder(req, res) {
                         ? closedPrice
                         : calculateBuyingPrice(order.assetName, closedPrice);
 
+                /**
+                 * TODO
+                 * Нужно решить что с ценами делать
+                 * На них можно вилять милионами способов:
+                 * 1) Заморозить профит
+                 * 2) Изменить отклонение графика
+                 * 3) Черещ lotVolume
+                 * 4) Получать по real-time обычную цену
+                 */
+                const finalClosedPrice = order.profitFreeze
+                    ? order.closedPrice
+                    : closedPriceParam || closedPriceReal.value;
+
                 const closedOrder = {
                     id,
                     isClosed: true,
                     closedAt: Date.now(),
-                    closedPrice: closedPriceParam || closedPriceReal.value,
+                    closedPrice: finalClosedPrice,
                 };
 
                 const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
+
                 const profit = getProfit(
                     order.amount,
                     order.openingPrice,
-                    closedPriceReal.value,
+                    finalClosedPrice,
                     order.type,
                     asset
                 );
 
+                const finalProfit = order.profitFreeze ? order.profit : profit;
+
                 const commission = getCommission(order.pledge, COMMISSION);
+
                 const updatedUser = {
                     id: userId,
-                    balance: balance + profit - commission,
-                    mainBalance: balance + profit - commission,
+                    balance: balance + finalProfit - commission,
+                    mainBalance: balance + finalProfit - commission,
                 };
 
                 Promise.all([editUser(updatedUser), editOrder(closedOrder)])
                     .then(async ([user, order]) => {
                         const openOrders = await getOrdersByInfo({userId, isClosed: false});
-                        // const closedOrders = await getOrdersByInfo({ userId, page: 1, perPage: 1, isClosed: true });
                         const countClosedOrders = await Order.countDocuments({
                             userId,
                             isClosed: true,

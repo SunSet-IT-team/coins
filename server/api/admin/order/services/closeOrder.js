@@ -21,7 +21,6 @@ export default function closeOrder(req, res) {
         getOrderById(orderInfo.id)
             .then((order) => {
                 if (!order) return res.status(BAD_REQUEST_STATUS_CODE).send();
-
                 getUserById(order.userId)
                     .then((user) => {
                         if (!user || user.id !== order.userId) {
@@ -57,11 +56,14 @@ export default function closeOrder(req, res) {
                         const updatedUser = {
                             id: user.id,
                             balance: user.balance + netProfit,
+                            mainBalance: user.balance + netProfit,
                         };
 
                         Promise.all([editOrderQuery(closedOrder), editUserQuery(updatedUser)])
                             .then(() => res.status(OKEY_STATUS_CODE).end())
-                            .catch(() => res.status(SERVER_ERROR_STATUS_CODE).end());
+                            .catch(() => {
+                                res.status(SERVER_ERROR_STATUS_CODE).end();
+                            });
                     })
                     .catch(() => res.status(SERVER_ERROR_STATUS_CODE).end());
             })

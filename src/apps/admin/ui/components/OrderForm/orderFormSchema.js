@@ -138,7 +138,6 @@ export default function ({data: {title, isClosed, profitCheckboxProps, profitFre
                             ? {color: 'default'}
                             : {}),
                     },
-                    readOnly: profitFreeze.checkbox, //При заморозке поля оно становится изменяемым
                 },
                 validators: [],
             },

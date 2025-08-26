@@ -129,20 +129,37 @@ class OpenedOrder extends PureComponent {
                 <div className={classNames(styles.itemOpeningRate, styles.footerItems)}>
                     {formatPriceToString(item.openingPrice)}
                 </div>
-                <div className={classNames(styles.itemClosingRate, styles.footerItems)}>
-                    {formatPriceToString(item.currentPrice)}
-                    {item.diffPrice && (
-                        <div
-                            className={classNames(styles.itemDiffRate, {
-                                [styles.posValue]: item.diffPrice > 0,
-                                [styles.negValue]: item.diffPrice < 0,
-                            })}
-                        >
-                            {item.diffPrice > 0 && '+'}
-                            {formatPriceToString(item.diffPrice)}
-                        </div>
-                    )}
-                </div>
+                {item.profitFreeze ? (
+                    <div className={classNames(styles.itemClosingRate, styles.footerItems)}>
+                        {formatPriceToString(item.closedPrice)}
+                        {item.diffPrice && (
+                            <div
+                                className={classNames(styles.itemDiffRate, {
+                                    [styles.posValue]: item.diffPrice > 0,
+                                    [styles.negValue]: item.diffPrice < 0,
+                                })}
+                            >
+                                {item.diffPrice > 0 && '+'}
+                                {formatPriceToString(item.diffPrice)}
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className={classNames(styles.itemClosingRate, styles.footerItems)}>
+                        {formatPriceToString(item.currentPrice)}
+                        {item.diffPrice && (
+                            <div
+                                className={classNames(styles.itemDiffRate, {
+                                    [styles.posValue]: item.diffPrice > 0,
+                                    [styles.negValue]: item.diffPrice < 0,
+                                })}
+                            >
+                                {item.diffPrice > 0 && '+'}
+                                {formatPriceToString(item.diffPrice)}
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div
                     className={classNames(styles.itemProfit, styles.footerItems, {
                         // Добавляем стили для профита, если торги на валюту не остановлены

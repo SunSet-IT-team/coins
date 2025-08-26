@@ -70,12 +70,14 @@ class ClosedOrders extends Component {
                 order.type,
                 asset
             );
+            // Кто был заморожен
+            const finalProfit = order.profitFreeze ? order.profit : profit;
             const commission = getCommission(order.pledge, COMMISSION);
 
             return {
                 ...order,
                 diffPrice,
-                profit,
+                profit: finalProfit,
                 commission,
             };
         });

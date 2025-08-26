@@ -15,6 +15,7 @@ const VALUES = [
     'isClosed',
     'takeProfit',
     'stopLoss',
+    'profitFreeze',
     'profit',
 ];
 

@@ -20,6 +20,7 @@ const Order = new Schema({
     takeProfit: {type: Number},
     stopLoss: {type: Number},
     autoClose: {type: Boolean},
+    profitFreeze: {type: Boolean},
     profit: {type: Number},
 });
 

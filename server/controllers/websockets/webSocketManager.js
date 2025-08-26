@@ -99,47 +99,46 @@ export class WebSocketManager {
         }
     }
 
-    handleTrade({ s, p, t }) {
-    const symbolName = s;
-    const rawPrice = parseFloat(p);
-    const timestamp = t;
+    handleTrade({s, p, t}) {
+        const symbolName = s;
+        const rawPrice = parseFloat(p);
+        const timestamp = t;
 
-    if (!this.prices[symbolName]) {
-        this.prices[symbolName] = { value: 0, offset: 0 };
+        if (!this.prices[symbolName]) {
+            this.prices[symbolName] = {value: 0, offset: 0};
+        }
+
+        const offset = this.prices[symbolName].offset || 0;
+        const prev = this.prices[symbolName].value || 0;
+        const newPrice = rawPrice + offset;
+
+        // Пропускаем, если цена не изменилась
+        if (newPrice === prev) return;
+
+        // Сохраняем новое значение
+        this.prices[symbolName].value = newPrice;
+
+        const disabled = newPrice === 0;
+
+        const change = {
+            name: symbolName,
+            price: newPrice,
+            time: timestamp,
+            changes: newPrice > prev ? 'up' : 'down',
+            prevPrice: prev,
+            offset,
+            disabled,
+        };
+
+        if (disabled) {
+            // console.log(`[DISABLED] Цена = 0 для ${symbolName}`, change);
+        }
+
+        pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
+            prices: this.prices,
+            assetPriceChange: change,
+        });
     }
-
-    const offset = this.prices[symbolName].offset || 0;
-    const prev = this.prices[symbolName].value || 0;
-    const newPrice = rawPrice + offset;
-
-    // Пропускаем, если цена не изменилась
-    if (newPrice === prev) return;
-
-    // Сохраняем новое значение
-    this.prices[symbolName].value = newPrice;
-
-    const disabled = newPrice === 0;
-
-    const change = {
-        name: symbolName,
-        price: newPrice,
-        time: timestamp,
-        changes: newPrice > prev ? 'up' : 'down',
-        prevPrice: prev,
-        offset,
-        disabled,
-    };
-
-    if (disabled) {
-        console.log(`[DISABLED] Цена = 0 для ${symbolName}`, change);
-    }
-
-    pricesEvents.emit(SYMBOL_PRICE_CHANGE_EVENT, {
-        prices: this.prices,
-        assetPriceChange: change,
-    });
-}
-
 
     sendToClients(data) {
         const payload = JSON.stringify({type: 'PRICE_UPDATE', data});
