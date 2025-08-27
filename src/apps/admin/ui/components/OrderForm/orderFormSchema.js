@@ -29,7 +29,9 @@ const getAllAssets = () => {
     }));
 };
 
-export default function ({data: {title, isClosed, profitCheckboxProps, profitFreeze} = {}} = {}) {
+export default function ({
+    data: {title, isClosed, profitCheckboxProps, autoUpdatePriceCheckboxProps, profitFreeze} = {},
+} = {}) {
     const assets = getAllAssets();
     return {
         fields: [
@@ -142,22 +144,27 @@ export default function ({data: {title, isClosed, profitCheckboxProps, profitFre
                 validators: [],
             },
             {
-                component: FormFieldInput,
+                component: FormFieldInputWithCheckBox,
                 name: 'closedPrice',
                 schema: {
                     label: 'Цена закрытия',
                     // readOnly: !profitFreeze.checkbox, //При заморозке поля оно становится изменяемым
+                    checkBoxProps: {...autoUpdatePriceCheckboxProps},
                 },
-                validators: [
-                    {
-                        name: 'required',
-                        options: {text: 'Заполните цену закрытия'},
-                    },
-                    {
-                        name: 'min',
-                        options: {minValue: 0, text: 'Не может быть отрицательной'},
-                    },
-                ],
+                ...(isClosed
+                    ? {
+                          validators: [
+                              {
+                                  name: 'required',
+                                  options: {text: 'Заполните цену закрытия'},
+                              },
+                              {
+                                  name: 'min',
+                                  options: {minValue: 0, text: 'Не может быть отрицательной'},
+                              },
+                          ],
+                      }
+                    : {}),
             },
             {
                 component: FormFieldInput,

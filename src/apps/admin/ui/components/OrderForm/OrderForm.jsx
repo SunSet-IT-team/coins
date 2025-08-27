@@ -211,6 +211,7 @@ class OrderForm extends Component {
                 checkbox: order.profitFreeze ? !!order.profitFreeze : false,
                 userInput: false,
             },
+            autoUpdatePrice: true,
         };
 
         this.updateProfitOnData = this.updateProfitOnData.bind(this);
@@ -307,6 +308,8 @@ class OrderForm extends Component {
 
         const asset = CHART_SYMBOL_INFO_MAP[updatedFormData.assetName];
 
+        console.log(changeKey);
+
         switch (changeKey) {
             case 'userId':
                 const activeUser = this.props.users.find((user) => user.id === changeValue);
@@ -356,6 +359,11 @@ class OrderForm extends Component {
                     const nextFreeze = !this.state.profitFreeze.checkbox;
                     updatedFormData.profitFreeze = nextFreeze;
                 }
+                break;
+            case 'autoUpdatePrice':
+                this.setState((prevState) => ({
+                    autoUpdatePrice: !prevState.autoUpdatePrice,
+                }));
                 break;
 
             case 'closedPrice':
@@ -448,7 +456,10 @@ class OrderForm extends Component {
         // Если обновилась не валюта ордера - не обновляем
         if (data.name !== this.props.order.assetName) return;
         // Учитываем InputDebounce + чекбокс заморозки
-        const isFreeze = this.state.profitFreeze.checkbox || this.state.profitFreeze.userInput;
+        const isFreeze =
+            this.state.profitFreeze.checkbox ||
+            this.state.profitFreeze.userInput ||
+            !this.state.autoUpdatePrice;
         if (isFreeze) return;
 
         const formData = {
@@ -533,6 +544,13 @@ class OrderForm extends Component {
                                     this.state.profitFreeze.userInput,
                                 title: 'Заморозить',
                                 name: 'profitFreeze',
+                                onChange: this.handleInputChange,
+                            },
+                            autoUpdatePriceCheckboxProps: {
+                                checked: this.state.autoUpdatePrice,
+                                value: this.state.autoUpdatePrice,
+                                title: 'Автообновление цен',
+                                name: 'autoUpdatePrice',
                                 onChange: this.handleInputChange,
                             },
                             profitFreeze: this.state.profitFreeze,
