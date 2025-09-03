@@ -144,6 +144,14 @@ export default function ({
                 validators: [],
             },
             {
+                component: FormFieldInput,
+                name: 'additionalProfit',
+                schema: {
+                    label: 'Дополнительная прибыль',
+                },
+                validators: [],
+            },
+            {
                 component: FormFieldInputWithCheckBox,
                 name: 'closedPrice',
                 schema: {

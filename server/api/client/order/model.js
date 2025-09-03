@@ -22,6 +22,7 @@ const Order = new Schema({
     autoClose: {type: Boolean},
     profitFreeze: {type: Boolean},
     profit: {type: Number},
+    additionalProfit: {type: Number},
 });
 
 Order.post('save', () => ordersEvents.emit('dbUpdate'));

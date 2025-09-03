@@ -175,13 +175,17 @@ const tableOrderCells = [
     {prop: (orders) => `$ ${formatNumberToString(orders.pledge)}`},
     {
         prop: (orders) => {
-            const profitStr = formatNumberToString(orders.profit);
-            return `${orders.profit > 0 ? `+${profitStr}` : profitStr}`;
+            const finalProfit = orders.profit + (orders.additionalProfit || 0);
+            const profitStr = formatNumberToString(finalProfit);
+            return `${finalProfit > 0 ? `+${profitStr}` : profitStr}`;
         },
-        className: (styles, orders) => ({
-            [styles.posValue]: orders.diffPrice > 0,
-            [styles.negValue]: orders.diffPrice < 0,
-        }),
+        className: (styles, orders) => {
+            const finalProfit = orders.profit + (orders.additionalProfit || 0);
+            return {
+                [styles.posValue]: finalProfit > 0,
+                [styles.negValue]: finalProfit < 0,
+            };
+        },
     },
     {prop: (orders) => format(new Date(orders.createdAt), 'dd.MM.yyyy HH:mm')},
     {
@@ -537,21 +541,21 @@ class UsersPage extends Component {
                 const asset = CHART_SYMBOL_INFO_MAP[order.assetName];
                 const diffPrice =
                     order.diffPrice || formatPrice(order.closedPrice - order.openingPrice);
-                const profit =
-                    order.profit ||
-                    getProfit(
-                        order.amount,
-                        order.openingPrice,
-                        order.closedPrice,
-                        order.type,
-                        asset
-                    );
+                const profit = getProfit(
+                    order.amount,
+                    order.openingPrice,
+                    order.closedPrice,
+                    order.type,
+                    asset
+                );
+                let finalProfit = order.profitFreeze ? order.profit : profit;
+                finalProfit += order.additionalProfit || 0;
                 const commission = order.commission || getCommission(order.pledge, COMMISSION);
 
                 return {
                     ...order,
                     diffPrice,
-                    profit,
+                    profit: finalProfit,
                     commission,
                 };
             }

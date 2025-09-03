@@ -17,6 +17,7 @@ const VALUES = [
     'stopLoss',
     'profitFreeze',
     'profit',
+    'additionalProfit',
 ];
 
 export default function prepareOrder(body) {

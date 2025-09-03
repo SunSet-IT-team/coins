@@ -42,15 +42,18 @@ export default function closeOrder(req, res) {
                                       asset
                                   );
 
+                        // Прибавляем к итоговому профиту дополнительный
+                        const resultProfit = profit + order.additionalProfit || 0;
+
                         const commission = getCommission(order.pledge, COMMISSION);
-                        const netProfit = profit - commission;
+                        const netProfit = resultProfit - commission;
 
                         const closedOrder = {
                             id: order.id,
                             isClosed: true,
                             closedAt: orderInfo.closedAt,
                             closedPrice,
-                            profit,
+                            profit: resultProfit,
                         };
 
                         const updatedUser = {

@@ -53,6 +53,7 @@ export default function editOrder(req, res) {
                                 order.type,
                                 asset
                             );
+                            const resultProfit = profit + order.additionalProfit || 0;
 
                             const prevCommission = getCommission(prevOrder.pledge, COMMISSION);
                             const commission = getCommission(order.pledge, COMMISSION);
@@ -63,13 +64,13 @@ export default function editOrder(req, res) {
                                     user.balance -
                                     prevProfit +
                                     prevCommission +
-                                    profit -
+                                    resultProfit -
                                     commission,
                                 mainBalance:
                                     user.mainBalance -
                                     prevProfit +
                                     prevCommission +
-                                    profit -
+                                    resultProfit -
                                     commission,
                             };
 

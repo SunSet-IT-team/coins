@@ -145,12 +145,16 @@ class AssetPriceWebsocketController {
                     order.openingPrice
             );
 
+            let finalProfit = order.profitFreeze
+                ? order.savedProfit + (order.additionalProfit || 0)
+                : updatedOrder.profit;
+
             return {
                 ...order,
                 currentPrice: currentPriceReal,
                 commission: updatedOrder.commission,
                 diffPrice,
-                profit: order.savedProfit || updatedOrder.profit,
+                profit: finalProfit,
             };
         });
 

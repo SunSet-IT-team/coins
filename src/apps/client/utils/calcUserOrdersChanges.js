@@ -19,7 +19,8 @@ export default (user, orders, prices) => {
             {openingPrice: order.openingPrice, amount: order.amount, type: order.type},
             realSymbolPrice,
             userBalance,
-            COMMISSION
+            COMMISSION,
+            order.additionalProfit
         );
 
         userBalance = assetValues.balance;

@@ -70,8 +70,10 @@ class ClosedOrders extends Component {
                 order.type,
                 asset
             );
+
             // Кто был заморожен
-            const finalProfit = order.profitFreeze ? order.profit : profit;
+            let finalProfit = order.profitFreeze ? order.profit : profit;
+            finalProfit += order.additionalProfit || 0;
             const commission = getCommission(order.pledge, COMMISSION);
 
             return {
