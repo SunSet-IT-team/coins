@@ -40,7 +40,8 @@ const validate = (fields, fieldsValidatorsMap) => {
 
 export default function saveOrder(req, res) {
     try {
-        const {assetName, amount, type, takeProfit, stopLoss, autoClose, profit} = req.body;
+        const {assetName, amount, type, takeProfit, stopLoss, autoClose, profit, additionalProfit} =
+            req.body;
         const openingPrice = pricesController.prices[assetName].value || 0;
         const openingPriceReal =
             type === 'sell' ? openingPrice : calculateBuyingPrice(assetName, openingPrice);
@@ -67,6 +68,7 @@ export default function saveOrder(req, res) {
             stopLoss: stopLoss || 0,
             autoClose,
             profit: profit || 0,
+            additionalProfit: additionalProfit || 0,
         };
 
         const isOrderValid = validate(orderObj, orderFieldsValidatorsMap);

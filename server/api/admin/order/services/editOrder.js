@@ -53,7 +53,7 @@ export default function editOrder(req, res) {
                                 order.type,
                                 asset
                             );
-                            const resultProfit = profit + order.additionalProfit || 0;
+                            const resultProfit = profit + (order.additionalProfit || 0);
 
                             const prevCommission = getCommission(prevOrder.pledge, COMMISSION);
                             const commission = getCommission(order.pledge, COMMISSION);
@@ -116,7 +116,8 @@ export default function editOrder(req, res) {
                     {openingPrice: order.openingPrice, amount: order.amount, type: order.type},
                     realSymbolPrice.value,
                     user.balance,
-                    COMMISSION
+                    COMMISSION,
+                    order.additionalProfit
                 );
 
                 totalPledge = pledge;

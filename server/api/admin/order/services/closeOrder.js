@@ -43,7 +43,7 @@ export default function closeOrder(req, res) {
                                   );
 
                         // Прибавляем к итоговому профиту дополнительный
-                        const resultProfit = profit + order.additionalProfit || 0;
+                        const resultProfit = profit + (order.additionalProfit || 0);
 
                         const commission = getCommission(order.pledge, COMMISSION);
                         const netProfit = resultProfit - commission;

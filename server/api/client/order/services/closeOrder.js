@@ -87,7 +87,9 @@ export default function closeOrder(req, res) {
                     asset
                 );
 
-                const finalProfit = order.profitFreeze ? order.profit : profit;
+                let finalProfit = order.profitFreeze ? order.profit : profit;
+                // Прибавляем к итоговому профиту дополнительный
+                finalProfit += order.additionalProfit || 0;
 
                 const commission = getCommission(order.pledge, COMMISSION);
 
